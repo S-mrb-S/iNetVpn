@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinner_items">
+        <item>گزینه 1</item>
+        <item>گزینه 2</item>
+        <item>گزینه 3</item>
+        <!-- و غیره -->
+    </string-array>
+</resources>
