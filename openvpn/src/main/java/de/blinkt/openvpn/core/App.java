@@ -30,7 +30,7 @@ public class App extends /*com.orm.SugarApp*/ Application {
 //    public static boolean ShowDailyUsage = true;
 //    public static String device_id;
 //    public static long device_created;
-    public static final String CHANNEL_ID = "com.lazycoder.cakevpn";
+    public static final String CHANNEL_ID = "com.gold.hamrahvpn";
 //    public static final int NOTIFICATION_ID = new Random().nextInt(601) + 200;
     NotificationManager manager;
 
@@ -69,7 +69,7 @@ public class App extends /*com.orm.SugarApp*/ Application {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel serviceChannel = new NotificationChannel(
                         CHANNEL_ID,
-                        "comlazycodercakevpn",
+                        "comgoldhamrahvpn",
                         NotificationManager.IMPORTANCE_LOW
                 );
 

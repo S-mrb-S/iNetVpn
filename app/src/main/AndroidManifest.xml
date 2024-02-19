@@ -28,6 +28,7 @@
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
+
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
@@ -54,10 +55,12 @@
         android:theme="@style/AppThemeDayNight"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity
-            android:name="com.xray.lite.ui.MainSettingsV2ray"
-            android:exported="false"
-            android:theme="@style/AppThemeDayNight.NoActionBar" />
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
+
+        <!--App-->
         <activity
             android:name=".ui.LauncherActivity"
             android:exported="true"
@@ -68,6 +71,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="false"
@@ -81,25 +85,89 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
+
         <activity
             android:name=".ui.LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".ui.ServerActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@style/AppThemeDayNight.NoActionBar" />
+
+        <activity
+            android:name=".ui.UsageActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@style/AppThemeDayNight.NoActionBar" />
+
+        <activity android:name=".ui.ContactActivity" />
+        <activity android:name=".ui.FAQActivity" />
+        <activity android:name=".ui.ReviewActivity" />
+
+        <!--OpenVpn-->
+        <service
+            android:name="de.blinkt.openvpn.core.OpenVPNService"
+            android:exported="true"
+            android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="de.blinkt.openvpn.api.ExternalOpenVPNService"
+            android:exported="true"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="de.blinkt.openvpn.api.IOpenVPNAPIService" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name="de.blinkt.openvpn.LaunchVPN"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:label="@string/vpn_launch_title"
+            tools:ignore="ExportedActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="de.blinkt.openvpn.DisconnectVPNActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=".DisconnectVPN"
+            android:theme="@style/blinkt.dialog" />
+
+        <!--V2ray-->
+        <activity
+            android:name="com.xray.lite.ui.MainSettingsV2ray"
+            android:exported="false"
+            android:theme="@style/AppThemeDayNight.NoActionBar" />
+
         <activity
             android:name="com.xray.lite.ui.ServerAngActivity"
             android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar"
             android:windowSoftInputMode="stateUnchanged" />
+
         <activity
             android:name="com.xray.lite.ui.MainAngActivity"
             android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar"
             android:windowSoftInputMode="stateUnchanged" />
+
         <activity
             android:name="com.xray.lite.ui.ServerCustomConfigActivity"
             android:exported="false"
             android:windowSoftInputMode="stateUnchanged" />
+
         <activity
             android:name="com.xray.lite.ui.SettingsActivity"
             android:exported="false" />
@@ -133,30 +201,8 @@
             android:excludeFromRecents="true"
             android:exported="false"
             android:process=":RunSoLibV2RayDaemon"
-            android:theme="@style/AppTheme.NoActionBar.Translucent" /> <!-- gold -->
-<!--        <activity-->
-<!--            android:name="de.blinkt.openvpn.LaunchVPN"-->
-<!--            android:excludeFromRecents="true"-->
-<!--            android:exported="true"-->
-<!--            android:label="@string/app_name"-->
-<!--            tools:ignore="ExportedActivity">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            android:theme="@style/AppTheme.NoActionBar.Translucent" />
 
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-        <activity
-            android:name=".ui.ServerActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:theme="@style/AppThemeDayNight.NoActionBar" />
-        <activity
-            android:name=".ui.UsageActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:theme="@style/AppThemeDayNight.NoActionBar" />
-        <activity android:name=".ui.ContactActivity" />
-        <activity android:name=".ui.FAQActivity" />
-        <activity android:name=".ui.ReviewActivity" />
         <activity
             android:name="com.xray.lite.ui.UrlSchemeActivity"
             android:exported="true">
@@ -273,6 +319,7 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
+
     </application>
 
 </manifest>
