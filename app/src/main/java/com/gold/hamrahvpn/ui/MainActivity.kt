@@ -35,7 +35,6 @@ import com.tbruyelle.rxpermissions.RxPermissions
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
 import com.xray.lite.AppConfig.ANG_PACKAGE
-import com.xray.lite.InitV2rayModule
 import com.xray.lite.extension.toast
 import com.xray.lite.service.V2RayServiceManager
 import com.xray.lite.ui.BaseActivity
@@ -93,9 +92,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private val mainViewModel: MainViewModel by viewModels()
 
-    // new
-    var hasFile = Data.ovpnContents.isNotEmpty()
-
     //    private var FileID: String? = "NULL"
 //    private var File: String = ENCRYPT_DATA.decrypt(Data.connectionStorage.getString("file", Data.NA))
     private var City: String? = Data.connectionStorage.getString("city", Data.NA)
@@ -105,24 +101,16 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // بازیابی مقادیر از MMKV و رمزگشایی آنها
 //        FileID = Data.connectionStorage.getString("file_id", Data.NA)
 //        // بررسی وجود فایل
-//        hasFile = FileID!!.isNotEmpty()
+//        Data.hasFile = FileID!!.isNotEmpty()
 
     private val df = SimpleDateFormat("dd-MMM-yyyy")
     private var today: String = df.format(Calendar.getInstance().time)
-
-    override fun onStop() {
-        super.onStop()
-    }
 
     override fun onResume() {
         super.onResume()
         if (Data.isConnectionDetails) {
             restoreTodayTextTv()
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     @Deprecated("Deprecated in Java")
@@ -141,7 +129,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val view = binding.root
         setContentView(view)
 
-        InitV2rayModule.ModuleInitVoid(this, MainApplication.application)
         setupDrawer()
 
         // save default config for v2ray
@@ -251,7 +238,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                             CountryListManager.OpenVpnSetServerList(Image, binding.ivServers)
 
                             // set connection button
-                            if (hasFile) {
+                            if (Data.hasFile) {
                                 if (MainApplication.connection_status == 0) {
                                     // disconnected
                                     binding.btnConnection.text = Data.disconnected_btn
@@ -294,7 +281,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                             }
 
                             // set message text
-//                            if (hasFile) {
+//                            if (Data.hasFile) {
 //                                if (hasInternetConnection()) {
 //                                    if (MainApplication.connection_status == 0) {
 //                                        // disconnected
@@ -376,7 +363,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                             }
 
                             // get daily usage
-                            if (hasFile) {
+                            if (Data.hasFile) {
                                 if (MainApplication.connection_status == 0) {
                                     // disconnected
                                     if (MainApplication.ShowDailyUsage) {
@@ -388,7 +375,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                             }
 
                             // show animation
-                            if (hasFile) {
+                            if (Data.hasFile) {
                                 if (ShowAnimation) {
                                     ShowAnimation = false
                                     if (MainApplication.connection_status == 0) {
@@ -626,18 +613,21 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private fun connectToV2ray() {
         if (mainViewModel.isRunning.value == true) {
+            toast("STOP")
             Utils.stopVService(this)
             mainAnimationState(0);
         } else if ((settingsStorage?.decodeString(AppConfig.PREF_MODE) ?: "VPN") == "VPN") {
             val intent = VpnService.prepare(this)
             if (intent == null) {
                 startV2Ray()
+                toast("SS")
                 mainAnimationState(3)
             } else {
                 requestVpnPermission.launch(intent)
             }
         } else {
             startV2Ray()
+            toast("SS")
             mainAnimationState(3)
         }
     }
@@ -645,7 +635,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private fun connectToOpenVpn() {
 //        val r = Runnable {
 //            if (!MainApplication.isStart) {
-//                if (!hasFile) {
+//                if (!Data.hasFile) {
 //                    val servers = Intent(this@MainActivity, ServerActivity::class.java)
 //                    startActivity(servers)
 //                    overridePendingTransition(
@@ -1035,6 +1025,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // v2ray
     private fun startV2Ray() {
         if (mainStorage?.decodeString(MmkvManager.KEY_SELECTED_SERVER).isNullOrEmpty()) {
+            toast("NULL")
             return
         }
         showCircle()

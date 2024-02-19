@@ -23,7 +23,7 @@ import java.util.Random;
 import androidx.preference.PreferenceManager;
 import com.gold.hamrahvpn.util.LogManager;
 
-public class MainApplication extends /*com.orm.SugarApp*/ Application {
+public class MainApplication extends Application {
     public static boolean isStart;
     private Boolean firstRun = false;
     public static int connection_status = 0;

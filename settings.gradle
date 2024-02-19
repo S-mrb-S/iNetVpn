@@ -17,4 +17,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Hamrah Vpn"
 include ':app', ':openvpn'//, ':xraylite'
-include ':xraylite'

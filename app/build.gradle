@@ -20,11 +20,11 @@ android {
         applicationId "com.gold.hamrahvpn"
         minSdkVersion 21
         targetSdkVersion 34
-//        resConfigs "en", "fa"
-//        multiDexEnabled true
+        resConfigs "en", "fa"
         versionCode 4
         versionName '2.0.3'
-//        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -100,7 +100,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
-    implementation project(path: ':xraylite')
+//    implementation project(path: ':xraylite')
     implementation project(path: ':openvpn')
     testImplementation 'junit:junit:4.13.2'
 

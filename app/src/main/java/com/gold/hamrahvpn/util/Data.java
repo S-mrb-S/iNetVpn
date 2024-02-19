@@ -80,5 +80,6 @@ public class Data {
 
     // ovpn file
     public static String ovpnContents;
+    public static Boolean hasFile = false;
 
 }

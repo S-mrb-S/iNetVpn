@@ -149,6 +149,7 @@ public class LauncherActivity extends BaseActivity {
 
         try {
             Data.ovpnContents = readAssetFile(this, "client-all-tcp.ovpn");
+            Data.hasFile = true;
         } finally {
             endThisActivityWithCheck();
         }

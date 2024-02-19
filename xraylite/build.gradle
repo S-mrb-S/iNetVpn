@@ -8,55 +8,63 @@ def shrinkEnable = false
 
 android {
     ndkVersion '26.1.10909125'
-    namespace 'com.xray.lite'
     compileSdk 34
 
-    defaultConfig {
-        minSdk 21
+    namespace 'com.xray.lite'
+    testNamespace 'com.xray.liteTest'
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    buildTypes {
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 34
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled proguardEnable
+            shrinkResources shrinkEnable
+            ndk.abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            ndk.abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+        }
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            java.srcDirs += 'src/main/kotlin'
+        }
+    }
     buildFeatures {
         viewBinding true
         buildConfig true
     }
 
-    packagingOptions {
-        jniLibs {
-            useLegacyPackaging true
-        }
-    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
-
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
-    testImplementation 'junit:junit:4.14-SNAPSHOT'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    testImplementation 'junit:junit:4.13.2'
 
     // Androidx
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1' //
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
