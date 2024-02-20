@@ -2,7 +2,10 @@ package com.gold.hamrahvpn.util;
 
 import android.graphics.Typeface;
 
+import com.gold.hamrahvpn.model.OpenVpnServerList;
 import com.tencent.mmkv.MMKV;
+
+import java.util.ArrayList;
 
 /**
  * @MehraB832 --> github
@@ -72,20 +75,19 @@ public class Data {
     public static MMKV connectionStorage = MmkvManager.getConnectionStorage(),
             settingsStorage = MmkvManager.getSettingsStorage(),
             appValStorage = MmkvManager.getAppValStorage(),
-            prefUsageStorage = MmkvManager.getDUStorage();
+            prefUsageStorage = MmkvManager.getDUStorage(),
+            appAppDetailsStorage = MmkvManager.getADStorage();
 
     // login
 //    public static Boolean i
 //    public static List<String> DefaultBlockedAppsArray = new ArrayList();
 
-    // ovpn file
-    public static String ovpnContents;
-    public static Boolean hasFile = false;
-
+    // ovpn servers
+    public static ArrayList<OpenVpnServerList> serverLists;
+    public static Boolean hasFile;
     // App
     public static boolean isStart;
     public static int connection_status = 0;
-//    public static boolean hasFile = false;
     public static boolean abortConnection = false;
     public static long CountDown;
     public static boolean ShowDailyUsage = true;

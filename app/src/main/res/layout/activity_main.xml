@@ -150,19 +150,6 @@
             app:lottie_autoPlay="true"
             app:lottie_loop="true" />
 
-        <!--fitstart-->
-
-        <ImageView
-            android:id="@+id/iv_progress_bar"
-            android:layout_width="20dp"
-            android:layout_height="16dp"
-            android:background="@color/colorPrograssImage"
-            android:contentDescription="@string/todo"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/la_animation"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/la_animation" />
-
         <TextView
             android:id="@+id/tv_main_count_down"
             android:layout_width="wrap_content"

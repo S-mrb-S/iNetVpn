@@ -1,5 +1,10 @@
 package adv.drw.layout.behavior;
 
+/*/===========================================================
+  by MehrabSp --> github.com/MehraB832 && github.com/MehrabSp
+  T.me/MehrabSp
+//===========================================================*/
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +32,6 @@ import com.google.android.material.shape.MaterialShapeDrawable;
 import java.util.HashMap;
 
 /**
- * Edited by Mehrab
  * (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
  */
 public class AdvanceDrawerLayout extends DrawerLayout {
@@ -311,3 +315,7 @@ public class AdvanceDrawerLayout extends DrawerLayout {
 
     private static final String TAG = AdvanceDrawerLayout.class.getSimpleName();
 }
+/*/===========================================================
+  by MehrabSp --> github.com/MehraB832 && github.com/MehrabSp
+  T.me/MehrabSp
+//===========================================================*/

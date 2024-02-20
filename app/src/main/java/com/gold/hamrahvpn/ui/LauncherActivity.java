@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,11 +23,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.gold.hamrahvpn.MainApplication;
 import com.gold.hamrahvpn.R;
 import com.gold.hamrahvpn.util.Data;
 import com.gold.hamrahvpn.util.LogManager;
-import com.gold.hamrahvpn.util.MmkvManager;
-import com.tencent.mmkv.MMKV;
 import com.xray.lite.ui.BaseActivity;
 
 import org.json.JSONArray;
@@ -36,14 +34,9 @@ import org.json.JSONObject;
 
 import java.util.Random;
 
-import com.gold.hamrahvpn.MainApplication;
-
 public class LauncherActivity extends BaseActivity {
     TextView tv_welcome_status, tv_welcome_app;
     String StringGetAppURL, AppDetails, StringGetConnectionURL, FileDetails;
-    MMKV appAppDetailsStorage = MmkvManager.getADStorage();
-    MMKV connectionStorage = MmkvManager.getConnectionStorage();
-    MMKV appValStorage = MmkvManager.getAppValStorage();
     Boolean isLoginBool = false;
     //    TextView tv_welcome_title, tv_welcome_description, tv_welcome_size, tv_welcome_version;
     private long backPressedTime;
@@ -69,20 +62,19 @@ public class LauncherActivity extends BaseActivity {
         setContentView(R.layout.activity_launcher);
         // hide toolbar!
         setSupportActionBar(null);
-
+        // api
         StringGetAppURL = "https://raw.githubusercontent.com/gayanvoice/android-vpn-client-ics-openvpn/images/appdetails.json";
         StringGetConnectionURL = "https://raw.githubusercontent.com/gayanvoice/android-vpn-client-ics-openvpn/images/filedetails.json";
+
         tv_welcome_status = findViewById(R.id.tv_welcome_status);
         tv_welcome_app = findViewById(R.id.tv_welcome_app);
 
         try {
             startAnimation(LauncherActivity.this, R.id.ll_welcome_loading, R.anim.slide_up_800, true);
             Handler handler = new Handler();
-            handler.postDelayed(() -> startAnimation(LauncherActivity.this, R.id.ll_welcome_details, R.anim.slide_up_800, true), 1000);
-
+            handler.postDelayed(() -> startAnimation(this, R.id.ll_welcome_details, R.anim.slide_up_800, true), 200);
             try {
-                isLoginBool = appValStorage.decodeBool("isLoginBool", false);
-                Log.d("IS", isLoginBool.toString());
+                isLoginBool = Data.appValStorage.decodeBool("isLoginBool", false);
             } catch (Exception e) {
                 Bundle params = new Bundle();
                 params.putString("device_id", MainApplication.device_id);
@@ -90,29 +82,20 @@ public class LauncherActivity extends BaseActivity {
                 LogManager.logEvent(params);
             }
 
-            if (!isConnectionDetails) {
-                if (!Data.isAppDetails) {
-                    handler.postDelayed(this::getAppDetails, 200);
-                } else {
-                    endThisActivityWithCheck();
-                }
-            } else {
-                endThisActivityWithCheck();
-            }
         } catch (Exception e) {
             Bundle params = new Bundle();
             params.putString("device_id", MainApplication.device_id);
             params.putString("exception", "MGJA1" + e);
             LogManager.logEvent(params);
 
-            runAnyWay();
+        } finally {
+            getAppDetails();
         }
-
     }
 
     private void runAnyWay() {
         Handler handler = new Handler();
-        handler.postDelayed(this::endThisActivityWithCheck, 4000);
+        handler.postDelayed(this::endThisActivityWithCheck, 2000);
     }
 
     void getAppDetails() {
@@ -121,7 +104,7 @@ public class LauncherActivity extends BaseActivity {
         queue.getCache().clear();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, StringGetAppURL,
                 Response -> {
-                    Log.e("Response", Response);
+//                    Log.e("Response", Response);
                     AppDetails = Response;
                     Data.isAppDetails = true;
                 }, error -> {
@@ -129,7 +112,6 @@ public class LauncherActivity extends BaseActivity {
             params.putString("device_id", MainApplication.device_id);
             params.putString("exception", "WA2" + error.toString());
             LogManager.logEvent(params);
-
             Data.isAppDetails = false;
         });
 
@@ -147,12 +129,6 @@ public class LauncherActivity extends BaseActivity {
     void getFileDetails() {
         tv_welcome_status.setText(get_details_from_file);
 
-        try {
-            Data.ovpnContents = readAssetFile(this, "client-all-tcp.ovpn");
-            Data.hasFile = true;
-        } finally {
-            endThisActivityWithCheck();
-        }
         RequestQueue queue = Volley.newRequestQueue(LauncherActivity.this);
         queue.getCache().clear();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, StringGetConnectionURL,
@@ -244,14 +220,14 @@ public class LauncherActivity extends BaseActivity {
                 PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
                 cuVersion = pInfo.versionName;
                 if (cuVersion.isEmpty()) {
-                    cuVersion = "0.0.0";
+                    cuVersion = "0.0.1";
                 }
-                appAppDetailsStorage.putString("ads", Ads);
-                appAppDetailsStorage.putString("up_title", upTitle);
-                appAppDetailsStorage.putString("up_description", upDescription);
-                appAppDetailsStorage.putString("up_size", upSize);
-                appAppDetailsStorage.putString("up_version", upVersion);
-                appAppDetailsStorage.putString("cu_version", cuVersion);
+                Data.appAppDetailsStorage.putString("ads", Ads);
+                Data.appAppDetailsStorage.putString("up_title", upTitle);
+                Data.appAppDetailsStorage.putString("up_description", upDescription);
+                Data.appAppDetailsStorage.putString("up_size", upSize);
+                Data.appAppDetailsStorage.putString("up_version", upVersion);
+                Data.appAppDetailsStorage.putString("cu_version", cuVersion);
             } catch (Exception e) {
                 Bundle params = new Bundle();
                 params.putString("device_id", MainApplication.device_id);
@@ -259,15 +235,15 @@ public class LauncherActivity extends BaseActivity {
                 LogManager.logEvent(params);
             }
             try {
-                connectionStorage.putString("id", ID);
-                connectionStorage.putString("file_id", FileID);
-                connectionStorage.putString("file", ENCRYPT_DATA.encrypt(File));
-                connectionStorage.putString("city", City);
-                connectionStorage.putString("country", Country);
-                connectionStorage.putString("image", Image);
-                connectionStorage.putString("ip", IP);
-                connectionStorage.putString("active", Active);
-                connectionStorage.putString("signal", Signal);
+                Data.connectionStorage.putString("id", ID);
+                Data.connectionStorage.putString("file_id", FileID);
+                Data.connectionStorage.putString("file", ENCRYPT_DATA.encrypt(File));
+                Data.connectionStorage.putString("city", City);
+                Data.connectionStorage.putString("country", Country);
+                Data.connectionStorage.putString("image", Image);
+                Data.connectionStorage.putString("ip", IP);
+                Data.connectionStorage.putString("active", Active);
+                Data.connectionStorage.putString("signal", Signal);
             } catch (Exception e) {
                 Bundle params = new Bundle();
                 params.putString("device_id", MainApplication.device_id);
@@ -276,8 +252,8 @@ public class LauncherActivity extends BaseActivity {
             }
 
             try {
-                appValStorage.putString("app_details", ENCRYPT_DATA.encrypt(AppDetails));
-                appValStorage.putString("file_details", ENCRYPT_DATA.encrypt(FileDetails));
+                Data.appValStorage.putString("app_details", ENCRYPT_DATA.encrypt(AppDetails));
+                Data.appValStorage.putString("file_details", ENCRYPT_DATA.encrypt(FileDetails));
             } catch (Exception e) {
                 Bundle params = new Bundle();
                 params.putString("device_id", MainApplication.device_id);
@@ -288,7 +264,7 @@ public class LauncherActivity extends BaseActivity {
             try {
                 if (!isConnectionDetails) {
                     tv_welcome_status.setText(disconnected);
-                    Toast.makeText(this, "هشدار شما افلاین هستید!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "شما افلاین هستید!", Toast.LENGTH_SHORT).show();
                 }
 //                } else {
 //                    startAnimation(LauncherActivity.this, R.id.ll_welcome_loading, R.anim.fade_out_500, false);
@@ -306,12 +282,12 @@ public class LauncherActivity extends BaseActivity {
         try {
             if (isLoginBool) {
                 Intent Main = new Intent(LauncherActivity.this, MainActivity.class);
-                Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(Main);
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
             } else {
                 Intent Welcome = new Intent(LauncherActivity.this, LoginActivity.class);
-                Welcome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                Welcome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(Welcome);
             }
         } finally {

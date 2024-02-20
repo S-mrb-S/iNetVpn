@@ -1,4 +1,4 @@
-package com.gold.hamrahvpn.util;
+package com.gold.hamrahvpn.interfaces;
 
 import android.os.Parcelable;
 

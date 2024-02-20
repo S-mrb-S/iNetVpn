@@ -1,7 +1,7 @@
 package com.gold.hamrahvpn.interfaces;
 
-import com.gold.hamrahvpn.model.Server;
+import com.gold.hamrahvpn.model.OpenVpnServerList;
 
 public interface ChangeServer {
-    void newServer(Server server);
+    void newServer(OpenVpnServerList server);
 }

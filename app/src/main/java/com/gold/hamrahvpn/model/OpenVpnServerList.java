@@ -1,6 +1,9 @@
-package com.gold.hamrahvpn.recyclerview.cmp;
+package com.gold.hamrahvpn.model;
 
-
+/*/===========================================================
+  by MehrabSp --> github.com/MehraB832 && github.com/MehrabSp
+  T.me/MehrabSp
+//===========================================================*/
 public class OpenVpnServerList {
     // {"id":0, "file":0, "city":"Essen","country":"Germany","image":"germany","ip":"51.68.191.75","active":"true","signal":"a"},
     public String ID;
@@ -11,6 +14,33 @@ public class OpenVpnServerList {
     public String IP;
     public String Active;
     public String Signal;
+    private String ovpn; // url assets
+    private String ovpnUserName;
+    private String ovpnUserPassword;
+
+    public String GetOVPN() {
+        return ovpn;
+    }
+
+    public void SetOVPN(String ovpn) {
+        this.ovpn = ovpn;
+    }
+
+    public String GetOVPNUserName() {
+        return ovpnUserName;
+    }
+
+    public void SetOVPNUserName(String ovpnUserName) {
+        this.ovpnUserName = ovpnUserName;
+    }
+
+    public String GetOVPNUserPassword() {
+        return ovpnUserPassword;
+    }
+
+    public void SetOVPNUserPassword(String ovpnUserPassword) {
+        this.ovpnUserPassword = ovpnUserPassword;
+    }
 
     public String GetID() {
         return ID;
@@ -76,3 +106,7 @@ public class OpenVpnServerList {
         this.Signal = Signal;
     }
 }
+/*/===========================================================
+  by MehrabSp --> github.com/MehraB832 && github.com/MehrabSp
+  T.me/MehrabSp
+//===========================================================*/

@@ -1,11 +1,11 @@
 package com.gold.hamrahvpn.ui;
 
 import static com.gold.hamrahvpn.ui.MainActivity.ENCRYPT_DATA;
-import static com.gold.hamrahvpn.ui.MainActivity.defaultItemDialog;
 import static com.gold.hamrahvpn.util.Data.KEY_GRID;
 import static com.gold.hamrahvpn.util.Data.KEY_app_details;
-import static com.gold.hamrahvpn.util.SafeParcelable.NULL;
+import static com.gold.hamrahvpn.interfaces.SafeParcelable.NULL;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,13 +25,13 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.gold.hamrahvpn.R;
+import com.gold.hamrahvpn.interfaces.NavItemClickListener;
 import com.gold.hamrahvpn.recyclerview.MainAdapter;
-import com.gold.hamrahvpn.recyclerview.cmp.OpenVpnServerList;
-import com.gold.hamrahvpn.util.FinishActivityListener;
+import com.gold.hamrahvpn.model.OpenVpnServerList;
+import com.gold.hamrahvpn.interfaces.FinishActivityListener;
 import com.gold.hamrahvpn.util.LogManager;
 import com.gold.hamrahvpn.util.MmkvManager;
 import com.tencent.mmkv.MMKV;
-import com.xray.lite.ui.MainAngActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,10 +45,11 @@ import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
 
-/**
- * by MehraB832
- */
-public class ServerActivity extends Activity implements FinishActivityListener {
+/*/===========================================================
+  by MehrabSp --> github.com/MehraB832 && github.com/MehrabSp
+  T.me/MehrabSp
+//===========================================================*/
+public class ServerActivity extends Activity implements NavItemClickListener {
     RecyclerView recyclerView; // list
     private MainAdapter adapter;
 //    ProfileManager pm;
@@ -61,7 +62,7 @@ public class ServerActivity extends Activity implements FinishActivityListener {
     // 100
     @Override
     public void onBackPressed() {
-        finishActivity(false);
+        finishActivity();
     }
 
     @Override
@@ -85,7 +86,7 @@ public class ServerActivity extends Activity implements FinishActivityListener {
         }
 
         LinearLayout ll_server_back = findViewById(R.id.ll_server_back);
-        ll_server_back.setOnClickListener(v -> finishActivity(false));
+        ll_server_back.setOnClickListener(v -> finishActivity());
 
         LinearLayout ll_server_retry = findViewById(R.id.ll_server_refresh);
         ll_server_retry.setOnClickListener(v -> {
@@ -216,18 +217,20 @@ public class ServerActivity extends Activity implements FinishActivityListener {
                 openVpnServerListItemList.add(OpenVpnServerList);
             }
 
-            adapter = new MainAdapter(ServerActivity.this, openVpnServerListItemList, ServerActivity.this);
+                adapter = new MainAdapter(ServerActivity.this, openVpnServerListItemList);
 
-            recyclerView = findViewById(R.id.ls_servers_list);
-            // new adapter
-            recyclerView.setLayoutManager(getLayoutManager());
-            recyclerView.setItemAnimator(new FadeInAnimator());
+                recyclerView = findViewById(R.id.ls_servers_list);
+                // new adapter
+                recyclerView.setLayoutManager(getLayoutManager());
+                recyclerView.setItemAnimator(new FadeInAnimator());
 
-            AnimationAdapter defaultAdapter = new AlphaInAnimationAdapter(adapter);
-            defaultAdapter.setFirstOnly(true);
-            defaultAdapter.setDuration(500);
-            defaultAdapter.setInterpolator(new OvershootInterpolator(0.5f));
-            recyclerView.setAdapter(defaultAdapter);
+                AnimationAdapter defaultAdapter = new AlphaInAnimationAdapter(adapter);
+                defaultAdapter.setFirstOnly(true);
+                defaultAdapter.setDuration(500);
+                defaultAdapter.setInterpolator(new OvershootInterpolator(0.5f));
+                recyclerView.setAdapter(defaultAdapter);
+
+
         }
     }
 
@@ -238,17 +241,29 @@ public class ServerActivity extends Activity implements FinishActivityListener {
                 : new LinearLayoutManager(this);
     }
 
-    @Override
-    public void finishActivity(Boolean finishWithResetList) {
-        if (finishWithResetList) {
-            resetList();
-        }
+    private void finishActivity() {
         finish();
         overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
     }
 
+    /**
+     * On navigation item click, close activity and change server
+     * @param index: server index
+     */
+    @Override
+    public void clickedItem(int index) {
+        resetList();
+        finishActivity();
+//        changeServer.newServer(serverLists.get(index));
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     private void resetList() {
         adapter.notifyDataSetChanged();
     }
 
 }
+/*/===========================================================
+  by MehrabSp --> github.com/MehraB832 && github.com/MehrabSp
+  T.me/MehrabSp
+//===========================================================*/

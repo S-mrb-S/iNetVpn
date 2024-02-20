@@ -12,31 +12,26 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gold.hamrahvpn.MainApplication;
 import com.gold.hamrahvpn.R;
-import com.gold.hamrahvpn.recyclerview.cmp.OpenVpnServerList;
+import com.gold.hamrahvpn.model.OpenVpnServerList;
 import com.gold.hamrahvpn.recyclerview.cmp.SetHolderHelper;
-import com.gold.hamrahvpn.util.FinishActivityListener;
 import com.gold.hamrahvpn.util.LogManager;
 
 import java.util.List;
 
-import com.gold.hamrahvpn.MainApplication;
-
 /**
  * Created by Daichi Furiya / Wasabeef on 2020/08/26.
  * From animators library
- * add by MehraB832
+ * Edited by MehrabSp
  */
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
+    private final List<OpenVpnServerList> dataSet;
+    private final Context context;
 
-    private List<OpenVpnServerList> dataSet;
-    public static Context context;
-    public static FinishActivityListener finishActivityListener;
-
-    public MainAdapter(Context context, List<OpenVpnServerList> dataSet, FinishActivityListener finishActivityListener) {
-        MainAdapter.context = context;
+    public MainAdapter(Context context, List<OpenVpnServerList> dataSet) {
+        this.context = context;
         this.dataSet = dataSet;
-        MainAdapter.finishActivityListener = finishActivityListener;
     }
 
     @NonNull
@@ -50,17 +45,14 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
             final OpenVpnServerList OpenVpnServerList = dataSet.get(position);
-            // openvpn serverlist
-            SetHolderHelper.setItemHolder(OpenVpnServerList, holder);
-            // setbackground darkmode
-            SetHolderHelper.setBackgroundHolder(holder.itemView, position);
+            SetHolderHelper holderHelper = new SetHolderHelper(context, OpenVpnServerList, holder, position);
+            holderHelper.setAllHolder();
         } catch (Exception e) {
             Bundle params = new Bundle();
             params.putString("device_id", MainApplication.device_id);
             params.putString("exception", "BV0" + e);
             LogManager.logEvent(params);
         }
-
     }
 
     @Override
@@ -99,7 +91,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             tv_country = itemView.findViewById(R.id.tv_country);
             iv_flag = itemView.findViewById(R.id.iv_flag);
             iv_signal_strength = itemView.findViewById(R.id.iv_signal_strength);
-
         }
     }
 }
