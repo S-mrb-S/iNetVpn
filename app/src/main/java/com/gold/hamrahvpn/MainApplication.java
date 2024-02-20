@@ -7,55 +7,47 @@ package com.gold.hamrahvpn;
 
 import static com.gold.hamrahvpn.util.Data.settingsStorage;
 
-import android.app.Application;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.multidex.MultiDexApplication;
+import androidx.preference.PreferenceManager;
+import androidx.work.Configuration;
+
+import com.gold.hamrahvpn.util.LogManager;
 import com.tencent.mmkv.MMKV;
 
 import java.util.Calendar;
-import java.util.Random;
-import androidx.preference.PreferenceManager;
-import com.gold.hamrahvpn.util.LogManager;
 
-public class MainApplication extends Application {
-    public static boolean isStart;
-    private Boolean firstRun = false;
-    public static int connection_status = 0;
-    public static boolean hasFile = false;
-    public static boolean abortConnection = false;
-    public static long CountDown;
-    public static boolean ShowDailyUsage = true;
-    public static String device_id;
-    public static long device_created;
-    public static final String CHANNEL_ID = "COM.GOLD.HAMRAHVPN";
-    public static final int NOTIFICATION_ID = new Random().nextInt(601) + 200;
-    NotificationManager manager;
-
-    public static Application application = null;
-
+public class MainApplication extends MultiDexApplication implements Configuration.Provider {
     public static final String PREF_LAST_VERSION = "pref_last_version";
+    public static MainApplication application;
+    public static String device_id;
+
+    public static MainApplication getApplication() {
+        return application;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        application = this;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        createNotificationChannel();
-        application = this;
-        // MMKV
-        MMKV.initialize(this);
-        LogManager.setAppContext(this);
-        // V2ray
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean firstRun = defaultSharedPreferences.getInt(PREF_LAST_VERSION, 0) != BuildConfig.VERSION_CODE;
-        if (firstRun) {
+        if (firstRun)
             defaultSharedPreferences.edit().putInt(PREF_LAST_VERSION, BuildConfig.VERSION_CODE).apply();
-        }
-
+        MMKV.initialize(this);
+        LogManager.setAppContext(this);
         // device id
         device_id = settingsStorage.getString("device_id", "NULL");
         if (device_id.equals("NULL")) {
@@ -63,31 +55,9 @@ public class MainApplication extends Application {
             settingsStorage.putString("device_id", device_id);
             settingsStorage.putString("device_created", String.valueOf(System.currentTimeMillis()));
         }
-
-//        PRNGFixes.apply();
-//        StatusListener mStatus = new StatusListener();
-//        mStatus.init(getApplicationContext());
-
     }
 
-    private void createNotificationChannel() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel serviceChannel = new NotificationChannel(
-                        CHANNEL_ID,
-                        "COMGOLDHAMRAHVPN",
-                        NotificationManager.IMPORTANCE_LOW
-                );
-
-                serviceChannel.setSound(null, null);
-                manager = getSystemService(NotificationManager.class);
-                manager.createNotificationChannel(serviceChannel);
-            }
-        } catch (Exception e) {
-            //Log.e("error", e.getStackTrace()[0].getMethodName());
-        }
-    }
-
+    // UsageActivity
     private String getUniqueKey() {
         Calendar now = Calendar.getInstance();
         int year = now.get(Calendar.YEAR);
@@ -114,5 +84,13 @@ public class MainApplication extends Application {
         return Time + str_manufacturer + str_api + str_model + version;
     }
 
-
+    // work 1.8.1 manager
+    @NonNull
+    @Override
+    public Configuration getWorkManagerConfiguration() {
+        return new Configuration.Builder()
+                .setDefaultProcessName(BuildConfig.APPLICATION_ID + ":bg")
+                .build();
+    }
 }
+

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import com.gold.hamrahvpn.R;
 import com.gold.hamrahvpn.recyclerview.MainAdapter;
 import com.gold.hamrahvpn.util.CountryListManager;
+import com.gold.hamrahvpn.util.Data;
 import com.gold.hamrahvpn.util.EncryptData;
 import com.gold.hamrahvpn.util.LogManager;
 
@@ -45,8 +46,8 @@ public class SetHolderHelper {
                     connectionStorage.putString("ip", OpenVpnServerList.GetIP());
                     connectionStorage.putString("active", OpenVpnServerList.GetActive());
                     connectionStorage.putString("signal", OpenVpnServerList.GetSignal());
-                    MainApplication.hasFile = true;
-                    MainApplication.abortConnection = true;
+                    Data.hasFile = true;
+                    Data.abortConnection = true;
                 } catch (Exception e) {
                     Bundle params = new Bundle();
                     params.putString("device_id", MainApplication.device_id);

@@ -179,12 +179,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                         runOnUiThread {
 
                             // set country flag
-                            if (MainApplication.abortConnection) {
-                                MainApplication.abortConnection = false
-                                if (MainApplication.connection_status != 2) {
-                                    MainApplication.CountDown = 1
+                            if (Data.abortConnection) {
+                                Data.abortConnection = false
+                                if (Data.connection_status != 2) {
+                                    Data.CountDown = 1
                                 }
-                                if (MainApplication.connection_status == 2) {
+                                if (Data.connection_status == 2) {
                                     try {
 //                                        stop_vpn()
                                         try {
@@ -225,28 +225,28 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                                         binding.laAnimation.cancelAnimation()
                                         binding.laAnimation.setAnimation(R.raw.ninjainsecure)
                                         binding.laAnimation.playAnimation()
-                                        MainApplication.ShowDailyUsage = true
+                                        Data.ShowDailyUsage = true
                                     } catch (e: Exception) {
                                         val params = Bundle()
                                         params.putString("device_id", MainApplication.device_id)
                                         params.putString("exception", "MA8$e")
                                         LogManager.logEvent(params)
                                     }
-                                    MainApplication.isStart = false
+                                    Data.isStart = false
                                 }
                             }
                             CountryListManager.OpenVpnSetServerList(Image, binding.ivServers)
 
                             // set connection button
                             if (Data.hasFile) {
-                                if (MainApplication.connection_status == 0) {
+                                if (Data.connection_status == 0) {
                                     // disconnected
                                     binding.btnConnection.text = Data.disconnected_btn
                                     binding.btnConnection.background = ContextCompat.getDrawable(
                                         this@MainActivity,
                                         R.drawable.button_connect
                                     )
-                                } else if (MainApplication.connection_status == 1) {
+                                } else if (Data.connection_status == 1) {
                                     // connecting
                                     if (EnableConnectButton) {
                                         binding.btnConnection.text = Data.connecting_cancel_btn
@@ -263,14 +263,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                                                 R.drawable.button_retry
                                             )
                                     }
-                                } else if (MainApplication.connection_status == 2) {
+                                } else if (Data.connection_status == 2) {
                                     // connected
                                     binding.btnConnection.text = Data.connected_btn
                                     binding.btnConnection.background = ContextCompat.getDrawable(
                                         this@MainActivity,
                                         R.drawable.button_disconnect
                                     )
-                                } else if (MainApplication.connection_status == 3) {
+                                } else if (Data.connection_status == 3) {
                                     // connected
                                     binding.btnConnection.text = Data.connected_error_btn
                                     binding.btnConnection.background = ContextCompat.getDrawable(
@@ -283,11 +283,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                             // set message text
 //                            if (Data.hasFile) {
 //                                if (hasInternetConnection()) {
-//                                    if (MainApplication.connection_status == 0) {
+//                                    if (Data.connection_status == 0) {
 //                                        // disconnected
 //                                        binding.tvMessageTopText.text = Data.disconnected_txt
 //                                        binding.tvMessageBottomText.text = Data.disconnected_txt2
-//                                    } else if (MainApplication.connection_status == 1) {
+//                                    } else if (Data.connection_status == 1) {
 //                                        // connecting
 //                                        binding.tvMessageTopText.text =
 //                                            Data.connecting_txt + ' ' + City
@@ -296,12 +296,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 ////                                            this@MainActivity
 ////                                        )
 //
-//                                    } else if (MainApplication.connection_status == 2) {
+//                                    } else if (Data.connection_status == 2) {
 //                                        // connected
 //                                        binding.tvMessageTopText.text =
 //                                            Data.connected_txt + ' ' + City
 //                                        binding.tvMessageBottomText.text = Data.StringCountDown
-//                                    } else if (MainApplication.connection_status == 3) {
+//                                    } else if (Data.connection_status == 3) {
 //                                        // connected
 //                                        binding.tvMessageTopText.text =
 //                                            Data.connected_error_danger_vpn_txt
@@ -318,7 +318,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                             // show data limit
                             if (ShowData) {
                                 ShowData = false
-                                if (MainApplication.connection_status == 0) {
+                                if (Data.connection_status == 0) {
                                     val handlerData = Handler()
                                     handlerData.postDelayed({
                                         startAnimation(
@@ -328,7 +328,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                                             true
                                         )
                                     }, 1000)
-                                } else if (MainApplication.connection_status == 1) {
+                                } else if (Data.connection_status == 1) {
                                     val handlerData = Handler()
                                     handlerData.postDelayed({
                                         startAnimation(
@@ -338,7 +338,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                                             true
                                         )
                                     }, 1000)
-                                } else if (MainApplication.connection_status == 2) {
+                                } else if (Data.connection_status == 2) {
                                     val handlerData = Handler()
                                     handlerData.postDelayed({
                                         startAnimation(
@@ -348,7 +348,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                                             true
                                         )
                                     }, 1000)
-                                } else if (MainApplication.connection_status == 3) {
+                                } else if (Data.connection_status == 3) {
                                     // connected
                                     val handlerData = Handler()
                                     handlerData.postDelayed({
@@ -364,10 +364,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
                             // get daily usage
                             if (Data.hasFile) {
-                                if (MainApplication.connection_status == 0) {
+                                if (Data.connection_status == 0) {
                                     // disconnected
-                                    if (MainApplication.ShowDailyUsage) {
-                                        MainApplication.ShowDailyUsage = false
+                                    if (Data.ShowDailyUsage) {
+                                        Data.ShowDailyUsage = false
                                         // بازیابی مقدار مربوط به کلید "today"
                                         restoreTodayTextTv()
                                     }
@@ -378,7 +378,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                             if (Data.hasFile) {
                                 if (ShowAnimation) {
                                     ShowAnimation = false
-                                    if (MainApplication.connection_status == 0) {
+                                    if (Data.connection_status == 0) {
                                         // disconnected
                                         startAnimation(
                                             this@MainActivity,
@@ -389,7 +389,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                                         binding.laAnimation.cancelAnimation()
                                         binding.laAnimation.setAnimation(R.raw.ninjainsecure)
                                         binding.laAnimation.playAnimation()
-                                    } else if (MainApplication.connection_status == 1) {
+                                    } else if (Data.connection_status == 1) {
                                         // connecting
                                         startAnimation(
                                             this@MainActivity,
@@ -400,7 +400,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                                         binding.laAnimation.cancelAnimation()
                                         binding.laAnimation.setAnimation(R.raw.conneting)
                                         binding.laAnimation.playAnimation()
-                                    } else if (MainApplication.connection_status == 3) {
+                                    } else if (Data.connection_status == 3) {
                                         // connected
                                         startAnimation(
                                             this@MainActivity,
@@ -634,7 +634,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private fun connectToOpenVpn() {
 //        val r = Runnable {
-//            if (!MainApplication.isStart) {
+//            if (!Data.isStart) {
 //                if (!Data.hasFile) {
 //                    val servers = Intent(this@MainActivity, ServerActivity::class.java)
 //                    startActivity(servers)
@@ -683,25 +683,25 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //                                true
 //                            )
 //                            binding.tvMainCountDown.visibility = View.VISIBLE
-//                            MainApplication.CountDown = 30
+//                            Data.CountDown = 30
 //                            try {
 //                                ConnectionTimer = object : CountDownTimer(32000, 1000) {
 //                                    override fun onTick(millisUntilFinished: Long) {
-//                                        MainApplication.CountDown = MainApplication.CountDown - 1
+//                                        Data.CountDown = Data.CountDown - 1
 //                                        binding.ivProgressBar.layoutParams.width = progress as Int
 //                                        progress =
 //                                            progress!! + resources.getDimension(R.dimen.lo_10dpGrid)
 //                                                .toInt()
-//                                        binding.tvMainCountDown.text = MainApplication.CountDown.toString()
-//                                        if (MainApplication.connection_status == 2) {
+//                                        binding.tvMainCountDown.text = Data.CountDown.toString()
+//                                        if (Data.connection_status == 2) {
 //                                            ConnectionTimer!!.cancel()
 //                                            // ویرایش کردن مقدار "connection_time" در MMKV
 //                                            Data.settingsStorage.putString(
 //                                                "connection_time",
-//                                                MainApplication.CountDown.toString()
+//                                                Data.CountDown.toString()
 //                                            )
 //                                            // بررسی شرط
-//                                            if (MainApplication.CountDown >= 20) {
+//                                            if (Data.CountDown >= 20) {
 //                                                // بازیابی مقدار "rate" از MMKV
 //                                                val rate =
 //                                                    Data.settingsStorage.getString("rate", "false")
@@ -743,10 +743,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //                                                false
 //                                            )
 //                                        }
-//                                        if (MainApplication.CountDown <= 20) {
+//                                        if (Data.CountDown <= 20) {
 //                                            EnableConnectButton = true
 //                                        }
-//                                        if (MainApplication.CountDown <= 1) {
+//                                        if (Data.CountDown <= 1) {
 //                                            ConnectionTimer!!.cancel()
 //                                            startAnimation(
 //                                                this@MainActivity,
@@ -795,14 +795,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //                                                binding.laAnimation.cancelAnimation()
 //                                                binding.laAnimation.setAnimation(R.raw.ninjainsecure)
 //                                                binding.laAnimation.playAnimation()
-//                                                MainApplication.ShowDailyUsage = true
+//                                                Data.ShowDailyUsage = true
 //                                            } catch (e: Exception) {
 //                                                val params = Bundle()
 //                                                params.putString("device_id", MainApplication.device_id)
 //                                                params.putString("exception", "MA3$e")
 //                                                LogManager.logEvent(params)
 //                                            }
-//                                            MainApplication.isStart = false
+//                                            Data.isStart = false
 //                                        }
 //                                    }
 //
@@ -816,7 +816,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //                            }
 //                            ConnectionTimer!!.start()
 //                            EnableConnectButton = false
-//                            MainApplication.isStart = true
+//                            Data.isStart = true
 //
 //
 //                        } catch (e: Exception) {
@@ -893,14 +893,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //                                }, 500)
 //                            }
 //                        }
-//                        MainApplication.ShowDailyUsage = true
+//                        Data.ShowDailyUsage = true
 //                    } catch (e: Exception) {
 //                        val params = Bundle()
 //                        params.putString("device_id", MainApplication.device_id)
 //                        params.putString("exception", "MA6$e")
 //                        LogManager.logEvent(params)
 //                    }
-//                    MainApplication.isStart = false
+//                    Data.isStart = false
 //                }
 //            }
 //        }
@@ -942,8 +942,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //    ) {
 //        runOnUiThread {
 //            if (state == "CONNECTED") {
-//                MainApplication.isStart = true
-//                MainApplication.connection_status = 2
+//                Data.isStart = true
+//                Data.connection_status = 2
 //                val handlerData = Handler()
 //                handlerData.postDelayed({
 //                    startAnimation(this@MainActivity, R.id.la_animation, R.anim.fade_in_1000, true)

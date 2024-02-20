@@ -82,4 +82,12 @@ public class Data {
     public static String ovpnContents;
     public static Boolean hasFile = false;
 
+    // App
+    public static boolean isStart;
+    public static int connection_status = 0;
+//    public static boolean hasFile = false;
+    public static boolean abortConnection = false;
+    public static long CountDown;
+    public static boolean ShowDailyUsage = true;
+
 }
