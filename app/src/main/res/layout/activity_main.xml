@@ -12,7 +12,7 @@
         android:id="@+id/constraintLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorMainBackground"
+        android:background="@color/colorBackground"
         android:orientation="vertical"
         tools:context=".ui.MainActivity">
 
@@ -87,7 +87,7 @@
                     android:gravity="center"
                     android:lineSpacingExtra="2dp"
                     android:text="@string/none"
-                    android:textColor="@color/colorTextHint"
+                    android:textColor="@color/colorTextStats"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="@id/tv_message_bottom_text"
                     app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +101,7 @@
                     android:gravity="center"
                     android:lineSpacingExtra="2dp"
                     android:text="@string/default_time_popup"
-                    android:textColor="@color/colorTextHint"
+                    android:textColor="@color/colorTextStats"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/tv_message_top_text"
@@ -154,7 +154,7 @@
             android:id="@+id/tv_main_count_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorTextHint"
+            android:textColor="@color/colorTextStats"
             android:textSize="32sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/la_animation"
@@ -183,7 +183,7 @@
                     android:paddingStart="@dimen/lo_24dpGrid"
                     android:paddingEnd="@dimen/lo_24dpGrid"
                     android:text="@string/default_connect_button_text"
-                    android:textColor="@color/colorTextHint"
+                    android:textColor="@color/colorTextStats"
                     android:textSize="@dimen/ts_H6"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -198,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
                 android:layout_marginBottom="100dp"
-                android:background="@drawable/button_connect"
+                android:background="@drawable/button_protocol"
                 android:orientation="horizontal"
                 android:paddingLeft="8.0dip"
                 android:paddingTop="16.0dip"
@@ -220,7 +220,7 @@
                     android:layout_marginEnd="10.0dip"
                     android:gravity="center"
                     android:text="@string/config_type_button_text"
-                    android:textColor="@color/colorTextHint"
+                    android:textColor="@color/colorTextStats"
                     android:textSize="14.0sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -256,7 +256,7 @@
                 android:layout_marginStart="@dimen/lo_4dpGrid"
                 android:gravity="center"
                 android:text="@string/none"
-                android:textColor="@color/colorTextHint"
+                android:textColor="@color/colorTextStats"
                 android:textSize="16sp"
                 android:textStyle="italic" />
 
@@ -267,7 +267,7 @@
                 android:layout_marginStart="@dimen/lo_4dpGrid"
                 android:gravity="center"
                 android:text="@string/default_text_footer_end"
-                android:textColor="@color/colorTextHint"
+                android:textColor="@color/colorTextStats"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -293,7 +293,7 @@
                 android:layout_marginStart="@dimen/lo_4dpGrid"
                 android:gravity="center"
                 android:text="@string/default_text_footer_end"
-                android:textColor="@color/colorTextHint"
+                android:textColor="@color/colorTextStats"
                 android:textSize="16sp" />
 
             <TextView
@@ -303,7 +303,7 @@
                 android:layout_marginStart="@dimen/lo_4dpGrid"
                 android:gravity="center"
                 android:text="@string/none"
-                android:textColor="@color/colorTextHint"
+                android:textColor="@color/colorTextStats"
                 android:textSize="16sp"
                 android:textStyle="italic" />
 
@@ -314,7 +314,7 @@
                 android:layout_marginStart="@dimen/lo_4dpGrid"
                 android:gravity="center"
                 android:text="@string/default_text_today"
-                android:textColor="@color/colorTextHint"
+                android:textColor="@color/colorTextStats"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -351,7 +351,7 @@
                     android:text="@string/connection_test_pending"
                     android:textAlignment="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@color/colorTextHint" />
+                    android:textColor="@color/colorTextStats" />
 
             </LinearLayout>
 
@@ -364,7 +364,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/colorMainBackground"
+        android:background="@color/colorBackground"
         app:headerLayout="@layout/nav_header"
         app:itemIconTint="@color/colorAccent"
         app:menu="@menu/activity_main_drawer">

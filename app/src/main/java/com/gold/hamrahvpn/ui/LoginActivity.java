@@ -2,6 +2,7 @@ package com.gold.hamrahvpn.ui;
 
 import static com.gold.hamrahvpn.util.Data.appValStorage;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,6 +10,9 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +22,7 @@ import com.gold.hamrahvpn.util.LogManager;
 import com.google.android.material.textfield.TextInputEditText;
 
 import com.gold.hamrahvpn.MainApplication;
+import android.os.Handler;
 
 public class LoginActivity extends AppCompatActivity {
     TextInputEditText txtUsername, txtPassword;
@@ -35,6 +40,11 @@ public class LoginActivity extends AppCompatActivity {
         txtPassword = findViewById(R.id.inputPassword);
 
         btn_welcome_later = findViewById(R.id.btn_welcome_later);
+
+        Handler handler = new Handler();
+
+        handler.postDelayed(() -> startAnimation(LoginActivity.this, R.id.ll_main_layout_login, R.anim.slide_up_800, true), 500);
+
 
         txtUsername.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,6 +108,17 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
+
+    public void startAnimation(Context ctx, int view, int animation, boolean show) {
+    View element = findViewById(view);
+    if (show) {
+        element.setVisibility(View.VISIBLE);
+    } else {
+        element.setVisibility(View.INVISIBLE);
+    }
+    Animation anim = AnimationUtils.loadAnimation(ctx, animation);
+    element.startAnimation(anim);
+}
 
     private int countWords(String text) {
         String trimText = text.trim();

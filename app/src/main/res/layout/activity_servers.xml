@@ -4,7 +4,7 @@
     android:id="@+id/constraintLayoutServers"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorMainBackground"
+    android:background="@color/colorBackground"
     android:orientation="vertical"
     tools:context=".ui.MainActivity">
 
@@ -76,7 +76,7 @@
                 android:layout_width="34dp"
                 android:layout_height="34dp"
                 android:background="@drawable/ic_servers_cloud"
-                android:backgroundTint="@color/colorStatsBox"
+                android:backgroundTint="@color/colorStatsBlue"
                 android:contentDescription="@string/todo" />
         </LinearLayout>
     </LinearLayout>
@@ -92,7 +92,7 @@
             android:id="@+id/ls_servers_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@color/colorMainBackground"
+            android:divider="@color/colorBackground"
             android:dividerHeight="1dp"
             android:footerDividersEnabled="true"
             android:headerDividersEnabled="true"

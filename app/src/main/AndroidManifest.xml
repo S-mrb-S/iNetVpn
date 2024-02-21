@@ -96,12 +96,10 @@
 
         <activity
             android:name=".ui.ServerActivity"
-            android:configChanges="keyboardHidden|orientation"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
 
         <activity
             android:name=".ui.UsageActivity"
-            android:configChanges="keyboardHidden|orientation"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
 
         <activity android:name=".ui.ContactActivity" />

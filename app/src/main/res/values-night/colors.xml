@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <!-- background main-->
-    <color name="colorMainBackground">#303030</color>
+<!--    <color name="colorBackground">#303030</color>-->
     <color name="colorPrimaryRecyclerBox">#303030</color>
 
     <color name="colorPrograssImage">#E9E9E9</color>
 
-    <color name="colorStatsBox">#FF4E4E</color>
-    <color name="colorStatsGrayBox">#818181</color>
+<!--    <color name="colorStatsBlue">#FF4E4E</color>-->
+<!--    <color name="colorStatsGray">#818181</color>-->
 
     <color name="colorLineUsageList">#606060</color>
 
@@ -20,7 +20,8 @@
 
     <color name="colorTextHint">#000000</color>
 
-    <color name="colorPrimary">#222222</color>
+    <color name="colorBackground">#303030</color>
+<!--    <color name="colorPrimary">#222222</color>-->
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="colorBg">#000000</color>

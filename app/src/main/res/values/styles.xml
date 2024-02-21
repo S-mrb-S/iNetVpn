@@ -6,10 +6,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorMainBg">@color/colorBg</item>
         <item name="colorMainText">@color/colorText</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
-<!--        <item name="colorControlNormal">@color/colorAccent</item>-->
-        <item name="colorControlNormal">@color/colorAccentWhite</item>
+        <item name="android:statusBarColor">@color/colorLightPrimary</item>
+        <item name="android:navigationBarColor">@color/colorLightPrimary</item>
+<!--        <item name="colorControlNormal">@color/colorAccentWhite</item>-->
     </style>
 
     <style name="AppThemeDayNight.NoActionBar" parent="AppThemeDayNight">

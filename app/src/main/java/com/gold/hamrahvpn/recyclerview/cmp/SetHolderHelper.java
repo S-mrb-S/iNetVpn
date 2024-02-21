@@ -70,14 +70,14 @@ public class SetHolderHelper {
     private void setBackgroundHolder() {
         int ID = Integer.parseInt(connectionStorage.getString("id", "1"));
         if (position == ID) {
-            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.colorStatsBox));
+            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.colorStatsBlue));
         }
     }
 
     private void setItemListener() {
         holder.ll_item.setOnClickListener(v -> {
             navItemClickListener.clickedItem(position);
-            holder.ll_item.setBackgroundColor(context.getResources().getColor(R.color.colorStatsBox));
+            holder.ll_item.setBackgroundColor(context.getResources().getColor(R.color.colorStatsBlue));
             holder.tv_country.setTextColor(context.getResources().getColor(R.color.colorTextHint));
             EncryptData En = new EncryptData();
             try {

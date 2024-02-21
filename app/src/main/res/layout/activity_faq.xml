@@ -15,7 +15,7 @@
             android:id="@+id/linearLayoutFAQMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorMainBackground"
+            android:background="@color/colorBackground"
             android:orientation="vertical">
 
             <LinearLayout
@@ -157,7 +157,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/lo_8dpGrid"
                     android:layout_marginBottom="@dimen/lo_8dpGrid"
-                    android:background="@color/colorStatsBox"
+                    android:background="@color/colorStatsBlue"
                     android:orientation="vertical">
 
                     <Button
@@ -212,7 +212,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/lo_8dpGrid"
                     android:layout_marginBottom="@dimen/lo_8dpGrid"
-                    android:background="@color/colorStatsBox"
+                    android:background="@color/colorStatsBlue"
                     android:orientation="vertical">
 
                     <ImageView
@@ -293,7 +293,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/lo_8dpGrid"
                     android:layout_marginBottom="@dimen/lo_8dpGrid"
-                    android:background="@color/colorStatsBox"
+                    android:background="@color/colorStatsBlue"
                     android:orientation="vertical">
 
                     <ImageView

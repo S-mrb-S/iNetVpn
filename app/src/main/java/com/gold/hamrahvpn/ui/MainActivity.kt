@@ -102,7 +102,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onResume() {
         super.onResume()
-//        if (Data.isConnectionDetails) {
+//        if (Data.isConnectionDetails)
             restoreTodayTextTv()
     }
 

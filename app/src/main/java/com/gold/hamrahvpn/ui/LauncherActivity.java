@@ -289,6 +289,7 @@ public class LauncherActivity extends BaseActivity {
                 Intent Welcome = new Intent(LauncherActivity.this, LoginActivity.class);
 //                Welcome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(Welcome);
+                overridePendingTransition(R.anim.fade_in_1000, R.anim.fade_out_500);
             }
         } finally {
             finish();

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constLayoutContactMain"
     android:layout_width="match_parent"
-    android:background="@color/colorMainBackground"
+    android:background="@color/colorBackground"
     android:layout_height="match_parent"
     tools:context=".ui.ContactActivity">
 
@@ -17,7 +17,7 @@
             android:id="@+id/linearLayoutContactMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorMainBackground"
+            android:background="@color/colorBackground"
             android:orientation="vertical">
 
             <LinearLayout
