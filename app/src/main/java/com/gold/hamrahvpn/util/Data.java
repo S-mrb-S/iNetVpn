@@ -92,4 +92,13 @@ public class Data {
     public static long CountDown;
     public static boolean ShowDailyUsage = true;
 
+    // api
+    public static final String ApiAdress = "http://45.88.8.210:3008/api";
+    public static final String ApiKey = "RuOq4gdOYT-rgdgrd4tedgr";
+    public static final String ApiLoginName = "getuser";
+    public static final String ApiOpenVpnName = "getallopenvpn";
+    public static final String ApiV2rayName = "getallv2ray";
+
+    //
+
 }

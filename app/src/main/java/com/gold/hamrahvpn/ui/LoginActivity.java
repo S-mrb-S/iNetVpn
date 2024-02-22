@@ -17,15 +17,27 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.gold.hamrahvpn.R;
+import com.gold.hamrahvpn.handler.CheckLoginFromApi;
 import com.gold.hamrahvpn.util.LogManager;
 import com.google.android.material.textfield.TextInputEditText;
 
 import com.gold.hamrahvpn.MainApplication;
 import android.os.Handler;
+import android.widget.TextView;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
     TextInputEditText txtUsername, txtPassword;
+    TextView statusIsLogin;
     Boolean isTextForLogin = false;
     Button btn_welcome_later;
 
@@ -38,13 +50,13 @@ public class LoginActivity extends AppCompatActivity {
 
         txtUsername = findViewById(R.id.inputUsername);
         txtPassword = findViewById(R.id.inputPassword);
+        statusIsLogin = findViewById(R.id.statusIsLogin);
 
         btn_welcome_later = findViewById(R.id.btn_welcome_later);
 
         Handler handler = new Handler();
 
         handler.postDelayed(() -> startAnimation(LoginActivity.this, R.id.ll_main_layout_login, R.anim.slide_up_800, true), 500);
-
 
         txtUsername.addTextChangedListener(new TextWatcher() {
             @Override
@@ -79,7 +91,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
         // اعمال محدودیت تعداد کلمات
         InputFilter[] filters = new InputFilter[1];
         filters[0] = new InputFilter.LengthFilter(50) {
@@ -103,7 +114,8 @@ public class LoginActivity extends AppCompatActivity {
 
         btn_welcome_later.setOnClickListener(view -> {
             if (isTextForLogin) {
-                saveAndFinish();
+                Handler handlerS = new Handler();
+                handlerS.postDelayed(this::saveAndFinish, 1000);
             }
         });
 
@@ -141,20 +153,33 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void saveAndFinish() {
-        appValStorage.encode("isLoginBool", true); // no check
-        try {
-            Intent Main = new Intent(LoginActivity.this, MainActivity.class);
-            Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(Main);
-            overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
-        } catch (Exception e) {
-            Bundle params = new Bundle();
-            params.putString("device_id", MainApplication.device_id);
-            params.putString("exception", "MAA1" + e);
-            LogManager.logEvent(params);
-        } finally {
-            finish();
-        }
+        String inputUserText = Objects.requireNonNull(txtUsername.getText()).toString();
+        String inputPassText = Objects.requireNonNull(txtPassword.getText()).toString();
+
+        CheckLoginFromApi.checkIsLogin(LoginActivity.this, inputUserText, inputPassText, new CheckLoginFromApi.LoginCallback() {
+            @Override
+            public void onLoginResult(boolean isLogin) {
+                appValStorage.encode("isLoginBool", isLogin);
+
+                if (isLogin){
+                    try {
+                        Intent Main = new Intent(LoginActivity.this, MainActivity.class);
+                        Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(Main);
+                        overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+                    } catch (Exception e) {
+                        Bundle params = new Bundle();
+                        params.putString("device_id", MainApplication.device_id);
+                        params.putString("exception", "MAA1" + e);
+                        LogManager.logEvent(params);
+                    } finally {
+                        finish();
+                    }
+                }else{
+                    statusIsLogin.setText("پسورد یا یوزرنیم اشتباه است");
+                }
+            }
+        });
     }
 
     private void setActionInputText(Boolean isLogin) {

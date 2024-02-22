@@ -13,12 +13,14 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -32,6 +34,8 @@ import com.xray.lite.ui.BaseActivity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class LauncherActivity extends BaseActivity {
@@ -95,14 +99,14 @@ public class LauncherActivity extends BaseActivity {
 
     private void runAnyWay() {
         Handler handler = new Handler();
-        handler.postDelayed(this::endThisActivityWithCheck, 2000);
+        handler.postDelayed(this::endThisActivityWithCheck, 100);
     }
 
     void getAppDetails() {
         tv_welcome_status.setText(get_info_from_app);
         RequestQueue queue = Volley.newRequestQueue(LauncherActivity.this);
         queue.getCache().clear();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, StringGetAppURL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, StringGetAppURL,
                 Response -> {
 //                    Log.e("Response", Response);
                     AppDetails = Response;
@@ -125,6 +129,8 @@ public class LauncherActivity extends BaseActivity {
             }
         });
     }
+
+
 
     void getFileDetails() {
         tv_welcome_status.setText(get_details_from_file);
@@ -181,17 +187,23 @@ public class LauncherActivity extends BaseActivity {
             }
 
             try {
+
+//    {"id":0, "file":0, "city":"Essen","country":"Germany","image":"germany","ip":"51.68.191.75","active":"true","signal":"a"},
+
                 JSONObject json_response = new JSONObject(AppDetails);
                 JSONArray jsonArray = json_response.getJSONArray("free");
                 JSONObject json_object = jsonArray.getJSONObject(Random);
+
                 ID = json_object.getString("id");
-                FileID = json_object.getString("file");
-                City = json_object.getString("city");
-                Country = json_object.getString("country");
-                Image = json_object.getString("image");
-                IP = json_object.getString("ip");
-                Active = json_object.getString("active");
-                Signal = json_object.getString("signal");
+
+                FileID = "0";
+                City = "Essen";
+                Country = "Germany";
+                Image = "germany";
+                IP = "51.68.191.75";
+                Active = "true";
+                Signal = "a";
+
             } catch (Exception e) {
                 Bundle params = new Bundle();
                 params.putString("device_id", MainApplication.device_id);

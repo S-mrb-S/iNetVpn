@@ -25,6 +25,8 @@ import androidx.lifecycle.lifecycleScope
 import com.gold.hamrahvpn.MainApplication
 import com.gold.hamrahvpn.R
 import com.gold.hamrahvpn.databinding.ActivityMainBinding
+import com.gold.hamrahvpn.handler.GetAllOpenVpn
+import com.gold.hamrahvpn.handler.GetAllV2ray
 import com.gold.hamrahvpn.model.OpenVpnServerList
 import com.gold.hamrahvpn.util.CountryListManager
 import com.gold.hamrahvpn.util.Data
@@ -35,7 +37,6 @@ import com.tbruyelle.rxpermissions.RxPermissions
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
 import com.xray.lite.AppConfig.ANG_PACKAGE
-import com.xray.lite.extension.toast
 import com.xray.lite.service.V2RayServiceManager
 import com.xray.lite.ui.BaseActivity
 import com.xray.lite.ui.MainAngActivity
@@ -54,12 +55,13 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
-class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener { // , VpnStatus.ByteCountListener, VpnStatus.StateListener
+class MainActivity : BaseActivity(),
+    NavigationView.OnNavigationItemSelectedListener { // , VpnStatus.ByteCountListener, VpnStatus.StateListener
     //====== Variable =======
     private lateinit var binding: ActivityMainBinding
     var thread: Thread? = null
-    var showData = true
 
+    private lateinit var serverLists: ArrayList<OpenVpnServerList>
     // NEW
     private var fadeIn1000: Animation? = null
     private var fade_out_1000: Animation? = null
@@ -83,7 +85,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private val adapter by lazy { MainRecyclerAdapter(MainAngActivity()) }
     private val requestVpnPermission =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == RESULT_OK) startV2Ray()
+            if (it.resultCode == RESULT_OK) {
+                startV2Ray()
+                mainAnimationState(3)
+            }
         }
 
     // ViewModel (V2ray)
@@ -103,7 +108,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onResume() {
         super.onResume()
 //        if (Data.isConnectionDetails)
-            restoreTodayTextTv()
+        restoreTodayTextTv()
     }
 
     @Deprecated("Deprecated in Java")
@@ -124,11 +129,17 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         setupDrawer()
 
+        initializeAll()
         // save default config for v2ray
         initializeApp()
         setupViewModel()
         copyAssets()
 
+        // set country flag
+        setCountryFlagHome()
+
+        // set Data limit
+        showDataLimit()
         // ایجاد یک نمونه از MMKV با نام "connection_data"
         // بازیابی مقادیر از MMKV و رمزگشایی آنها
         FileID = Data.connectionStorage.getString("file_id", Data.NA)
@@ -162,69 +173,33 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         // ui refresh
         thread = object : Thread() {
-            var ShowAnimation = true
-            var isFistRun = true
+//            var isFistRun = true
             override fun run() {
                 try {
-                    while (!thread!!.isInterrupted) {
+//                    while (!thread!!.isInterrupted) {
                         // important
-                        if (isFistRun) {
-                            sleep(300) // don't delete
-                            isFistRun = false
-                        } else {
-                            sleep(2000) // don't delete
-                        }
+//                        if (isFistRun) {
+//                            sleep(300) // don't delete
+//                            isFistRun = false
+//                        } else {
+//                            sleep(2000) // don't delete
+//                        }
                         runOnUiThread {
-                            // set country flag
-                            setCountryFlagHome()
-                            // set Data limit
-                            showDataLimit()
                             // show animation
                             if (Data.hasFile) {
                                 setInternetTextConntection(true)
                                 // get daily usage
                                 setTextButtonConnectHome()
-
-                                if (ShowAnimation) {
-                                    ShowAnimation = false
-                                    if (Data.connection_status == 0) {
-                                        // disconnected
-                                        startAnimation(
-                                            this@MainActivity,
-                                            R.id.la_animation,
-                                            R.anim.fade_in_1000,
-                                            true
-                                        )
-                                        binding.laAnimation.cancelAnimation()
-                                        binding.laAnimation.setAnimation(R.raw.ninjainsecure)
-                                        binding.laAnimation.playAnimation()
-                                    } else if (Data.connection_status == 1) {
-                                        // connecting
-                                        startAnimation(
-                                            this@MainActivity,
-                                            R.id.la_animation,
-                                            R.anim.fade_in_1000,
-                                            true
-                                        )
-                                        binding.laAnimation.cancelAnimation()
-                                        binding.laAnimation.setAnimation(R.raw.conneting)
-                                        binding.laAnimation.playAnimation()
-                                    } else if (Data.connection_status == 3) {
-                                        // connected
-                                        startAnimation(
-                                            this@MainActivity,
-                                            R.id.la_animation,
-                                            R.anim.fade_in_1000,
-                                            true
-                                        )
-                                        binding.laAnimation.cancelAnimation()
-                                        binding.laAnimation.setAnimation(R.raw.ninjainsecure)
-                                        binding.laAnimation.playAnimation()
-                                    }
-                                }
+                                setAnimation()
                             }
+
+//                            GetAllOpenVpn.setRetOpenV(
+//                                this@MainActivity
+//                            ) { retOpenV ->
+//                                Log.d("OPEN", retOpenV)
+//                            }
                         }
-                    }
+//                    }
                 } catch (e: InterruptedException) {
                     val params = Bundle()
                     params.putString("device_id", MainApplication.device_id)
@@ -241,7 +216,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     /**
      * Initialize all variable and object
      */
-    private fun initializeAll() {}
+    private fun initializeAll() {
+        GetAllOpenVpn.setRetOpenV(
+                this
+            ) { retOpenVpn ->
+            serverLists = retOpenVpn;
+            }
+    }
 
     private fun sendNotifPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -298,80 +279,39 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private fun showDataLimit() {
         // show data limit
-        if (showData) {
-            showData = false
-            if (Data.connection_status == 0) {
-                val handlerData = Handler()
-                handlerData.postDelayed({
-                    startAnimation(
-                        this@MainActivity,
-                        R.id.ll_main_today,
-                        R.anim.slide_up_800,
-                        true
-                    )
-                }, 1000)
-            } else if (Data.connection_status == 1) {
-                val handlerData = Handler()
-                handlerData.postDelayed({
-                    startAnimation(
-                        this@MainActivity,
-                        R.id.ll_main_today,
-                        R.anim.slide_up_800,
-                        true
-                    )
-                }, 1000)
-            } else if (Data.connection_status == 2) {
-                try {
-                    // stop vpn and cancel timer
-                    binding.tvMainCountDown.visibility = View.INVISIBLE
-                    val handlerToday12 = Handler()
-                    handlerToday12.postDelayed({
-                        startAnimation(
-                            this@MainActivity,
-                            R.id.ll_main_data,
-                            R.anim.slide_down_800,
-                            false
-                        )
-                        binding.llMainData.visibility = View.INVISIBLE
-                    }, 500)
-                    val handlerData = Handler()
-                    handlerData.postDelayed({
-                        startAnimation(
-                            this@MainActivity,
-                            R.id.ll_main_today,
-                            R.anim.slide_up_800,
-                            true
-                        )
-                    }, 1000)
-                    startAnimation(
-                        this@MainActivity,
-                        R.id.la_animation,
-                        R.anim.fade_in_1000,
-                        true
-                    )
-                    binding.laAnimation.cancelAnimation()
-                    binding.laAnimation.setAnimation(R.raw.ninjainsecure)
-                    binding.laAnimation.playAnimation()
-                    Data.ShowDailyUsage = true
-                } catch (e: Exception) {
-                    val params = Bundle()
-                    params.putString("device_id", MainApplication.device_id)
-                    params.putString("exception", "MA8$e")
-                    LogManager.logEvent(params)
-                }
-                Data.isStart = false
-
-                val handlerData = Handler()
-                handlerData.postDelayed({
+        if (Data.connection_status == 0) {
+            val handlerData = Handler()
+            handlerData.postDelayed({
+                startAnimation(
+                    this@MainActivity,
+                    R.id.ll_main_today,
+                    R.anim.slide_up_800,
+                    true
+                )
+            }, 1000)
+        } else if (Data.connection_status == 1) {
+            val handlerData = Handler()
+            handlerData.postDelayed({
+                startAnimation(
+                    this@MainActivity,
+                    R.id.ll_main_today,
+                    R.anim.slide_up_800,
+                    true
+                )
+            }, 1000)
+        } else if (Data.connection_status == 2) {
+            try {
+                // stop vpn
+                val handlerToday12 = Handler()
+                handlerToday12.postDelayed({
                     startAnimation(
                         this@MainActivity,
                         R.id.ll_main_data,
-                        R.anim.slide_up_800,
-                        true
+                        R.anim.slide_down_800,
+                        false
                     )
-                }, 1000)
-            } else if (Data.connection_status == 3) {
-                // connected
+                    binding.llMainData.visibility = View.INVISIBLE
+                }, 500)
                 val handlerData = Handler()
                 handlerData.postDelayed({
                     startAnimation(
@@ -381,8 +321,46 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                         true
                     )
                 }, 1000)
+                startAnimation(
+                    this@MainActivity,
+                    R.id.la_animation,
+                    R.anim.fade_in_1000,
+                    true
+                )
+                binding.laAnimation.cancelAnimation()
+                binding.laAnimation.setAnimation(R.raw.ninjainsecure)
+                binding.laAnimation.playAnimation()
+                Data.ShowDailyUsage = true
+            } catch (e: Exception) {
+                val params = Bundle()
+                params.putString("device_id", MainApplication.device_id)
+                params.putString("exception", "MA8$e")
+                LogManager.logEvent(params)
             }
+            Data.isStart = false
+
+            val handlerData = Handler()
+            handlerData.postDelayed({
+                startAnimation(
+                    this@MainActivity,
+                    R.id.ll_main_data,
+                    R.anim.slide_up_800,
+                    true
+                )
+            }, 1000)
+        } else if (Data.connection_status == 3) {
+            // connected
+            val handlerData = Handler()
+            handlerData.postDelayed({
+                startAnimation(
+                    this@MainActivity,
+                    R.id.ll_main_today,
+                    R.anim.slide_up_800,
+                    true
+                )
+            }, 1000)
         }
+
     }
 
     private fun showDataFooterHome(status: Int) {
@@ -440,6 +418,42 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     }
 
+    private fun setAnimation(){
+        if (Data.connection_status == 0) {
+                                        // disconnected
+                                        startAnimation(
+                                            this@MainActivity,
+                                            R.id.la_animation,
+                                            R.anim.fade_in_1000,
+                                            true
+                                        )
+                                        binding.laAnimation.cancelAnimation()
+                                        binding.laAnimation.setAnimation(R.raw.ninjainsecure)
+                                        binding.laAnimation.playAnimation()
+                                    } else if (Data.connection_status == 1) {
+                                        // connecting
+                                        startAnimation(
+                                            this@MainActivity,
+                                            R.id.la_animation,
+                                            R.anim.fade_in_1000,
+                                            true
+                                        )
+                                        binding.laAnimation.cancelAnimation()
+                                        binding.laAnimation.setAnimation(R.raw.conneting)
+                                        binding.laAnimation.playAnimation()
+                                    } else if (Data.connection_status == 3) {
+                                        // connected
+                                        startAnimation(
+                                            this@MainActivity,
+                                            R.id.la_animation,
+                                            R.anim.fade_in_1000,
+                                            true
+                                        )
+                                        binding.laAnimation.cancelAnimation()
+                                        binding.laAnimation.setAnimation(R.raw.ninjainsecure)
+                                        binding.laAnimation.playAnimation()
+                                    }
+    }
     private fun setTextButtonConnectHome() {
         if (Data.connection_status == 0) {
             // disconnected
@@ -465,27 +479,31 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                         R.drawable.button_retry
                     )
             }
-        } else if (Data.connection_status == 2) {
+        }
+        else
+//            if (Data.connection_status == 2)
+            {
             // connected
             binding.btnConnection.text = Data.connected_btn
             binding.btnConnection.background = ContextCompat.getDrawable(
                 this@MainActivity,
                 R.drawable.button_disconnect
             )
-        } else if (Data.connection_status == 3) {
-            // connected
-            binding.btnConnection.text = Data.connected_error_btn
-            binding.btnConnection.background = ContextCompat.getDrawable(
-                this@MainActivity,
-                R.drawable.button_retry
-            )
         }
+//        else if (Data.connection_status == 3) {
+//            // connected
+//            binding.btnConnection.text = Data.connected_error_btn
+//            binding.btnConnection.background = ContextCompat.getDrawable(
+//                this@MainActivity,
+//                R.drawable.button_retry
+//            )
+//        }
     }
 
     private fun stopVpnAnim() {
         try {
             // stop vpn and cancel timer
-            binding.tvMainCountDown.visibility = View.INVISIBLE
+//            binding.tvMainCountDown.visibility = View.INVISIBLE
             val handlerToday12 = Handler()
             handlerToday12.postDelayed({
                 startAnimation(
@@ -605,12 +623,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 defaultItemDialog = which
                 Data.settingsStorage.putInt("default_connection_type", which)
                 toggleIsLayoutTest()
-            } else {
-                Toast.makeText(
-                    this@MainActivity,
-                    "کانفیگ مورد نظر یافت نشد!",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
         }
         val dialog = builder.create()
@@ -618,13 +630,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     private fun toggleIsLayoutTest() {
-        startAnimation(
-            this,
-            R.id.ll_main_layout_test,
-            if (defaultItemDialog == 1) R.anim.slide_down_800 else R.anim.slide_up_800,
-            defaultItemDialog == 1
-        )
-
         if (defaultItemDialog == 1) {
             // show openvpn layout
             binding.llMainData.visibility =
@@ -694,21 +699,18 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private fun connectToV2ray() {
         if (mainViewModel.isRunning.value == true) {
-            toast("STOP")
             Utils.stopVService(this)
             mainAnimationState(0);
         } else if ((settingsStorage?.decodeString(AppConfig.PREF_MODE) ?: "VPN") == "VPN") {
             val intent = VpnService.prepare(this)
             if (intent == null) {
                 startV2Ray()
-                toast("SS")
                 mainAnimationState(3)
             } else {
                 requestVpnPermission.launch(intent)
             }
         } else {
             startV2Ray()
-            toast("SS")
             mainAnimationState(3)
         }
     }
@@ -1036,7 +1038,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     // change animation main state
     private fun mainAnimationState(status: Int) { // la_animation_connected
-        toast("EJRA")
+        Data.connection_status = status
+        setTextButtonConnectHome()
         startAnimation(
             this,
             R.id.la_animation,
@@ -1071,8 +1074,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 // تنظیم اندازه انیمیشن به 300dp
 //                val newWidth = 300.dpToPx() // تبدیل dp به پیکسل
 //                val newHeight = 300.dpToPx()
-                binding.laAnimation.scaleX = 2.5f
-                binding.laAnimation.scaleY = 2.5f
+                binding.laAnimation.scaleX = 1.5f
+                binding.laAnimation.scaleY = 1.5f
 //                binding.laAnimation.requestLayout()
             } // connected
         }
@@ -1086,11 +1089,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // v2ray
     private fun startV2Ray() {
         if (mainStorage?.decodeString(MmkvManager.KEY_SELECTED_SERVER).isNullOrEmpty()) {
-            toast("NULL")
             return
         }
         showCircle()
-        toast(R.string.toast_services_start)
         V2RayServiceManager.startV2Ray(this)
         hideCircle()
     }
@@ -1134,21 +1135,17 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private fun initializeApp() {
         // اگر اولین بار استفاده می‌شود، اجرای کد مربوط به نصب برنامه
         if (isFirstRun()) {
-
-            val testOne =
-                "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNToycWdqck1WVmJ3WWROZDNGdHZ0dHNM@51.142.158.58:63072#180_+@%F0%9D%97%94%F0%9D%97%A5%F0%9D%97%9A%F0%9D%97%A2%F0%9D%97%A7%F0%9D%97%94%F0%9D%97%AD\n" +
-                        "vless://e1a928be-e289-4aef-b92e-4106fabdf42f@198.41.202.5:80?security=&type=ws&path=/?ed%3D2048&host=mahi.kosnanatfilterchi.eu.org&encryption=none#%F0%9F%87%BA%F0%9F%87%B8+@FreakConfig\n" +
-                        "vless://9bcf1249-836e-4fcf-a28b-355dc959e324@104.18.14.229:2087?security=tls&sni=mtn.0bbg.cfd&fp=firefox&type=grpc&serviceName=zula.ir&encryption=none#%F0%9F%87%A9%F0%9F%87%AA+@FreakConfig\n" +
-                        "vless://8dcae9dc-7ec3-4065-8d24-18eda4d7c7b5@159.69.198.253:2087?security=tls&sni=de7.korda.top&fp=chrome&type=grpc&serviceName=de7.korda.top&encryption=none#%F0%9F%87%A9%F0%9F%87%AA+@FreakConfig\n" +
-                        "vless://e1a928be-e289-4aef-b92e-4106fabdf42f@172.67.204.84:80?security=&type=ws&path=/?ed%3D2048&host=mahi.kosnanatfilterchi.eu.org&encryption=none#%F0%9F%87%A6%F0%9F%87%B7+@FreakConfig"
-
-            try {
-                importBatchConfig(testOne)
-                // ذخیره اطلاعات یکبار برای اجراهای بعدی
-                saveFirstRunFlag()
-//                toast("Welcome!")
-            } catch (e: Exception) {
-                e.printStackTrace()
+            // فراخوانی متد checkIsLogin و ارسال context و callback
+            GetAllV2ray.setRetV2ray(
+                this
+            ) { retV2ray ->
+                try {
+                    importBatchConfig(retV2ray)
+                    // ذخیره اطلاعات یکبار برای اجراهای بعدی
+                    saveFirstRunFlag()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }
@@ -1157,14 +1154,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         when (defaultItemDialog) {
             1 -> connectToOpenVpn()
             0 -> connectToV2ray()
-            else -> Toast.makeText(
-                this@MainActivity,
-                "کانفیگ مورد نظر یافت نشد!",
-                Toast.LENGTH_SHORT
-            ).show()
         }
-
-
     }
 
     private fun importBatchConfig(server: String?, subid: String = "") {
@@ -1183,7 +1173,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             count = AngConfigManager.appendCustomConfigServer(server, subid2)
         }
         if (count > 0) {
-//            toast(R.string.toast_success)
             mainViewModel.reloadServerList()
         } else {
 //            toast(R.string.toast_failure)

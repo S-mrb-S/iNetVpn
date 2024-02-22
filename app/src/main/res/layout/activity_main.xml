@@ -33,9 +33,9 @@
                 android:id="@+id/iv_home"
                 android:layout_width="34dp"
                 android:layout_height="34dp"
-                android:src="@drawable/ic_home"
                 android:layout_gravity="center_vertical"
-                android:contentDescription="@string/todo" />
+                android:contentDescription="@string/todo"
+                android:src="@drawable/ic_home" />
         </LinearLayout>
 
         <LinearLayout
@@ -56,8 +56,8 @@
                 android:layout_width="34dp"
                 android:layout_height="34dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_go_forward"
-                android:contentDescription="@string/todo" />
+                android:contentDescription="@string/todo"
+                android:src="@drawable/ic_go_forward" />
 
         </LinearLayout>
 
@@ -150,82 +150,67 @@
             app:lottie_autoPlay="true"
             app:lottie_loop="true" />
 
-        <TextView
-            android:id="@+id/tv_main_count_down"
+        <com.github.jorgecastilloprz.FABProgressCircle
+            android:id="@+id/fabProgressCircle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorTextStats"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/la_animation"
-            app:layout_constraintEnd_toEndOf="@+id/la_animation"
-            app:layout_constraintStart_toStartOf="@+id/la_animation"
-            app:layout_constraintTop_toTopOf="@+id/la_animation" />
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/main_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/la_animation">
 
-            <com.github.jorgecastilloprz.FABProgressCircle
-                android:id="@+id/fabProgressCircle"
+
+            <Button
+                android:id="@+id/btn_connection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center"
-                android:layout_marginBottom="164dp">
+                android:background="@drawable/button_connect"
+                android:elevation="@dimen/lo_8dpGrid"
+                android:paddingStart="@dimen/lo_24dpGrid"
+                android:paddingEnd="@dimen/lo_24dpGrid"
+                android:text="@string/default_connect_button_text"
+                android:textColor="@color/colorTextStats"
+                android:textSize="@dimen/ts_H6"
+                android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/btn_connection"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_connect"
-                    android:elevation="@dimen/lo_8dpGrid"
-                    android:paddingStart="@dimen/lo_24dpGrid"
-                    android:paddingEnd="@dimen/lo_24dpGrid"
-                    android:text="@string/default_connect_button_text"
-                    android:textColor="@color/colorTextStats"
-                    android:textSize="@dimen/ts_H6"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_progress_bar" />
+        </com.github.jorgecastilloprz.FABProgressCircle>
 
-            </com.github.jorgecastilloprz.FABProgressCircle>
+        <LinearLayout
+            android:id="@+id/ll_protocol_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/button_protocol"
+            android:orientation="horizontal"
+            android:paddingLeft="8.0dip"
+            android:paddingTop="16.0dip"
+            android:paddingRight="8.0dip"
+            android:paddingBottom="16.0dip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fabProgressCircle">
 
-            <LinearLayout
-                android:id="@+id/ll_protocol_main"
+            <ImageView
+                android:layout_width="16.0dip"
+                android:layout_height="16.0dip"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_arrow_back" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center"
-                android:layout_marginBottom="100dp"
-                android:background="@drawable/button_protocol"
-                android:orientation="horizontal"
-                android:paddingLeft="8.0dip"
-                android:paddingTop="16.0dip"
-                android:paddingRight="8.0dip"
-                android:paddingBottom="16.0dip">
+                android:layout_gravity="center"
+                android:layout_marginStart="15.0dip"
+                android:layout_marginEnd="10.0dip"
+                android:gravity="center"
+                android:text="@string/config_type_button_text"
+                android:textColor="@color/colorTextStats"
+                android:textSize="14.0sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-                <ImageView
-                    android:layout_width="16.0dip"
-                    android:layout_height="16.0dip"
-                    android:layout_gravity="center"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_arrow_back" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="15.0dip"
-                    android:layout_marginEnd="10.0dip"
-                    android:gravity="center"
-                    android:text="@string/config_type_button_text"
-                    android:textColor="@color/colorTextStats"
-                    android:textSize="14.0sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <LinearLayout
             android:id="@+id/ll_main_data"
@@ -324,7 +309,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/button_connect"
+            android:background="@drawable/layout_round"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingTop="@dimen/lo_8dpGrid"
@@ -338,7 +323,6 @@
                 android:id="@+id/layout_test"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="6dp"
                 android:clickable="true"
                 android:focusable="true">
 
