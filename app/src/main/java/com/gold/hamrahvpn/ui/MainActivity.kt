@@ -1,14 +1,16 @@
 package com.gold.hamrahvpn.ui
 
-
 import android.Manifest
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.VpnService
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.RemoteException
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -22,16 +24,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
-import com.gold.hamrahvpn.MainApplication
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.gold.hamrahvpn.R
 import com.gold.hamrahvpn.databinding.ActivityMainBinding
-import com.gold.hamrahvpn.handler.GetAllOpenVpn
 import com.gold.hamrahvpn.handler.GetAllV2ray
+import com.gold.hamrahvpn.interfaces.ChangeServer
 import com.gold.hamrahvpn.model.OpenVpnServerList
+import com.gold.hamrahvpn.util.CheckInternetConnection
 import com.gold.hamrahvpn.util.CountryListManager
 import com.gold.hamrahvpn.util.Data
 import com.gold.hamrahvpn.util.EncryptData
-import com.gold.hamrahvpn.util.LogManager
 import com.google.android.material.navigation.NavigationView
 import com.tbruyelle.rxpermissions.RxPermissions
 import com.tencent.mmkv.MMKV
@@ -45,6 +47,11 @@ import com.xray.lite.util.AngConfigManager
 import com.xray.lite.util.MmkvManager
 import com.xray.lite.util.Utils
 import com.xray.lite.viewmodel.MainViewModel
+import de.blinkt.openvpn.OpenVpnApi
+import de.blinkt.openvpn.core.OpenVPNService
+import de.blinkt.openvpn.core.OpenVPNService.setDefaultStatus
+import de.blinkt.openvpn.core.OpenVPNThread
+import de.blinkt.openvpn.core.VpnStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rx.Observable
@@ -55,17 +62,56 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
+/**
+ * @MehrabSp && Github.com/MehraB832 || MehrabSp
+ */
 class MainActivity : BaseActivity(),
-    NavigationView.OnNavigationItemSelectedListener { // , VpnStatus.ByteCountListener, VpnStatus.StateListener
+    NavigationView.OnNavigationItemSelectedListener,
+    ChangeServer { // , VpnStatus.ByteCountListener, VpnStatus.StateListener
     //====== Variable =======
     private lateinit var binding: ActivityMainBinding
-    var thread: Thread? = null
 
-    private lateinit var serverLists: ArrayList<OpenVpnServerList>
-    // NEW
+    /**
+     * openvpn state
+     *
+     */
+    private val internetStatus: Boolean
+        /**
+         * Internet connection status.
+         */
+        get() = connection!!.netCheck(this)
+    private val isServiceRunning: Unit
+        /**
+         * Get service status
+         */
+        get() {
+            setStatus(OpenVPNService.getStatus())
+        }
+
+
+    /**
+     * handler
+     */
+
+    private var imageCountry: String? = Data.connectionStorage.getString("image", Data.NA)
+    private var City: String? = Data.connectionStorage.getString("city", Data.NA)
+
+    private var vpnState: Int =
+        0 // 0 --> ninja (no connect) \\ 1 --> loading (ninja (load again)) (connecting) \\ 2 --> connected (wifi (green logo))
+
+    private var footerState: Int =
+        0 // 0 --> main_data \\ 1 --> main_today \\ 2 --> v2ray test layout
+
+    private var isSetupFirst: Boolean = true
+
     private var fadeIn1000: Animation? = null
     private var fade_out_1000: Animation? = null
-    var EnableConnectButton = false
+
+    /**
+     *
+     */
+    private var connection: CheckInternetConnection? = null
+//    private var testoo: IOpenVPNAPIService? = null
 
     // MMKV
     private val mainStorage by lazy {
@@ -87,29 +133,15 @@ class MainActivity : BaseActivity(),
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 startV2Ray()
-                mainAnimationState(3)
             }
         }
 
     // ViewModel (V2ray)
     private val mainViewModel: MainViewModel by viewModels()
 
-    // ovpn && server data
-    private var FileID: String? = "NULL"
-    private var File: String =
-        ENCRYPT_DATA.decrypt(Data.connectionStorage.getString("file", Data.NA))
-    private var City: String? = Data.connectionStorage.getString("city", Data.NA)
-    private var Image: String? = Data.connectionStorage.getString("image", Data.NA)
-
     // Usage
     private val df = SimpleDateFormat("dd-MMM-yyyy")
     private var today: String = df.format(Calendar.getInstance().time)
-
-    override fun onResume() {
-        super.onResume()
-//        if (Data.isConnectionDetails)
-        restoreTodayTextTv()
-    }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
@@ -127,101 +159,24 @@ class MainActivity : BaseActivity(),
         val view = binding.root
         setContentView(view)
 
-        setupDrawer()
+        Data.isStart = Data.connectionStorage.getBoolean("isStart", false)
+        vpnState = Data.connectionStorage.getInt("stateVpn", 0)
 
-        initializeAll()
+        handlerSetupFirst()
+
+        setupDrawer()
+        initializeAll() // openvpn
         // save default config for v2ray
         initializeApp()
         setupViewModel()
         copyAssets()
 
-        // set country flag
-        setCountryFlagHome()
-
-        // set Data limit
-        showDataLimit()
-        // ایجاد یک نمونه از MMKV با نام "connection_data"
-        // بازیابی مقادیر از MMKV و رمزگشایی آنها
-        FileID = Data.connectionStorage.getString("file_id", Data.NA)
-        // بررسی وجود فایل
-        Data.hasFile = FileID!!.isNotEmpty()
-
         // Load default config type and save.
         defaultItemDialog = Data.settingsStorage.getInt("default_connection_type", 0)
 
-        fadeIn1000 = AnimationUtils.loadAnimation(this, R.anim.fade_in_1000)
-        fade_out_1000 = AnimationUtils.loadAnimation(this, R.anim.fade_out_1000)
-        binding.llTextBubble.animation = fadeIn1000
-
-        val handlerToday = Handler()
-        handlerToday.postDelayed({
-            startAnimation(
-                this@MainActivity,
-                R.id.linearLayoutMainHome,
-                R.anim.anim_slide_down,
-                true
-            )
-            startAnimation(
-                this@MainActivity,
-                R.id.linearLayoutMainServers,
-                R.anim.anim_slide_down,
-                true
-            )
-        }, 1000)
-
         setupClickListener()
 
-        // ui refresh
-        thread = object : Thread() {
-//            var isFistRun = true
-            override fun run() {
-                try {
-//                    while (!thread!!.isInterrupted) {
-                        // important
-//                        if (isFistRun) {
-//                            sleep(300) // don't delete
-//                            isFistRun = false
-//                        } else {
-//                            sleep(2000) // don't delete
-//                        }
-                        runOnUiThread {
-                            // show animation
-                            if (Data.hasFile) {
-                                setInternetTextConntection(true)
-                                // get daily usage
-                                setTextButtonConnectHome()
-                                setAnimation()
-                            }
-
-//                            GetAllOpenVpn.setRetOpenV(
-//                                this@MainActivity
-//                            ) { retOpenV ->
-//                                Log.d("OPEN", retOpenV)
-//                            }
-                        }
-//                    }
-                } catch (e: InterruptedException) {
-                    val params = Bundle()
-                    params.putString("device_id", MainApplication.device_id)
-                    params.putString("exception", "MA9$e")
-                    LogManager.logEvent(params)
-                }
-            }
-        }
-        (thread as Thread).start()
-
         sendNotifPermission()
-    }
-
-    /**
-     * Initialize all variable and object
-     */
-    private fun initializeAll() {
-        GetAllOpenVpn.setRetOpenV(
-                this
-            ) { retOpenVpn ->
-            serverLists = retOpenVpn;
-            }
     }
 
     private fun sendNotifPermission() {
@@ -238,314 +193,15 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    private fun setCountryFlagHome() {
-        // set country flag
-        CountryListManager.OpenVpnSetServerList(Image, binding.ivServers)
-    }
-
-    private fun setInternetTextConntection(boolean: Boolean) {
-        if (boolean) {
-            if (Data.connection_status == 0) {
-                // disconnected
-                binding.tvMessageTopText.text = Data.disconnected_txt
-                binding.tvMessageBottomText.text = Data.disconnected_txt2
-            } else if (Data.connection_status == 1) {
-                // connecting
-                binding.tvMessageTopText.text =
-                    Data.connecting_txt + ' ' + City
-                binding.tvMessageBottomText.text
-//                                        VpnStatus.getLastCleanLogMessage(
-//                                            this@MainActivity
-//                                        )
-
-            } else if (Data.connection_status == 2) {
-                // connected
-                binding.tvMessageTopText.text =
-                    Data.connected_txt + ' ' + City
-                binding.tvMessageBottomText.text = Data.StringCountDown
-            } else if (Data.connection_status == 3) {
-                // connected
-                binding.tvMessageTopText.text =
-                    Data.connected_error_danger_vpn_txt
-                binding.tvMessageBottomText.text =
-                    Data.connected_error_long_txt
-            }
-        } else {
-            binding.tvMessageTopText.text = Data.connected_catch_txt
-            binding.tvMessageBottomText.text =
-                Data.connected_catch_check_internet_txt
-        }
-    }
-
-    private fun showDataLimit() {
-        // show data limit
-        if (Data.connection_status == 0) {
-            val handlerData = Handler()
-            handlerData.postDelayed({
-                startAnimation(
-                    this@MainActivity,
-                    R.id.ll_main_today,
-                    R.anim.slide_up_800,
-                    true
-                )
-            }, 1000)
-        } else if (Data.connection_status == 1) {
-            val handlerData = Handler()
-            handlerData.postDelayed({
-                startAnimation(
-                    this@MainActivity,
-                    R.id.ll_main_today,
-                    R.anim.slide_up_800,
-                    true
-                )
-            }, 1000)
-        } else if (Data.connection_status == 2) {
-            try {
-                // stop vpn
-                val handlerToday12 = Handler()
-                handlerToday12.postDelayed({
-                    startAnimation(
-                        this@MainActivity,
-                        R.id.ll_main_data,
-                        R.anim.slide_down_800,
-                        false
-                    )
-                    binding.llMainData.visibility = View.INVISIBLE
-                }, 500)
-                val handlerData = Handler()
-                handlerData.postDelayed({
-                    startAnimation(
-                        this@MainActivity,
-                        R.id.ll_main_today,
-                        R.anim.slide_up_800,
-                        true
-                    )
-                }, 1000)
-                startAnimation(
-                    this@MainActivity,
-                    R.id.la_animation,
-                    R.anim.fade_in_1000,
-                    true
-                )
-                binding.laAnimation.cancelAnimation()
-                binding.laAnimation.setAnimation(R.raw.ninjainsecure)
-                binding.laAnimation.playAnimation()
-                Data.ShowDailyUsage = true
-            } catch (e: Exception) {
-                val params = Bundle()
-                params.putString("device_id", MainApplication.device_id)
-                params.putString("exception", "MA8$e")
-                LogManager.logEvent(params)
-            }
-            Data.isStart = false
-
-            val handlerData = Handler()
-            handlerData.postDelayed({
-                startAnimation(
-                    this@MainActivity,
-                    R.id.ll_main_data,
-                    R.anim.slide_up_800,
-                    true
-                )
-            }, 1000)
-        } else if (Data.connection_status == 3) {
-            // connected
-            val handlerData = Handler()
-            handlerData.postDelayed({
-                startAnimation(
-                    this@MainActivity,
-                    R.id.ll_main_today,
-                    R.anim.slide_up_800,
-                    true
-                )
-            }, 1000)
-        }
-
-    }
-
-    private fun showDataFooterHome(status: Int) {
-        // show data limit
-        val handlerData = Handler()
-        when (status) {
-            0 -> {
-                handlerData.postDelayed({
-                    startAnimation(
-                        this@MainActivity,
-                        R.id.ll_main_today,
-                        R.anim.slide_up_800,
-                        true
-                    )
-                }, 1000)
-                // disconnected
-                // get daily usage
-                if (Data.ShowDailyUsage) {
-                    Data.ShowDailyUsage = false
-                    // بازیابی مقدار مربوط به کلید "today"
-                    restoreTodayTextTv()
-                }
-
-            }
-
-            1 -> handlerData.postDelayed({
-                startAnimation(
-                    this@MainActivity,
-                    R.id.ll_main_today,
-                    R.anim.slide_up_800,
-                    true
-                )
-            }, 1000)
-
-            2 -> handlerData.postDelayed({
-                startAnimation(
-                    this@MainActivity,
-                    R.id.ll_main_data,
-                    R.anim.slide_up_800,
-                    true
-                )
-            }, 1000)
-
-            3 -> handlerData.postDelayed({
-                startAnimation(
-                    this@MainActivity,
-                    R.id.ll_main_today,
-                    R.anim.slide_up_800,
-                    true
-                )
-            }, 1000) // connected
-
-
-        }
-
-    }
-
-    private fun setAnimation(){
-        if (Data.connection_status == 0) {
-                                        // disconnected
-                                        startAnimation(
-                                            this@MainActivity,
-                                            R.id.la_animation,
-                                            R.anim.fade_in_1000,
-                                            true
-                                        )
-                                        binding.laAnimation.cancelAnimation()
-                                        binding.laAnimation.setAnimation(R.raw.ninjainsecure)
-                                        binding.laAnimation.playAnimation()
-                                    } else if (Data.connection_status == 1) {
-                                        // connecting
-                                        startAnimation(
-                                            this@MainActivity,
-                                            R.id.la_animation,
-                                            R.anim.fade_in_1000,
-                                            true
-                                        )
-                                        binding.laAnimation.cancelAnimation()
-                                        binding.laAnimation.setAnimation(R.raw.conneting)
-                                        binding.laAnimation.playAnimation()
-                                    } else if (Data.connection_status == 3) {
-                                        // connected
-                                        startAnimation(
-                                            this@MainActivity,
-                                            R.id.la_animation,
-                                            R.anim.fade_in_1000,
-                                            true
-                                        )
-                                        binding.laAnimation.cancelAnimation()
-                                        binding.laAnimation.setAnimation(R.raw.ninjainsecure)
-                                        binding.laAnimation.playAnimation()
-                                    }
-    }
-    private fun setTextButtonConnectHome() {
-        if (Data.connection_status == 0) {
-            // disconnected
-            binding.btnConnection.text = Data.disconnected_btn
-            binding.btnConnection.background = ContextCompat.getDrawable(
-                this@MainActivity,
-                R.drawable.button_connect
-            )
-        } else if (Data.connection_status == 1) {
-            // connecting
-            if (EnableConnectButton) {
-                binding.btnConnection.text = Data.connecting_cancel_btn
-                binding.btnConnection.background =
-                    ContextCompat.getDrawable(
-                        this@MainActivity,
-                        R.drawable.button_retry
-                    )
-            } else {
-                binding.btnConnection.text = Data.connecting_btn
-                binding.btnConnection.background =
-                    ContextCompat.getDrawable(
-                        this@MainActivity,
-                        R.drawable.button_retry
-                    )
-            }
-        }
-        else
-//            if (Data.connection_status == 2)
-            {
-            // connected
-            binding.btnConnection.text = Data.connected_btn
-            binding.btnConnection.background = ContextCompat.getDrawable(
-                this@MainActivity,
-                R.drawable.button_disconnect
-            )
-        }
-//        else if (Data.connection_status == 3) {
-//            // connected
-//            binding.btnConnection.text = Data.connected_error_btn
-//            binding.btnConnection.background = ContextCompat.getDrawable(
-//                this@MainActivity,
-//                R.drawable.button_retry
-//            )
-//        }
-    }
-
-    private fun stopVpnAnim() {
-        try {
-            // stop vpn and cancel timer
-//            binding.tvMainCountDown.visibility = View.INVISIBLE
-            val handlerToday12 = Handler()
-            handlerToday12.postDelayed({
-                startAnimation(
-                    this@MainActivity,
-                    R.id.ll_main_data,
-                    R.anim.slide_down_800,
-                    false
-                )
-                binding.llMainData.visibility = View.INVISIBLE
-            }, 500)
-            val handlerData = Handler()
-            handlerData.postDelayed({
-                startAnimation(
-                    this@MainActivity,
-                    R.id.ll_main_today,
-                    R.anim.slide_up_800,
-                    true
-                )
-            }, 1000)
-            startAnimation(
-                this@MainActivity,
-                R.id.la_animation,
-                R.anim.fade_in_1000,
-                true
-            )
-            binding.laAnimation.cancelAnimation()
-            binding.laAnimation.setAnimation(R.raw.ninjainsecure)
-            binding.laAnimation.playAnimation()
-            Data.ShowDailyUsage = true
-        } catch (e: Exception) {
-            val params = Bundle()
-            params.putString("device_id", MainApplication.device_id)
-            params.putString("exception", "MA8$e")
-            LogManager.logEvent(params)
-        }
-//                                    Data.isStart = false
-    }
-
     private fun setupClickListener() {
         binding.llProtocolMain.setOnClickListener {
-            setupMainDialog()
+            if (!Data.isStart) {
+                setupMainDialog()
+            } else {
+                showToast("لطفا اول اتصال را قطع کنید")
+            }
         }
+
         binding.linearLayoutMainHome.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.START)
         }
@@ -612,77 +268,20 @@ class MainActivity : BaseActivity(),
             Data.item_options,
             defaultItemDialog
         ) { dialog: DialogInterface, which: Int ->  // which --> 0, 1
-            if (which == 0 || which == 1) {
-                Handler().postDelayed({ dialog.dismiss() }, 300)
-                val selectedOption = Data.item_options[which]
-                Toast.makeText(
-                    this@MainActivity,
-                    "گزینه انتخاب شده: $selectedOption",
-                    Toast.LENGTH_SHORT
-                ).show()
-                defaultItemDialog = which
-                Data.settingsStorage.putInt("default_connection_type", which)
-                toggleIsLayoutTest()
+            Data.settingsStorage.putInt("default_connection_type", which)
+            Handler().postDelayed({ dialog.dismiss() }, 300)
+            defaultItemDialog = which
+
+            if (which == 0) {
+                setNewFooterState(2) //v2ray
             }
+            if (which == 1) {
+                setNewFooterState(0) //main data
+            }
+
         }
         val dialog = builder.create()
         dialog.show()
-    }
-
-    private fun toggleIsLayoutTest() {
-        if (defaultItemDialog == 1) {
-            // show openvpn layout
-            binding.llMainData.visibility =
-                if (binding.llMainLayoutTest.visibility == View.VISIBLE) {
-                    binding.llMainLayoutTest.postDelayed({
-                        startAnimation(
-                            this,
-                            R.id.ll_main_layout_test,
-                            R.anim.slide_down_800,
-                            false
-                        )
-                    }, 100)
-                    View.INVISIBLE
-                } else {
-                    View.VISIBLE
-                }
-        } else if (defaultItemDialog == 0) {
-            // show layout test (v2ray)
-            binding.llMainToday.visibility = if (binding.llMainToday.visibility == View.VISIBLE) {
-                binding.llMainToday.postDelayed({
-                    startAnimation(this, R.id.ll_main_today, R.anim.slide_down_800, false)
-                    binding.llMainToday.visibility = View.INVISIBLE
-                }, 100)
-                View.INVISIBLE
-            } else {
-                View.VISIBLE
-            }
-
-            binding.llMainData.visibility = if (binding.llMainData.visibility == View.VISIBLE) {
-                binding.llMainData.postDelayed({
-                    startAnimation(this, R.id.ll_main_data, R.anim.slide_down_800, false)
-                    binding.llMainData.visibility = View.INVISIBLE
-                }, 100)
-                View.INVISIBLE
-            } else {
-                View.VISIBLE
-            }
-
-            binding.llMainLayoutTest.visibility =
-                if (binding.llMainLayoutTest.visibility == View.INVISIBLE) {
-                    binding.llMainLayoutTest.postDelayed({
-                        startAnimation(
-                            this,
-                            R.id.ll_main_layout_test,
-                            R.anim.slide_up_800,
-                            true
-                        )
-                    }, 50)
-                    View.VISIBLE
-                } else {
-                    View.INVISIBLE
-                }
-        }
     }
 
     private fun restoreTodayTextTv() {
@@ -697,419 +296,623 @@ class MainActivity : BaseActivity(),
         }
     }
 
+    /**
+     * handler
+     */
+
+    private fun handlerSetupFirst() {
+        // set default
+        handleCountryImage()
+        handleNewVpnState()
+        handleNewFooterState()
+        showBubbleHomeAnimation()
+    }
+
+    private fun handleErrorWhenConnect() {
+        // binding.tvMessageTopText.text = Data.connected_catch_txt
+//            binding.tvMessageBottomText.text =
+//                Data.connected_catch_check_internet_txt
+
+        //binding.tvMessageTopText.text =
+//                    Data.connected_error_danger_vpn_txt
+//                binding.tvMessageBottomText.text =
+//                    Data.connected_error_long_txt
+    }
+
+    private fun handleNewVpnState() {
+
+        // cancel animation first (fade in)
+        if (!isSetupFirst) {
+
+            startAnimation(
+                this@MainActivity,
+                R.id.la_animation,
+                R.anim.fade_in_1000,
+                true
+            )
+            // stop animation
+            binding.laAnimation.cancelAnimation()
+
+            showToast("NOT ONE")
+        }
+
+        // set new animation
+        val animationResource = when (vpnState) {
+            0 -> R.raw.ninjainsecure // disconnected
+            1 -> R.raw.conneting // connecting
+            2 -> R.raw.connected_wifi // connected
+            else -> R.raw.ninjainsecure // ??
+        }
+        binding.laAnimation.setAnimation(animationResource)
+
+        when (vpnState) {
+            0 -> {
+                saveIsStart(false, 0)
+//                Data.isStart = false
+                // disconnected
+                binding.btnConnection.text = Data.disconnected_btn
+                binding.btnConnection.background = this@MainActivity.let {
+                    ContextCompat.getDrawable(
+                        it,
+                        R.drawable.button_connect
+                    )
+                }
+
+                // scale main animation
+                binding.laAnimation.scaleX = 1f
+                binding.laAnimation.scaleY = 1f
+
+                // bubble
+
+                binding.tvMessageTopText.text = Data.disconnected_txt
+                binding.tvMessageBottomText.text = Data.disconnected_txt2
+            }
+
+            1 -> {
+                // connecting
+                binding.btnConnection.text = Data.connecting_btn
+                binding.btnConnection.background =
+                    this@MainActivity.let {
+                        ContextCompat.getDrawable(
+                            it,
+                            R.drawable.button_retry
+                        )
+                    }
+
+                // scale
+                binding.laAnimation.scaleX = 1.5f
+                binding.laAnimation.scaleY = 1.5f
+
+                // bubble
+
+                binding.tvMessageTopText.text = Data.connecting_txt + ' ' + City
+                binding.tvMessageBottomText.text = ""
+            }
+
+            2 -> {
+                saveIsStart(true, 2)
+//                Data.isStart = true
+                // connected
+                binding.btnConnection.text = Data.connected_btn
+                binding.btnConnection.background = this@MainActivity.let {
+                    ContextCompat.getDrawable(
+                        it,
+                        R.drawable.button_disconnect
+                    )
+                }
+
+                // scale
+                binding.laAnimation.scaleX = 1.5f
+                binding.laAnimation.scaleY = 1.5f
+
+                // bubble
+                binding.tvMessageTopText.text = Data.connected_txt + ' ' + City
+                binding.tvMessageBottomText.text = "اتصال شما امن است"
+            }
+
+            else -> {
+                // ??
+            }
+        }
+
+        // play again
+        binding.laAnimation.playAnimation()
+
+    }
+
+    private fun saveIsStart(isStart: Boolean, stateVpn: Int) {
+        Data.connectionStorage.putBoolean("isStart", isStart)
+        Data.connectionStorage.putInt("stateVpn", stateVpn)
+        Data.isStart = isStart
+    }
+
+    private fun handleNewFooterState() {
+        if (!isSetupFirst) {
+            // cancel all footer data here
+            // ??
+        }
+
+        when (footerState) {
+            0 -> {
+                // main data
+
+//                val handlerToday12 = Handler()
+//                handlerToday12.postDelayed({
+//                    startAnimation(
+//                        this@MainActivity,
+//                        R.id.ll_main_today,
+//                        R.anim.slide_down_800,
+//                        false
+//                    )
+//                    binding.llMainData.visibility = View.INVISIBLE
+//                }, 500)
+                val handlerData = Handler()
+                handlerData.postDelayed({
+                    startAnimation(
+                        this@MainActivity,
+                        R.id.ll_main_data,
+                        R.anim.slide_up_800,
+                        true
+                    )
+                }, 1000)
+
+
+            }
+
+            1 -> {
+                // main today
+//                val handlerToday12 = Handler()
+//                handlerToday12.postDelayed({
+//                    startAnimation(
+//                        this@MainActivity,
+//                        R.id.ll_main_data,
+//                        R.anim.slide_down_800,
+//                        false
+//                    )
+//                    binding.llMainData.visibility = View.INVISIBLE
+//                }, 500)
+
+//                // stop vpn
+//                val handlerToday12 = Handler()
+//                handlerToday12.postDelayed({
+//                    startAnimation(
+//                        this@MainActivity,
+//                        R.id.ll_main_data,
+//                        R.anim.slide_down_800,
+//                        false
+//                    )
+//                    binding.llMainData.visibility = View.INVISIBLE
+//                }, 500)
+
+                val handlerData = Handler()
+                handlerData.postDelayed({
+                    startAnimation(
+                        this@MainActivity,
+                        R.id.ll_main_today,
+                        R.anim.slide_up_800,
+                        true
+                    )
+                }, 1000)
+
+            }
+
+            2 -> {
+                // layout test (v2ray)
+
+                val handlerData = Handler()
+                handlerData.postDelayed({
+                    startAnimation(
+                        this@MainActivity,
+                        R.id.ll_main_layout_test,
+                        R.anim.slide_up_800,
+                        true
+                    )
+                }, 1000)
+
+            }
+        }
+    }
+
+    private fun showBubbleHomeAnimation() {
+        if (isSetupFirst) {
+            isSetupFirst = false
+
+            fadeIn1000 = AnimationUtils.loadAnimation(this@MainActivity, R.anim.fade_in_1000)
+            fade_out_1000 = AnimationUtils.loadAnimation(this@MainActivity, R.anim.fade_out_1000)
+            binding.llTextBubble.animation = fadeIn1000
+
+            val handlerToday = Handler()
+            handlerToday.postDelayed({
+                startAnimation(
+                    this@MainActivity,
+                    R.id.linearLayoutMainHome,
+                    R.anim.anim_slide_down,
+                    true
+                )
+                startAnimation(
+                    this@MainActivity,
+                    R.id.linearLayoutMainServers,
+                    R.anim.anim_slide_down,
+                    true
+                )
+            }, 1000)
+
+        }
+    }
+
+    // public
+    fun setNewVpnState(newState: Int) {
+        vpnState = newState
+
+        handleNewVpnState()
+    }
+
+    // public
+    fun setNewFooterState(newState: Int) {
+        footerState = newState
+
+        handleNewFooterState()
+    }
+
+    private fun handleCountryImage() {
+        CountryListManager.OpenVpnSetServerList(imageCountry, binding.ivServers)
+    }
+
+
+    // set animations
+    private fun startAnimation(ctx: Context, view: Int, animation: Int, show: Boolean) {
+        val element = findViewById<View>(view)
+        if (show) {
+            element.visibility = View.VISIBLE
+        } else {
+            element.visibility = View.INVISIBLE
+        }
+        val anim = AnimationUtils.loadAnimation(ctx, animation)
+        element.startAnimation(anim)
+    }
+
+    /*
+    
+    
+     */
+
     private fun connectToV2ray() {
         if (mainViewModel.isRunning.value == true) {
             Utils.stopVService(this)
-            mainAnimationState(0);
+            setNewVpnState(0)
         } else if ((settingsStorage?.decodeString(AppConfig.PREF_MODE) ?: "VPN") == "VPN") {
             val intent = VpnService.prepare(this)
             if (intent == null) {
                 startV2Ray()
-                mainAnimationState(3)
             } else {
                 requestVpnPermission.launch(intent)
             }
         } else {
             startV2Ray()
-            mainAnimationState(3)
         }
     }
-
-    /**
-     * Change server when user select new server
-     * @param server ovpn server details
-     */
-    fun newServer(server: OpenVpnServerList) {}
 
     private fun connectToOpenVpn() {
-//        val r = Runnable {
-//            if (!Data.isStart) {
-//                if (!Data.hasFile) {
-//                    val servers = Intent(this@MainActivity, ServerActivity::class.java)
-//                    startActivity(servers)
-//                    overridePendingTransition(
-//                        R.anim.anim_slide_in_right,
-//                        R.anim.anim_slide_out_left
-//                    )
-//                } else {
-//                    if (hasInternetConnection()) {
-//                        try {
-//                            startVpn(Data.ovpnContents) // File, certificate
-//
-//                            val handlerToday1 = Handler()
-//                            handlerToday1.postDelayed({
-//                                startAnimation(
-//                                    this@MainActivity,
-//                                    R.id.ll_main_today,
-//                                    R.anim.slide_down_800,
-//                                    false
-//                                )
-//                            }, 500)
-//                            val handlerData = Handler()
-//                            handlerData.postDelayed({
-//                                startAnimation(
-//                                    this@MainActivity,
-//                                    R.id.ll_main_data,
-//                                    R.anim.slide_up_800,
-//                                    true
-//                                )
-//                            }, 1000)
-//                            startAnimation(
-//                                this@MainActivity,
-//                                R.id.la_animation,
-//                                R.anim.fade_in_1000,
-//                                true
-//                            )
-//                            binding.laAnimation.cancelAnimation()
-//                            binding.laAnimation.setAnimation(R.raw.conneting)
-//                            binding.laAnimation.playAnimation()
-//                            binding.ivProgressBar.layoutParams.width = 10
-//                            progress = 10
-//                            startAnimation(
-//                                this@MainActivity,
-//                                R.id.iv_progress_bar,
-//                                R.anim.fade_in_1000,
-//                                true
-//                            )
-//                            binding.tvMainCountDown.visibility = View.VISIBLE
-//                            Data.CountDown = 30
-//                            try {
-//                                ConnectionTimer = object : CountDownTimer(32000, 1000) {
-//                                    override fun onTick(millisUntilFinished: Long) {
-//                                        Data.CountDown = Data.CountDown - 1
-//                                        binding.ivProgressBar.layoutParams.width = progress as Int
-//                                        progress =
-//                                            progress!! + resources.getDimension(R.dimen.lo_10dpGrid)
-//                                                .toInt()
-//                                        binding.tvMainCountDown.text = Data.CountDown.toString()
-//                                        if (Data.connection_status == 2) {
-//                                            ConnectionTimer!!.cancel()
-//                                            // ویرایش کردن مقدار "connection_time" در MMKV
-//                                            Data.settingsStorage.putString(
-//                                                "connection_time",
-//                                                Data.CountDown.toString()
-//                                            )
-//                                            // بررسی شرط
-//                                            if (Data.CountDown >= 20) {
-//                                                // بازیابی مقدار "rate" از MMKV
-//                                                val rate =
-//                                                    Data.settingsStorage.getString("rate", "false")
-//                                                // بررسی شرط
-//                                                if (rate == "false") {
-//                                                    // ایجاد یک Handler برای تاخیر
-//                                                    val handler = Handler()
-//                                                    handler.postDelayed({
-//
-//                                                        // ایجاد Intent برای رفتن به ReviewActivity
-//                                                        val servers = Intent(
-//                                                            this@MainActivity,
-//                                                            ReviewActivity::class.java
-//                                                        )
-//                                                        startActivity(servers)
-//                                                        overridePendingTransition(
-//                                                            R.anim.anim_slide_in_right,
-//                                                            R.anim.anim_slide_out_left
-//                                                        )
-//                                                    }, 1000)
-//                                                }
-//                                            }
-//                                            startAnimation(
-//                                                this@MainActivity,
-//                                                R.id.tv_main_count_down,
-//                                                R.anim.fade_out_1000,
-//                                                false
-//                                            )
-//                                            startAnimation(
-//                                                this@MainActivity,
-//                                                R.id.iv_progress_bar,
-//                                                R.anim.fade_out_1000,
-//                                                false
-//                                            )
-//                                            startAnimation(
-//                                                this@MainActivity,
-//                                                R.id.la_animation,
-//                                                R.anim.fade_out_1000,
-//                                                false
-//                                            )
-//                                        }
-//                                        if (Data.CountDown <= 20) {
-//                                            EnableConnectButton = true
-//                                        }
-//                                        if (Data.CountDown <= 1) {
-//                                            ConnectionTimer!!.cancel()
-//                                            startAnimation(
-//                                                this@MainActivity,
-//                                                R.id.tv_main_count_down,
-//                                                R.anim.fade_out_500,
-//                                                false
-//                                            )
-//                                            startAnimation(
-//                                                this@MainActivity,
-//                                                R.id.iv_progress_bar,
-//                                                R.anim.fade_out_500,
-//                                                false
-//                                            )
-//                                            startAnimation(
-//                                                this@MainActivity,
-//                                                R.id.la_animation,
-//                                                R.anim.fade_out_500,
-//                                                false
-//                                            )
-//                                            try {
-////                                                stop_vpn()
-//                                                val handlerToday1 = Handler()
-//                                                handlerToday1.postDelayed({
-//                                                    startAnimation(
-//                                                        this@MainActivity,
-//                                                        R.id.ll_main_data,
-//                                                        R.anim.slide_down_800,
-//                                                        false
-//                                                    )
-//                                                }, 500)
-//                                                val handlerData = Handler()
-//                                                handlerData.postDelayed({
-//                                                    startAnimation(
-//                                                        this@MainActivity,
-//                                                        R.id.ll_main_today,
-//                                                        R.anim.slide_up_800,
-//                                                        true
-//                                                    )
-//                                                }, 1000)
-//                                                startAnimation(
-//                                                    this@MainActivity,
-//                                                    R.id.la_animation,
-//                                                    R.anim.fade_in_1000,
-//                                                    true
-//                                                )
-//                                                binding.laAnimation.cancelAnimation()
-//                                                binding.laAnimation.setAnimation(R.raw.ninjainsecure)
-//                                                binding.laAnimation.playAnimation()
-//                                                Data.ShowDailyUsage = true
-//                                            } catch (e: Exception) {
-//                                                val params = Bundle()
-//                                                params.putString("device_id", MainApplication.device_id)
-//                                                params.putString("exception", "MA3$e")
-//                                                LogManager.logEvent(params)
-//                                            }
-//                                            Data.isStart = false
-//                                        }
-//                                    }
-//
-//                                    override fun onFinish() {}
-//                                }
-//                            } catch (e: Exception) {
-//                                val params = Bundle()
-//                                params.putString("device_id", MainApplication.device_id)
-//                                params.putString("exception", "MA4$e")
-//                                LogManager.logEvent(params)
-//                            }
-//                            ConnectionTimer!!.start()
-//                            EnableConnectButton = false
-//                            Data.isStart = true
-//
-//
-//                        } catch (e: Exception) {
-//                            val params = Bundle()
-//                            params.putString("device_id", MainApplication.device_id)
-//                            params.putString("exception", "MA5$e")
-//                            LogManager.logEvent(params)
-//                        }
-//                    }
-//                }
-//            } else {
-//                if (EnableConnectButton) {
-//                    try {
-////                        stop_vpn()
-//                        try {
-//                            ConnectionTimer!!.cancel()
-//                        } catch (e: Exception) {
-//                            val params = Bundle()
-//                            params.putString("device_id", MainApplication.device_id)
-//                            params.putString("exception", "MA6$e")
-//                            LogManager.logEvent(params)
-//                        }
-//                        try {
-//                            binding.ivProgressBar.visibility = View.INVISIBLE
-//                            binding.tvMainCountDown.visibility = View.INVISIBLE
-//                        } catch (e: Exception) {
-//                            val params = Bundle()
-//                            params.putString("device_id", MainApplication.device_id)
-//                            params.putString("exception", "MA7$e")
-//                            LogManager.logEvent(params)
-//                        }
-//                        val handlerToday1 = Handler()
-//                        handlerToday1.postDelayed({
-//                            startAnimation(
-//                                this@MainActivity,
-//                                R.id.ll_main_data,
-//                                R.anim.slide_down_800,
-//                                false
-//                            )
-//                            binding.llMainData.visibility = View.INVISIBLE
-//                        }, 500)
-//                        val handlerData = Handler()
-//                        handlerData.postDelayed({
-//                            startAnimation(
-//                                this@MainActivity,
-//                                R.id.ll_main_today,
-//                                R.anim.slide_up_800,
-//                                true
-//                            )
-//                        }, 1000)
-//                        startAnimation(
-//                            this@MainActivity,
-//                            R.id.la_animation,
-//                            R.anim.fade_in_1000,
-//                            true
-//                        )
-//                        binding.laAnimation.cancelAnimation()
-//                        binding.laAnimation.setAnimation(R.raw.ninjainsecure)
-//                        binding.laAnimation.playAnimation()
-//                        val ConnectionTime = Data.settingsStorage.getString("connection_time", "0")
-//                        if (ConnectionTime!!.toLong() >= 20) {
-//                            Data.settingsStorage.putString("connection_time", "0")
-//                            val rate = Data.settingsStorage.getString("rate", "false")
-//                            if (rate == "false") {
-//                                val handler = Handler()
-//                                handler.postDelayed({
-//                                    val servers =
-//                                        Intent(this@MainActivity, ReviewActivity::class.java)
-//                                    startActivity(servers)
-//                                    overridePendingTransition(
-//                                        R.anim.anim_slide_in_right,
-//                                        R.anim.anim_slide_out_left
-//                                    )
-//                                }, 500)
-//                            }
-//                        }
-//                        Data.ShowDailyUsage = true
-//                    } catch (e: Exception) {
-//                        val params = Bundle()
-//                        params.putString("device_id", MainApplication.device_id)
-//                        params.putString("exception", "MA6$e")
-//                        LogManager.logEvent(params)
-//                    }
-//                    Data.isStart = false
-//                }
-//            }
-//        }
-//        r.run()
-    }
-
-//    override fun updateState(
-//        state: String?,
-//        logmessage: String?,
-//        localizedResId: Int,
-//        level: ConnectionStatus?,
-//        Intent: Intent?
-//    ) {
-//        runOnUiThread {
-//            if (state == "CONNECTED") {
-//                Data.isStart = true
-//                Data.connection_status = 2
-//                val handlerData = Handler()
-//                handlerData.postDelayed({
-//                    startAnimation(this@MainActivity, R.id.la_animation, R.anim.fade_in_1000, true)
-//                    binding.laAnimation.cancelAnimation()
-//                    binding.laAnimation.setAnimation(R.raw.ninjasecure)
-//                    binding.laAnimation.playAnimation()
-//                }, 1000)
-//                EnableConnectButton = true
-//            }
-//        }
-//    }
-
-//    override fun updateByteCount(ins: Long, outs: Long, diffIns: Long, diffOuts: Long) {
-//        val Total = ins + outs
-//        runOnUiThread {
-//            // size
-//            if (Total < 1000) {
-//                binding.tvDataText.text = Data.default_byte_txt
-//                binding.tvDataName.text = Data.update_count_txt
-//            } else if (Total <= 1000000) {
-//                binding.tvDataText.text = (Total / 1000).toString() + Data.KB
-//                binding.tvDataName.text = Data.update_count_txt
-//            } else {
-//                binding.tvDataText.text = (Total / 1000000).toString() + Data.MB
-//                binding.tvDataName.text = Data.update_count_txt
-//            }
-//        }
-//    }
-
-    // change animation main state
-    private fun mainAnimationState(status: Int) { // la_animation_connected
-        Data.connection_status = status
-        setTextButtonConnectHome()
-        startAnimation(
-            this,
-            R.id.la_animation,
-            R.anim.fade_in_1000,
-            true
-        )
-        binding.laAnimation.cancelAnimation()
-        val animationResource = when (status) {
-            0 -> R.raw.ninjainsecure // disconnected
-            1 -> R.raw.conneting // connecting
-            else -> R.raw.connected_wifi // connected
+        if (Data.isStart) {
+            stopVpn()
+        } else {
+            prepareVpn()
         }
-        binding.laAnimation.setAnimation(animationResource)
-        when (status) {
-            0 -> {
-                // تنظیم اندازه انیمیشن به 300dp
-//                val newWidth = 200.dpToPx() // تبدیل dp به پیکسل
-//                val newHeight = 200.dpToPx()
-                binding.laAnimation.scaleX = 1f
-                binding.laAnimation.scaleY = 1f
-//                binding.laAnimation.requestLayout()
-            } // disconnected
-            1 -> {
-                // تنظیم اندازه انیمیشن به 300dp
-//                val newWidth = 250.dpToPx() // تبدیل dp به پیکسل
-//                val newHeight = 250.dpToPx()
-                binding.laAnimation.scaleX = 1.5f
-                binding.laAnimation.scaleY = 1.5f
-//                binding.laAnimation.requestLayout()
-            }// connecting
-            else -> {
-                // تنظیم اندازه انیمیشن به 300dp
-//                val newWidth = 300.dpToPx() // تبدیل dp به پیکسل
-//                val newHeight = 300.dpToPx()
-                binding.laAnimation.scaleX = 1.5f
-                binding.laAnimation.scaleY = 1.5f
-//                binding.laAnimation.requestLayout()
-            } // connected
-        }
-        binding.laAnimation.playAnimation()
     }
 
 //    private fun Int.dpToPx(): Int {
 //        return (this * Resources.getSystem().displayMetrics.density).toInt()
 //    }
 
+
+    /**
+     * openvpn fun
+     */
+    private fun initializeAll() {
+        connection = CheckInternetConnection()
+
+        // Create New Profile (OpenVpn)
+//        val file = ENCRYPT_DATA.decrypt(Data.connectionStorage.getString("file", null))
+//        val name = "Profile from remote App"
+//        val profile: APIVpnProfile? = testoo?.addNewVPNProfile(name, false, file)
+//        testoo?.startProfile(profile?.mUUID);
+
+        // Checking is vpn already running or not (OpenVpn)
+        isServiceRunning
+        VpnStatus.initLogCache(this.cacheDir)
+    }
+
+    /**
+     * Stop vpn
+     *
+     * @return boolean: VPN status
+     */
+    private fun stopVpn(): Boolean {
+        try {
+            OpenVPNThread.stop()
+            setNewVpnState(0)
+            return true
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return false
+    }
+
+    /**
+     * Show show disconnect confirm dialog
+     */
+//    fun confirmDisconnect() {
+//        val builder = AlertDialog.Builder(this)
+//        builder.setMessage("تایید کنید")
+//        builder.setPositiveButton(
+//            this.getString(R.string.yes),
+//            { dialog, id -> stopVpn() })
+//        builder.setNegativeButton(
+//            this.getString(R.string.no)
+//        ) { dialog, id ->
+//            // User cancelled the dialog
+//        }
+//
+//        // Create the AlertDialog
+//        val dialog = builder.create()
+//        dialog.show()
+//    }
+
+    /**
+     * Prepare for vpn connect with required permission
+     */
+    private fun prepareVpn() {
+        if (!Data.isStart) {
+            if (internetStatus) {
+                // Checking permission for network monitor
+                val intent = VpnService.prepare(this)
+                if (intent != null) {
+                    startActivityForResult(intent, 1);
+                } else startVpn() //have already permission
+
+            } else {
+
+                // No internet connection available
+                showToast("شما به اینترنت متصل نیستید !!")
+            }
+        } else if (stopVpn()) {
+
+            // VPN is stopped, show a Toast message.
+            showToast("با موفقیت قطع شد")
+        }
+    }
+
+    /**
+     * Taking permission for network access
+     */
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == RESULT_OK) {
+
+            //Permission granted, start the VPN
+            startVpn();
+        } else {
+            showToast("دسترسی رد شد !! ");
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    /**
+     * Start the VPN
+     */
+    fun startVpn() {
+        try {
+            val file = Data.connectionStorage.getString("file", null)
+//            val filePass = MainActivity.ENCRYPT_DATA.decrypt(
+//                Data.connectionStorage.getString(
+//                    "filePass",
+//                    null
+//                )
+//            )
+//            val fileUser = MainActivity.ENCRYPT_DATA.decrypt(
+//                Data.connectionStorage.getString(
+//                    "fileUser",
+//                    null
+//                )
+//            )
+//            val country = Data.connectionStorage.getString("country", "NULL")
+//            if (file == null) {
+//                Toast.makeText(this, "Null!", Toast.LENGTH_SHORT).show()
+//            }
+//            Toast.makeText(this, "Start!", Toast.LENGTH_SHORT).show()
+//            Log.d("T", fileUser)
+//            Log.d("T", filePass)
+//            Log.d("T", (file)!!)
+//            Log.d("G", (country)!!)
+
+            // .ovpn file
+//            val outPlocal = Data.connectionStorage.getString("fileLocal", "null");
+
+//            val conf: InputStream? = outPlocal?.let { this.assets?.open(it) }
+//            val isr = InputStreamReader(conf)
+//            val br = BufferedReader(isr)
+//            var config = ""
+//            var line: String?
+//
+//            while (true) {
+//                line = br.readLine()
+//                if (line == null) break
+//                config += "$line\n"
+//            }
+//
+//            br.readLine()
+
+//            Log.d("THIS is file", config)
+            if (file != null) {
+                setNewVpnState(1)
+
+                OpenVpnApi.startVpn(this, file, "Japan", "App", "App")
+
+                // Update log
+//            binding.tvMessageTopText.setText("Connecting...");
+                Toast.makeText(this, "در حال اتصال ...", Toast.LENGTH_SHORT).show()
+
+            } else {
+                Toast.makeText(this, "کانفیگی یافت نشد", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: RemoteException) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * Status change with corresponding vpn connection status
+     *
+     * @param connectionState
+     */
+    fun setStatus(connectionState: String?) {
+        if (connectionState != null) {
+            when (connectionState) {
+                "DISCONNECTED" -> {
+                    stopVpn()
+                    setDefaultStatus()
+                }
+
+                "CONNECTED" -> {
+                    showToast("وصل شد ..")
+                    setNewVpnState(2)
+                }
+
+                "WAIT" -> {
+                    setNewVpnState(1)
+                }
+
+                "AUTH" -> {}
+                "RECONNECTING" -> {
+                    setNewVpnState(1)
+                }
+
+                "NONETWORK" -> {}
+            }
+        }
+    }
+
+    /**
+     * Receive broadcast message
+     */
+    var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            try {
+                setStatus(intent.getStringExtra("state"))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            try {
+                var duration = intent.getStringExtra("duration")
+                var lastPacketReceive = intent.getStringExtra("lastPacketReceive")
+                var byteIn = intent.getStringExtra("byteIn")
+                var byteOut = intent.getStringExtra("byteOut")
+                if (duration == null) duration = "00:00:00"
+                if (lastPacketReceive == null) lastPacketReceive = "0"
+                if (byteIn == null) byteIn = " "
+                if (byteOut == null) byteOut = " "
+                updateConnectionStatus(duration, lastPacketReceive, byteIn, byteOut)
+
+//                final long Total = ins + outs;
+
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                // size
+//                if (Total < 1000) {
+//                    tv_data_text.setText("1KB");
+//                    tv_data_name.setText("USED");
+//                } else if ((Total >= 1000) && (Total <= 1000_000)) {
+//                    tv_data_text.setText((Total / 1000) + "KB");
+//                    tv_data_name.setText("USED");
+//                } else {
+//                    tv_data_text.setText((Total / 1000_000) + "MB");
+//                    tv_data_name.setText("USED");
+//                }
+//            }
+//        });
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    /**
+     * Update status UI
+     *
+     * @param duration:          running time
+     * @param lastPacketReceive: last packet receive time
+     * @param byteIn:            incoming data
+     * @param byteOut:           outgoing data
+     */
+    fun updateConnectionStatus(
+        duration: String?,
+        lastPacketReceive: String?,
+        byteIn: String?,
+        byteOut: String?
+    ) {
+//        binding.durationTv.setText("Duration: " + duration);
+//        binding.lastPacketReceiveTv.setText("Packet Received: " + lastPacketReceive + " second ago");
+//        binding.byteInTv.setText("Bytes In: " + byteIn);
+//        binding.byteOutTv.setText("Bytes Out: " + byteOut);
+    }
+
+    /**
+     * Show toast message
+     *
+     * @param message: toast message
+     */
+    fun showToast(message: String?) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    /**
+     * Change server when user select new server
+     * //     * @param server ovpn server details
+     */
+//    fun newServer() { // Server server
+////        this.server = server;
+////        updateCurrentServerIcon(server.getFlagUrl());
+//
+//        // Stop previous connection
+//        if (Data.isStart) {
+//            stopVpn()
+//        }
+//        prepareVpn()
+//    }
+
+    /**
+     * v2ray
+     */
     // v2ray
     private fun startV2Ray() {
         if (mainStorage?.decodeString(MmkvManager.KEY_SELECTED_SERVER).isNullOrEmpty()) {
+            setNewVpnState(0)
             return
         }
+        setNewVpnState(1)
         showCircle()
         V2RayServiceManager.startV2Ray(this)
         hideCircle()
+
+        setNewVpnState(2)
+
     }
 
-    fun restartV2Ray() {
-        if (mainViewModel.isRunning.value == true) {
-            Utils.stopVService(this)
-        }
-        Observable.timer(500, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                startV2Ray()
-            }
-    }
+//    fun restartV2Ray() {
+//        if (mainViewModel.isRunning.value == true) {
+//            Utils.stopVService(this)
+//        }
+//        Observable.timer(500, TimeUnit.MILLISECONDS)
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe {
+//                startV2Ray()
+//            }
+//    }
 
     private fun showCircle() {
         // connection
-//        mainAnimationState(1)
         binding.fabProgressCircle.show()
     }
 
@@ -1119,7 +922,6 @@ class MainActivity : BaseActivity(),
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     try {
-//                        mainAnimationState(3);
                         if (binding.fabProgressCircle.isShown) {
                             binding.fabProgressCircle.hide()
                         }
@@ -1132,20 +934,16 @@ class MainActivity : BaseActivity(),
         }
     }
 
+    // save default v2ray config
     private fun initializeApp() {
-        // اگر اولین بار استفاده می‌شود، اجرای کد مربوط به نصب برنامه
-        if (isFirstRun()) {
-            // فراخوانی متد checkIsLogin و ارسال context و callback
-            GetAllV2ray.setRetV2ray(
-                this
-            ) { retV2ray ->
-                try {
-                    importBatchConfig(retV2ray)
-                    // ذخیره اطلاعات یکبار برای اجراهای بعدی
-                    saveFirstRunFlag()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+        MmkvManager.removeAllServer()
+        GetAllV2ray.setRetV2ray(
+            this
+        ) { retV2ray ->
+            try {
+                importBatchConfig(retV2ray)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
@@ -1179,16 +977,6 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    private fun isFirstRun(): Boolean {
-        val mmkv = MMKV.defaultMMKV()
-        return !mmkv.decodeBool("isFirstRun", false)
-    }
-
-    private fun saveFirstRunFlag() {
-        val mmkv = MMKV.defaultMMKV()
-        mmkv.encode("isFirstRun", true)
-    }
-
     private fun setTestState(content: String?) {
         binding.tvTestState.text = content
     }
@@ -1199,6 +987,7 @@ class MainActivity : BaseActivity(),
             setTestState(getString(R.string.connection_test_testing))
             mainViewModel.testCurrentServerRealPing()
         } else {
+            // handle error here
 //                tv_test_state.text = getString(R.string.connection_test_fail)
         }
     }
@@ -1213,6 +1002,7 @@ class MainActivity : BaseActivity(),
 //                    fab.setImageResource(R.drawable.ic_stat_name)
                 }
 //                fab.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_orange))
+                setNewVpnState(2);
                 setTestState(getString(R.string.connection_connected))
                 binding.layoutTest.isFocusable = true
             } else {
@@ -1220,6 +1010,7 @@ class MainActivity : BaseActivity(),
 //                    fab.setImageResource(R.drawable.ic_stat_name)
                 }
 //                fab.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_grey))
+                setNewVpnState(0)
                 setTestState(getString(R.string.connection_not_connected))
                 binding.layoutTest.isFocusable = false
             }
@@ -1282,19 +1073,42 @@ class MainActivity : BaseActivity(),
             }
         }
 //        binding.drawerLayout.closeDrawer(GravityCompat.START)
+        /**
+         * OpenVpn
+         */
+//        newServer()
+//        changeServer.newServer(serverLists.get(index));
         return true
     }
 
-    //
-    fun startAnimation(ctx: Context?, view: Int, animation: Int, show: Boolean) {
-        val Element = findViewById<View>(view)
-        if (show) {
-            Element.visibility = View.VISIBLE
-        } else {
-            Element.visibility = View.INVISIBLE
-        }
-        val anim = AnimationUtils.loadAnimation(ctx, animation)
-        Element.startAnimation(anim)
+
+    //     /**
+//     * On navigation item click, close drawer and change server
+//     *
+//     * @param index: server index
+//     */
+//    override fun clickedItem(int index) {
+//    }
+    override fun onResume() {
+        super.onResume()
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(broadcastReceiver, IntentFilter("connectionState"))
+        restoreTodayTextTv()
+    }
+
+    /**
+     * On navigation item click, close activity and change server
+     *
+     * @param index: server index
+     */
+    override fun newServer(server: OpenVpnServerList) {
+//        changeServer.newServer(serverLists.get(index));
+    }
+
+    override fun onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
+
+        super.onPause()
     }
 
     companion object {
