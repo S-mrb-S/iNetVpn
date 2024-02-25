@@ -24,6 +24,8 @@ import com.tencent.mmkv.MMKV;
 
 import java.util.Calendar;
 
+import de.blinkt.openvpn.core.App;
+
 public class MainApplication extends MultiDexApplication implements Configuration.Provider {
     public static final String PREF_LAST_VERSION = "pref_last_version";
     public static MainApplication application;
@@ -42,6 +44,9 @@ public class MainApplication extends MultiDexApplication implements Configuratio
     @Override
     public void onCreate() {
         super.onCreate();
+
+        App.setOpenVpn(this);
+
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean firstRun = defaultSharedPreferences.getInt(PREF_LAST_VERSION, 0) != BuildConfig.VERSION_CODE;
         if (firstRun)

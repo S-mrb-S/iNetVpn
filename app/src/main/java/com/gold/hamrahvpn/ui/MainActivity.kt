@@ -27,12 +27,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.gold.hamrahvpn.R
 import com.gold.hamrahvpn.databinding.ActivityMainBinding
+import com.gold.hamrahvpn.handler.CheckLoginFromApi
 import com.gold.hamrahvpn.handler.GetAllV2ray
 import com.gold.hamrahvpn.interfaces.ChangeServer
 import com.gold.hamrahvpn.model.OpenVpnServerList
 import com.gold.hamrahvpn.util.CheckInternetConnection
 import com.gold.hamrahvpn.util.CountryListManager
 import com.gold.hamrahvpn.util.Data
+import com.gold.hamrahvpn.util.Data.appValStorage
 import com.gold.hamrahvpn.util.EncryptData
 import com.google.android.material.navigation.NavigationView
 import com.tbruyelle.rxpermissions.RxPermissions
@@ -100,7 +102,7 @@ class MainActivity : BaseActivity(),
         0 // 0 --> ninja (no connect) \\ 1 --> loading (ninja (load again)) (connecting) \\ 2 --> connected (wifi (green logo))
 
     private var footerState: Int =
-        0 // 0 --> main_data \\ 1 --> main_today \\ 2 --> v2ray test layout
+        1 // 0 --> main_data \\ 1 --> main_today \\ 2 --> v2ray test layout
 
     private var isSetupFirst: Boolean = true
 
@@ -153,14 +155,39 @@ class MainActivity : BaseActivity(),
         }
     }
 
+    private fun checkInformationUser() {
+
+        val uL = appValStorage.getString("usernameLogin", null);
+        val uU = appValStorage.getString("usernamePassword", null);
+
+        CheckLoginFromApi.checkIsLogin(
+            this@MainActivity,
+            uL,
+            uU
+        ) { getApi, _ ->
+            try {
+//                Log.d("API", getApi.toString())
+                if (!getApi) {
+                    showToast("اشتراک شما به پایان رسیده است")
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    overridePendingTransition(R.anim.fade_in_1000, R.anim.fade_out_500)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        Data.isStart = Data.connectionStorage.getBoolean("isStart", false)
-        vpnState = Data.connectionStorage.getInt("stateVpn", 0)
+        checkInformationUser()
+//        Data.isStart = Data.connectionStorage.getBoolean("isStart", false)
+//        vpnState = Data.connectionStorage.getInt("stateVpn", 0)
 
         handlerSetupFirst()
 
@@ -172,7 +199,7 @@ class MainActivity : BaseActivity(),
         copyAssets()
 
         // Load default config type and save.
-        defaultItemDialog = Data.settingsStorage.getInt("default_connection_type", 0)
+        Data.defaultItemDialog = Data.settingsStorage.getInt("default_connection_type", 0)
 
         setupClickListener()
 
@@ -208,7 +235,7 @@ class MainActivity : BaseActivity(),
 
         binding.linearLayoutMainServers.setOnClickListener {
 
-            val servers: Intent = if (defaultItemDialog == 0) {
+            val servers: Intent = if (Data.defaultItemDialog == 0) {
                 Intent(this@MainActivity, MainAngActivity::class.java)
             } else {
                 Intent(this@MainActivity, ServerActivity::class.java)
@@ -266,11 +293,11 @@ class MainActivity : BaseActivity(),
         builder.setTitle(Data.item_txt)
         builder.setSingleChoiceItems(
             Data.item_options,
-            defaultItemDialog
+            Data.defaultItemDialog
         ) { dialog: DialogInterface, which: Int ->  // which --> 0, 1
             Data.settingsStorage.putInt("default_connection_type", which)
             Handler().postDelayed({ dialog.dismiss() }, 300)
-            defaultItemDialog = which
+            Data.defaultItemDialog = which
 
             if (which == 0) {
                 setNewFooterState(2) //v2ray
@@ -309,14 +336,32 @@ class MainActivity : BaseActivity(),
     }
 
     private fun handleErrorWhenConnect() {
-        // binding.tvMessageTopText.text = Data.connected_catch_txt
-//            binding.tvMessageBottomText.text =
-//                Data.connected_catch_check_internet_txt
+        binding.tvMessageTopText.text = Data.connected_catch_txt
+        binding.tvMessageBottomText.text =
+            Data.connected_catch_check_internet_txt
 
-        //binding.tvMessageTopText.text =
-//                    Data.connected_error_danger_vpn_txt
-//                binding.tvMessageBottomText.text =
-//                    Data.connected_error_long_txt
+//        binding.btnConnection.text = Data.connecting_btn
+        binding.btnConnection.background =
+            this@MainActivity.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.button_retry
+                )
+            }
+    }
+
+    private fun handleAUTH() {
+        binding.tvMessageTopText.text = "درحال ورود به سرور"
+        binding.tvMessageBottomText.text = "لطفا منتظر بمانید"
+
+        binding.btnConnection.text = "لغو"
+        binding.btnConnection.background =
+            this@MainActivity.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.button_retry
+                )
+            }
     }
 
     private fun handleNewVpnState() {
@@ -333,7 +378,6 @@ class MainActivity : BaseActivity(),
             // stop animation
             binding.laAnimation.cancelAnimation()
 
-            showToast("NOT ONE")
         }
 
         // set new animation
@@ -421,8 +465,8 @@ class MainActivity : BaseActivity(),
     }
 
     private fun saveIsStart(isStart: Boolean, stateVpn: Int) {
-        Data.connectionStorage.putBoolean("isStart", isStart)
-        Data.connectionStorage.putInt("stateVpn", stateVpn)
+//        Data.connectionStorage.putBoolean("isStart", isStart)
+//        Data.connectionStorage.putInt("stateVpn", stateVpn)
         Data.isStart = isStart
     }
 
@@ -674,6 +718,7 @@ class MainActivity : BaseActivity(),
 
                 // No internet connection available
                 showToast("شما به اینترنت متصل نیستید !!")
+                handleErrorWhenConnect()
             }
         } else if (stopVpn()) {
 
@@ -774,7 +819,6 @@ class MainActivity : BaseActivity(),
                 }
 
                 "CONNECTED" -> {
-                    showToast("وصل شد ..")
                     setNewVpnState(2)
                 }
 
@@ -782,12 +826,13 @@ class MainActivity : BaseActivity(),
                     setNewVpnState(1)
                 }
 
-                "AUTH" -> {}
+                "AUTH" -> handleAUTH()
+
                 "RECONNECTING" -> {
                     setNewVpnState(1)
                 }
 
-                "NONETWORK" -> {}
+                "NONETWORK" -> handleErrorWhenConnect()
             }
         }
     }
@@ -949,19 +994,17 @@ class MainActivity : BaseActivity(),
     }
 
     private fun fabOnClick() {
-        when (defaultItemDialog) {
+        when (Data.defaultItemDialog) {
             1 -> connectToOpenVpn()
             0 -> connectToV2ray()
         }
     }
 
     private fun importBatchConfig(server: String?, subid: String = "") {
-        val subid2 = if (subid.isNullOrEmpty()) {
+        val subid2 = subid.ifEmpty {
             mainViewModel.subscriptionId
-        } else {
-            subid
         }
-        val append = subid.isNullOrEmpty()
+        val append = subid.isEmpty()
 
         var count = AngConfigManager.importBatchConfig(server, subid2, append)
         if (count <= 0) {
@@ -973,7 +1016,7 @@ class MainActivity : BaseActivity(),
         if (count > 0) {
             mainViewModel.reloadServerList()
         } else {
-//            toast(R.string.toast_failure)
+            showToast("داده ها ذخیره نشد !")
         }
     }
 
@@ -1010,9 +1053,17 @@ class MainActivity : BaseActivity(),
 //                    fab.setImageResource(R.drawable.ic_stat_name)
                 }
 //                fab.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_grey))
-                setNewVpnState(0)
-                setTestState(getString(R.string.connection_not_connected))
-                binding.layoutTest.isFocusable = false
+
+                /**
+                 * این مدل در پس زمینه و کمی دیر تر از بقیه اجرا میشوند و باعث میشود که همه چیز را ریست کند
+                 * از مقدار ذخیره شده از قبل استفاده میکنم تا به مشکل نخورد
+                 */
+                if (Data.defaultItemDialog == 0) {
+                    setNewVpnState(0)
+                    setTestState(getString(R.string.connection_not_connected))
+                    binding.layoutTest.isFocusable = false
+                }
+
             }
             hideCircle()
         }
@@ -1059,8 +1110,18 @@ class MainActivity : BaseActivity(),
                 Toast.makeText(this@MainActivity, "بزودی ...", Toast.LENGTH_SHORT).show()
             }
 
+            R.id.info -> {
+                startActivity(Intent(this, Info::class.java))
+                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)
+            }
+
             R.id.logout -> {
-                Toast.makeText(this@MainActivity, "بزودی ...", Toast.LENGTH_SHORT).show()
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+
+                Data.appValStorage.encode("isLoginBool", false)
+
+                startActivity(Intent(this, LoginActivity::class.java))
+                overridePendingTransition(R.anim.fade_in_1000, R.anim.fade_out_500)
             }
 
             R.id.feedback -> {
@@ -1071,6 +1132,7 @@ class MainActivity : BaseActivity(),
                 startActivity(Intent(this, ContactActivity::class.java))
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
             }
+
         }
 //        binding.drawerLayout.closeDrawer(GravityCompat.START)
         /**
@@ -1112,9 +1174,6 @@ class MainActivity : BaseActivity(),
     }
 
     companion object {
-        @JvmField
-        var defaultItemDialog = 0 // 0 --> V2ray, 1 --> OpenVpn
-
         @JvmField
         val ENCRYPT_DATA = EncryptData()
     }

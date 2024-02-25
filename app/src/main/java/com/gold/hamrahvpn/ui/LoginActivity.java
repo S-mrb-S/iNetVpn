@@ -2,6 +2,10 @@ package com.gold.hamrahvpn.ui;
 
 import static com.gold.hamrahvpn.util.Data.appValStorage;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +19,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -54,6 +60,48 @@ public class LoginActivity extends AppCompatActivity {
 
         btn_welcome_later = findViewById(R.id.btn_welcome_later);
 
+
+//        final TextView textView = findViewById(R.id.textView);
+
+//        final int screenWidth = getResources().getDisplayMetrics().widthPixels;
+//
+//        final ValueAnimator animator = ValueAnimator.ofFloat(screenWidth - 20, -screenWidth -50);
+//        animator.setDuration(10000); // مدت زمان حرکت به میلی‌ثانیه
+//        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
+//                float value = (float) valueAnimator.getAnimatedValue();
+//                textView.setTranslationX(value);
+//            }
+//        });
+//        animator.addListener(new AnimatorListenerAdapter() {
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                // وقتی انیمیشن به پایان رسید، متن را به سمت راست مجدداً ببرید و انیمیشن را شروع کنید
+//                textView.setTranslationX(screenWidth);
+//                animator.start();
+//            }
+//        });
+//
+//        animator.start();
+
+//        final int screenWidth = getResources().getDisplayMetrics().widthPixels;
+//        final float initialX = screenWidth;
+//
+//        final ObjectAnimator animator = ObjectAnimator.ofFloat(textView, "translationX", initialX, -screenWidth);
+//        animator.setDuration(5000); // مدت زمان حرکت به میلی‌ثانیه
+//        animator.setRepeatCount(ObjectAnimator.INFINITE); // برای چرخش بی‌پایان
+//        animator.addListener(new AnimatorListenerAdapter() {
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                // هنگام پایان انیمیشن، تغییر متن را انجام دهید
+//                super.onAnimationEnd(animation);
+//                textView.setTranslationX(initialX);
+//            }
+//        });
+//
+//        animator.start();
+
         Handler handler = new Handler();
 
         handler.postDelayed(() -> startAnimation(LoginActivity.this, R.id.ll_main_layout_login, R.anim.slide_up_800, true), 500);
@@ -88,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                statusIsLogin.setTextColor(ContextCompat.getColor(LoginActivity.this, R.color.colorBubble));
             }
         });
 
@@ -153,37 +202,39 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void saveAndFinish() {
+        statusIsLogin.setText("");
+        setActionInputText(false);
         String inputUserText = Objects.requireNonNull(txtUsername.getText()).toString();
         String inputPassText = Objects.requireNonNull(txtPassword.getText()).toString();
 
-        CheckLoginFromApi.checkIsLogin(LoginActivity.this, inputUserText, inputPassText, new CheckLoginFromApi.LoginCallback() {
-            @Override
-            public void onLoginResult(boolean isLogin) {
-                appValStorage.encode("isLoginBool", isLogin);
+        CheckLoginFromApi.checkIsLogin(LoginActivity.this, inputUserText, inputPassText, (isLogin, message) -> {
+            appValStorage.encode("isLoginBool", isLogin);
 
-                if (isLogin){
-                    try {
-                        Intent Main = new Intent(LoginActivity.this, MainActivity.class);
-                        Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(Main);
-                        overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
-                    } catch (Exception e) {
-                        Bundle params = new Bundle();
-                        params.putString("device_id", MainApplication.device_id);
-                        params.putString("exception", "MAA1" + e);
-                        LogManager.logEvent(params);
-                    } finally {
-                        finish();
-                    }
-                }else{
-                    statusIsLogin.setText("پسورد یا یوزرنیم اشتباه است");
+            if (isLogin){
+                try {
+                    Intent Main = new Intent(LoginActivity.this, MainActivity.class);
+                    Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(Main);
+                    overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+                } catch (Exception e) {
+                    Bundle params = new Bundle();
+                    params.putString("device_id", MainApplication.device_id);
+                    params.putString("exception", "MAA1" + e);
+                    LogManager.logEvent(params);
+                } finally {
+                    finish();
                 }
+            }else{
+                statusIsLogin.setText(message);
+                statusIsLogin.setTextColor(ContextCompat.getColor(this, R.color.colorPingRed));
+                setActionInputText(true);
+//        Handler handler = new Handler();
+//        handler.postDelayed(this::endThisActivityWithCheck, 100);
             }
         });
     }
 
     private void setActionInputText(Boolean isLogin) {
-        Log.d("ACTION", isLogin.toString());
         if (isLogin) {
             btn_welcome_later.setBackgroundResource(R.drawable.round_input_active);
             isTextForLogin = true;

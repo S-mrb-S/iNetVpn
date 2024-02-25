@@ -86,7 +86,7 @@ public class Data {
     public static ArrayList<OpenVpnServerList> serverLists;
     public static Boolean hasFile;
     // App
-    public static boolean isStart;
+    public static boolean isStart = false;
     public static int connection_status = 0;
     public static boolean abortConnection = false;
     public static long CountDown;
@@ -98,7 +98,12 @@ public class Data {
     public static final String ApiLoginName = "getuser";
     public static final String ApiOpenVpnName = "getallopenvpn";
     public static final String ApiV2rayName = "getallv2ray";
-
     //
+
+    public static String GetAllOpenVpnContent;
+
+
+    public static int defaultItemDialog = 0; // 0 --> V2ray, 1 --> OpenVpn
+
 
 }

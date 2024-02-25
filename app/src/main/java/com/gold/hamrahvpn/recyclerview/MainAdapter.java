@@ -60,23 +60,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         return dataSet.size();
     }
 
-    @Deprecated
-    public void remove(int position) {
-        dataSet.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    @Deprecated
-    public void add(List<OpenVpnServerList> dataAdd, int position) {
-//        final OpenVpnServerList OpenVpnServerList = dataAdd.get(position);
-//            dataAdd.add(position, text);
-//        final ServerListItem ServerListItem = dataSet.get(position);
-//        holderHelper.setItemHolder(ServerListItem, holder);
-        // bottom
-//        holderHelper.setBackgroundHolder(holder.itemView, position);
-        notifyItemInserted(position);
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_country;
         public View vitem;

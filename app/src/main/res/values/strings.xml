@@ -2,6 +2,9 @@
 <resources>
     <string name="app_name" translatable="false">Hamrah Vpn</string>
 
+
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
     <!--    openvpn-->
     <!--<string name="title_activity_server_list">OpenVpnServerList Lists</string>
     <string name="action_settings">Settings</string>
@@ -481,13 +484,14 @@
     <string name="tv_usage_faq_qv_1">چطور تنظیمات سرور های v2ray را شخصی سازی کنم؟</string>
     <string name="tv_usage_faq_qv_2">فقط روی دکمه تنظیمات گوشه سمت راست بالا ضربه بزنید و کانفیگ سرور ها را تغییر دهید</string>
     <string name="tv_contact_title">درباره ی ما</string>
-    <string name="tv_about_contact_problem">by MRB</string>
-    <string name="tv_about_contact_me"><![CDATA[Github --> MehraB832]]></string>
+    <string name="tv_about_contact_problem">by Mr_artan, MehrabSp</string>
+    <string name="tv_about_contact_me">**</string>
     <string name="tv_review_title">Enjoying Hamrah VPN?</string>
     <string name="tv_review_sup">If you like this app, please give it 5 stars :)</string>
     <string name="btn_review_submit">SUBMIT REVIEW</string>
     <string name="iv_flag">name of the country</string>
     <string name="tv_country">New York, USA</string>
+    <string name="testlogincaptcha">یوزرنیم و پسورد خود را وارد کنید</string>
 
     <string-array name="share_method">
         <item>QRcode</item>

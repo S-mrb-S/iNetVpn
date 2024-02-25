@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingLeanbackLauncher">
-
-    <!--by Mehrab-->
+    tools:ignore="MissingLeanbackLauncher"> <!-- by Mehrab -->
     <uses-sdk
         android:minSdkVersion="21"
         tools:overrideLibrary="com.blacksquircle.ui.editorkit" />
@@ -13,9 +11,7 @@
         android:largeScreens="true"
         android:normalScreens="true"
         android:smallScreens="true"
-        android:xlargeScreens="true" />
-
-    <!-- Global permissions -->
+        android:xlargeScreens="true" /> <!-- Global permissions -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -44,12 +40,11 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
-
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
-        android:extractNativeLibs="true"
         android:banner="@mipmap/ic_banner"
+        android:extractNativeLibs="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -57,12 +52,14 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:extractNativeLibs"
         tools:targetApi="m">
+        <activity
+            android:name=".ui.Info"
+            android:theme="@style/AppThemeDayNight.NoActionBar"
+            android:exported="false" />
 
         <meta-data
             android:name="android.max_aspect"
-            android:value="2.1" />
-
-        <!--App-->
+            android:value="2.1" /> <!-- App -->
         <activity
             android:name=".ui.LauncherActivity"
             android:exported="true"
@@ -73,7 +70,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.MainActivity"
             android:exported="false"
@@ -87,44 +83,74 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-
         <activity
             android:name=".ui.LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".ui.ServerActivity"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
-
         <activity
             android:name=".ui.UsageActivity"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
-
         <activity android:name=".ui.ContactActivity" />
         <activity android:name=".ui.FAQActivity" />
-        <activity android:name=".ui.ReviewActivity" />
-
-        <!--OpenVpn-->
+        <activity android:name=".ui.ReviewActivity" /> <!-- OpenVpn -->
         <service
             android:name="de.blinkt.openvpn.core.OpenVPNService"
+            android:enabled="true"
             android:exported="true"
+            android:foregroundServiceType="specialUse"
             android:permission="android.permission.BIND_VPN_SERVICE">
             <intent-filter>
                 <action android:name="android.net.VpnService" />
             </intent-filter>
-        </service>
 
+            <meta-data
+                android:name="android.net.VpnService.SUPPORTS_ALWAYS_ON"
+                android:value="true" />
+
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="vpn" />
+        </service>
         <service
             android:name="de.blinkt.openvpn.api.ExternalOpenVPNService"
+            android:enabled="true"
             android:exported="true"
-            tools:ignore="ExportedService">
+            android:process=":openvpn">
             <intent-filter>
                 <action android:name="de.blinkt.openvpn.api.IOpenVPNAPIService" />
             </intent-filter>
-        </service>
 
+            <meta-data
+                android:name="android.net.VpnService.SUPPORTS_ALWAYS_ON"
+                android:value="true" />
+
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="vpn" />
+        </service>
+        <service
+            android:name="de.blinkt.openvpn.core.OpenVPNStatusService"
+            android:exported="false"
+            android:process=":openvpn" />
+
+        <receiver
+            android:name="de.blinkt.openvpn.OnBootReceiver"
+            android:exported="true">
+            <intent-filter android:priority="999">
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver> <!-- <service android:exported="true" android:name="de.blinkt.openvpn.core.keepVPNAlive" android:permission="android.permission.BIND_JOB_SERVICE" android:process=":openvpn"/> -->
+        <!-- <activity android:autoRemoveFromRecents="true" android:excludeFromRecents="true" android:exported="true" android:label="@string/vpn_launch_title" android:name="de.blinkt.openvpn.LaunchVPN" android:taskAffinity=".LaunchVPN" android:theme="@style/blinkt.dialog"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN"/> -->
+        <!-- <category android:name="android.intent.category.DEFAULT"/> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
         <activity
             android:name="de.blinkt.openvpn.LaunchVPN"
             android:excludeFromRecents="true"
@@ -137,37 +163,30 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="de.blinkt.openvpn.DisconnectVPNActivity"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:taskAffinity=".DisconnectVPN"
-            android:theme="@style/blinkt.dialog" />
-
-        <!--V2ray-->
+            android:theme="@style/blinkt.dialog" /> <!-- V2ray -->
         <activity
             android:name="com.xray.lite.ui.MainSettingsV2ray"
             android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
-
         <activity
             android:name="com.xray.lite.ui.ServerAngActivity"
             android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar"
             android:windowSoftInputMode="stateUnchanged" />
-
         <activity
             android:name="com.xray.lite.ui.MainAngActivity"
             android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar"
             android:windowSoftInputMode="stateUnchanged" />
-
         <activity
             android:name="com.xray.lite.ui.ServerCustomConfigActivity"
             android:exported="false"
             android:windowSoftInputMode="stateUnchanged" />
-
         <activity
             android:name="com.xray.lite.ui.SettingsActivity"
             android:exported="false" />
@@ -202,7 +221,6 @@
             android:exported="false"
             android:process=":RunSoLibV2RayDaemon"
             android:theme="@style/AppTheme.NoActionBar.Translucent" />
-
         <activity
             android:name="com.xray.lite.ui.UrlSchemeActivity"
             android:exported="true">
@@ -319,7 +337,6 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
-
     </application>
 
 </manifest>

@@ -18,18 +18,18 @@ public class OpenVpnServerList {
     private String ovpnUserName;
     private String ovpnUserPassword;
 
-    public OpenVpnServerList() {
-    }
-
-    public OpenVpnServerList(String flagUrl, String ovpn) {
-        this.ovpn = ovpn;
-    }
-
-    public OpenVpnServerList(String ovpn, String ovpnUserName, String ovpnUserPassword) {
-        this.ovpn = ovpn;
-        this.ovpnUserName = ovpnUserName;
-        this.ovpnUserPassword = ovpnUserPassword;
-    }
+//    public OpenVpnServerList() {
+//    }
+//
+//    public OpenVpnServerList(String flagUrl, String ovpn) {
+//        this.ovpn = ovpn;
+//    }
+//
+//    public OpenVpnServerList(String ovpn, String ovpnUserName, String ovpnUserPassword) {
+//        this.ovpn = ovpn;
+//        this.ovpnUserName = ovpnUserName;
+//        this.ovpnUserPassword = ovpnUserPassword;
+//    }
 
     public String GetOVPN() {
         return ovpn;

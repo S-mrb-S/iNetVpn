@@ -34,6 +34,7 @@ public class GetAllV2ray {
         //for POST requests, only the following line should be changed to
         StringRequest sr = new StringRequest(Request.Method.POST, Data.ApiAdress,
                 response -> {
+            Log.d("RESSS", response);
                     resV2ray = response;
                     retV2ray = checkV2ray();
                     callback.onV2rayResult(retV2ray);
@@ -74,7 +75,7 @@ public class GetAllV2ray {
                         int id = dataObject.getInt("id");
                         String country = dataObject.getString("country");
                         String tag = dataObject.getString("tag");
-                        String connection = dataObject.getString("connetion");
+                        String connection = dataObject.getString("connection");
 
                         res = connection + "\n" + res;
                     }

@@ -90,9 +90,10 @@ class MainRecyclerAdapter(val activity: MainAngActivity) :
                 )
             }
             if (guid == mainStorage?.decodeString(MmkvManager.KEY_SELECTED_SERVER)) {
-                holder.itemMainBinding.layoutIndicator.setBackgroundResource(R.color.colorSelected)
+                holder.itemMainBinding.infoContainer.setBackgroundResource(R.color.colorStatsBlue)
+//                holder.ll_item.setBackgroundColor(context.getResources().getColor(R.color.colorStatsBlue));
             } else {
-                holder.itemMainBinding.layoutIndicator.setBackgroundResource(R.color.colorUnselected)
+                holder.itemMainBinding.infoContainer.setBackgroundResource(R.color.colorUnselected)
             }
             holder.itemMainBinding.tvSubscription.text = ""
             val json = subStorage?.decodeString(config.subscriptionId)

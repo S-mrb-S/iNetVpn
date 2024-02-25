@@ -164,6 +164,7 @@
                 android:id="@+id/btn_connection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:soundEffectsEnabled="true"
                 android:background="@drawable/button_connect"
                 android:elevation="@dimen/lo_8dpGrid"
                 android:paddingStart="@dimen/lo_24dpGrid"

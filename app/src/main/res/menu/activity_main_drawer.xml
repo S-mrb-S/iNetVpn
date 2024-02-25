@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_settings_black"
             android:title="@string/setting_drawer" />
         <item
+            android:id="@+id/info"
+            android:icon="@drawable/ic_rounded_corner_grey"
+            android:title="حساب من" />
+        <item
             android:id="@+id/aboutMe"
             android:icon="@drawable/ic_about_black"
             android:title="@string/about_me_drawer" />
