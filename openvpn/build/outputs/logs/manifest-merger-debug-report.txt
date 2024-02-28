@@ -1,0 +1,15 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/merab/Desktop/MRB/JavaApp/Hamrah_Vpn/Hamrah/openvpn/src/main/AndroidManifest.xml:1:1-41
+INJECTED from /home/merab/Desktop/MRB/JavaApp/Hamrah_Vpn/Hamrah/openvpn/src/main/AndroidManifest.xml:1:1-41
+	package
+		ADDED from /home/merab/Desktop/MRB/JavaApp/Hamrah_Vpn/Hamrah/openvpn/src/main/AndroidManifest.xml:1:11-38
+		INJECTED from /home/merab/Desktop/MRB/JavaApp/Hamrah_Vpn/Hamrah/openvpn/src/main/AndroidManifest.xml
+uses-sdk
+INJECTED from /home/merab/Desktop/MRB/JavaApp/Hamrah_Vpn/Hamrah/openvpn/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/merab/Desktop/MRB/JavaApp/Hamrah_Vpn/Hamrah/openvpn/src/main/AndroidManifest.xml
+INJECTED from /home/merab/Desktop/MRB/JavaApp/Hamrah_Vpn/Hamrah/openvpn/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /home/merab/Desktop/MRB/JavaApp/Hamrah_Vpn/Hamrah/openvpn/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /home/merab/Desktop/MRB/JavaApp/Hamrah_Vpn/Hamrah/openvpn/src/main/AndroidManifest.xml

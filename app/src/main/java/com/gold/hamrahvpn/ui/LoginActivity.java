@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // هنگام تغییر مقدار
                 String inputText = s.toString();
-                checkText(inputText, "Username");
+                checkText(inputText);
             }
 
             @Override
@@ -131,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // هنگام تغییر مقدار
                 String inputText = s.toString();
-                checkText(inputText, "Password");
+                checkText(inputText);
             }
 
             @Override
@@ -140,26 +140,26 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // اعمال محدودیت تعداد کلمات
-        InputFilter[] filters = new InputFilter[1];
-        filters[0] = new InputFilter.LengthFilter(50) {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end,
-                                       Spanned dest, int dstart, int dend) {
-                // شمارش تعداد کلمات
-                int wordCount = countWords(dest.toString());
+//        // اعمال محدودیت تعداد کلمات
+//        InputFilter[] filters = new InputFilter[1];
+//        filters[0] = new InputFilter.LengthFilter(50) {
+//            @Override
+//            public CharSequence filter(CharSequence source, int start, int end,
+//                                       Spanned dest, int dstart, int dend) {
+//                // شمارش تعداد کلمات
+//                int wordCount = countWords(dest.toString());
+//
+//                // اگر تعداد کلمات بیشتر از حد مجاز است، ورودی را قبول نکن
+//                if (wordCount > 50) {
+//                    return "";
+//                }
+//
+//                return null;
+//            }
+//        };
 
-                // اگر تعداد کلمات بیشتر از حد مجاز است، ورودی را قبول نکن
-                if (wordCount > 50) {
-                    return "";
-                }
-
-                return null;
-            }
-        };
-
-        txtUsername.setFilters(filters);
-        txtPassword.setFilters(filters);
+//        txtUsername.setFilters(filters);
+//        txtPassword.setFilters(filters);
 
         btn_welcome_later.setOnClickListener(view -> {
             if (isTextForLogin) {
@@ -181,18 +181,18 @@ public class LoginActivity extends AppCompatActivity {
     element.startAnimation(anim);
 }
 
-    private int countWords(String text) {
-        String trimText = text.trim();
-        if (trimText.isEmpty()) {
-            return 0;
-        } else {
-            return trimText.split("\\s+").length; // شمارش تعداد کلمات با استفاده از فاصله ها
-        }
-    }
+//    private int countWords(String text) {
+//        String trimText = text.trim();
+//        if (trimText.isEmpty()) {
+//            return 0;
+//        } else {
+//            return trimText.split("\\s+").length; // شمارش تعداد کلمات با استفاده از فاصله ها
+//        }
+//    }
 
-    private void checkText(String newInput, String typeInput) {
-        String inputUserText = txtUsername.getText().toString();
-        String inputPassText = txtPassword.getText().toString();
+    private void checkText(String newInput) {
+        String inputUserText = Objects.requireNonNull(txtUsername.getText()).toString();
+        String inputPassText = Objects.requireNonNull(txtPassword.getText()).toString();
         if (newInput.isEmpty()) {
             setActionInputText(false);
         } else {

@@ -34,6 +34,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginEnd="@dimen/lo_4dpGrid"
                     android:background="@drawable/ic_go_back"
+                    android:backgroundTint="#CECBCB"
                     android:contentDescription="@string/todo" />
             </LinearLayout>
 
@@ -51,6 +52,7 @@
                 android:layout_marginBottom="@dimen/lo_16dpGrid"
                 android:gravity="center"
                 android:text="حساب کاربری"
+                android:textColor="@color/colorTextStats"
                 android:textSize="18sp" />
 
 
@@ -65,7 +67,6 @@
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/lo_16dpGrid"
                 android:background="@drawable/logo_effected" />
-
 
         </LinearLayout>
 
@@ -106,7 +107,25 @@
                     android:layout_marginBottom="10dp"
                     android:background="@color/colorLineUsageList" />
 
-                <!--content-->
+                <TextView
+                    android:id="@+id/text_for_c"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:visibility="visible"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorStatsGray"
+                    android:text="منتظر اولین اتصال"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_info_c"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:orientation="vertical">
+                    <!--content-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -118,13 +137,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:text="@string/none" />
+                        android:text="@string/none"
+                        android:textColor="@color/colorStatsGray" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:text="نام کاربری"
+                        android:textColor="@color/colorStatsGray"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -142,13 +163,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:text="@string/none" />
+                        android:text="@string/none"
+                        android:textColor="@color/colorStatsGray" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:text="اولین اتصال"
+                        android:textColor="@color/colorStatsGray"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -165,13 +188,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:text="@string/none" />
+                        android:text="@string/none"
+                        android:textColor="@color/colorStatsGray" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:text="نوع سرویس"
+                        android:textColor="@color/colorStatsGray"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -188,13 +213,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:text="@string/none" />
+                        android:text="@string/none"
+                        android:textColor="@color/colorStatsGray" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:text="انقضای حساب"
+                        android:textColor="@color/colorStatsGray"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -211,16 +238,19 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="3"
-                        android:text="@string/none" />
+                        android:text="@string/none"
+                        android:textColor="@color/colorStatsGray" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:text="روز های باقی مانده"
+                        android:textColor="@color/colorStatsGray"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
+                </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>

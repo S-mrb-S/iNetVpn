@@ -1,11 +1,13 @@
 package com.gold.hamrahvpn.ui
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.net.VpnService
 import android.os.Build
 import android.os.Bundle
@@ -96,6 +98,7 @@ class MainActivity : BaseActivity(),
      */
 
     private var imageCountry: String? = Data.connectionStorage.getString("image", Data.NA)
+    private var imageCountryV2ray: String? = null
     private var City: String? = Data.connectionStorage.getString("city", Data.NA)
 
     private var vpnState: Int =
@@ -156,7 +159,6 @@ class MainActivity : BaseActivity(),
     }
 
     private fun checkInformationUser() {
-
         val uL = appValStorage.getString("usernameLogin", null);
         val uU = appValStorage.getString("usernamePassword", null);
 
@@ -171,6 +173,7 @@ class MainActivity : BaseActivity(),
                     showToast("اشتراک شما به پایان رسیده است")
                     startActivity(Intent(this, LoginActivity::class.java))
                     overridePendingTransition(R.anim.fade_in_1000, R.anim.fade_out_500)
+                    finish()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -245,10 +248,6 @@ class MainActivity : BaseActivity(),
         }
 
         binding.btnConnection.setOnClickListener {
-            fabOnClick()
-        }
-
-        binding.laAnimation.setOnClickListener {
             fabOnClick()
         }
 
@@ -599,9 +598,17 @@ class MainActivity : BaseActivity(),
     }
 
     private fun handleCountryImage() {
-        CountryListManager.OpenVpnSetServerList(imageCountry, binding.ivServers)
+        if (imageCountryV2ray != null && imageCountry != null) {
+            if (Data.defaultItemDialog == 0) {
+                CountryListManager.OpenVpnSetServerList(
+                    imageCountryV2ray,
+                    binding.ivServers
+                ) // v2ray
+            } else {
+                CountryListManager.OpenVpnSetServerList(imageCountry, binding.ivServers)
+            }
+        }
     }
-
 
     // set animations
     private fun startAnimation(ctx: Context, view: Int, animation: Int, show: Boolean) {
@@ -638,7 +645,7 @@ class MainActivity : BaseActivity(),
 
     private fun connectToOpenVpn() {
         if (Data.isStart) {
-            stopVpn()
+            confirmDisconnect()
         } else {
             prepareVpn()
         }
@@ -685,22 +692,23 @@ class MainActivity : BaseActivity(),
     /**
      * Show show disconnect confirm dialog
      */
-//    fun confirmDisconnect() {
-//        val builder = AlertDialog.Builder(this)
-//        builder.setMessage("تایید کنید")
-//        builder.setPositiveButton(
-//            this.getString(R.string.yes),
-//            { dialog, id -> stopVpn() })
-//        builder.setNegativeButton(
-//            this.getString(R.string.no)
-//        ) { dialog, id ->
-//            // User cancelled the dialog
-//        }
-//
-//        // Create the AlertDialog
-//        val dialog = builder.create()
-//        dialog.show()
-//    }
+    private fun confirmDisconnect() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("تایید کنید")
+        builder.setPositiveButton(
+            this.getString(R.string.yes)
+        ) { _, _ -> stopVpn() }
+
+        builder.setNegativeButton(
+            this.getString(R.string.no)
+        ) { _, _ ->
+            // User cancelled the dialog
+        }
+
+        // Create the AlertDialog
+        val dialog = builder.create()
+        dialog.show()
+    }
 
     /**
      * Prepare for vpn connect with required permission
@@ -788,10 +796,16 @@ class MainActivity : BaseActivity(),
 //            br.readLine()
 
 //            Log.d("THIS is file", config)
+
+            val uL = appValStorage.getString("usernameLogin", null);
+            val uU = appValStorage.getString("usernamePassword", null);
+
             if (file != null) {
+                City = Data.connectionStorage.getString("city", Data.NA)
+                City?.let { Log.d("TAG NAME", it) }
                 setNewVpnState(1)
 
-                OpenVpnApi.startVpn(this, file, "Japan", "App", "App")
+                OpenVpnApi.startVpn(this, file, "Japan", uL, uU)
 
                 // Update log
 //            binding.tvMessageTopText.setText("Connecting...");
@@ -820,6 +834,7 @@ class MainActivity : BaseActivity(),
 
                 "CONNECTED" -> {
                     setNewVpnState(2)
+                    checkInformationUser()
                 }
 
                 "WAIT" -> {
@@ -987,6 +1002,8 @@ class MainActivity : BaseActivity(),
         ) { retV2ray ->
             try {
                 importBatchConfig(retV2ray)
+                imageCountryV2ray = Data.connectionStorage.getString("imageV2ray", Data.NA)
+                handleCountryImage()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -1005,6 +1022,8 @@ class MainActivity : BaseActivity(),
             mainViewModel.subscriptionId
         }
         val append = subid.isEmpty()
+
+        Log.d("SUBID 2 ", subid2)
 
         var count = AngConfigManager.importBatchConfig(server, subid2, append)
         if (count <= 0) {
@@ -1106,6 +1125,19 @@ class MainActivity : BaseActivity(),
                 overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)
             }
 
+            R.id.getUpdate -> {
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse("http://45.88.8.210:3008/update")
+                    startActivity(intent)
+                } catch (activityNotFound: ActivityNotFoundException) {
+
+                    showToast("اپدیتی یافت نشد")
+
+                } catch (_: Exception) {
+                }
+            }
+
             R.id.splitTun -> {
                 Toast.makeText(this@MainActivity, "بزودی ...", Toast.LENGTH_SHORT).show()
             }
@@ -1118,18 +1150,26 @@ class MainActivity : BaseActivity(),
             R.id.logout -> {
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
 
-                Data.appValStorage.encode("isLoginBool", false)
+                appValStorage.encode("isLoginBool", false)
 
                 startActivity(Intent(this, LoginActivity::class.java))
                 overridePendingTransition(R.anim.fade_in_1000, R.anim.fade_out_500)
+                finish()
             }
 
             R.id.feedback -> {
+//                startActivity(Intent(this, ContactActivity::class.java))
+//                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
                 Toast.makeText(this@MainActivity, "بزودی ...", Toast.LENGTH_SHORT).show()
             }
 
             R.id.aboutMe -> {
-                startActivity(Intent(this, ContactActivity::class.java))
+                startActivity(Intent(this, FAQActivity::class.java))
+                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
+            }
+
+            R.id.errorLog -> {
+                startActivity(Intent(this, LogActivity::class.java))
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
             }
 
@@ -1153,6 +1193,9 @@ class MainActivity : BaseActivity(),
 //    }
     override fun onResume() {
         super.onResume()
+        imageCountry = Data.connectionStorage.getString("image", Data.NA)
+        City = Data.connectionStorage.getString("city", Data.NA)
+
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(broadcastReceiver, IntentFilter("connectionState"))
         restoreTodayTextTv()

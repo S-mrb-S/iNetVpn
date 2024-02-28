@@ -61,6 +61,8 @@ public class GetAllV2ray {
 
     private static String checkV2ray() {
         String res = "";
+        boolean imageDef = true;
+
         if (resV2ray != null) {
             try {
                 JSONObject jsonResponse = new JSONObject(resV2ray);
@@ -76,6 +78,36 @@ public class GetAllV2ray {
                         String country = dataObject.getString("country");
                         String tag = dataObject.getString("tag");
                         String connection = dataObject.getString("connection");
+
+                        if (imageDef){
+                            imageDef = false;
+                            switch (tag) {
+                                case "japan":
+                                case "russia":
+                                case "southkorea":
+                                case "thailand":
+                                case "vietnam":
+                                case "unitedstates":
+                                case "unitedkingdom":
+                                case "singapore":
+                                case "france":
+                                case "germany":
+                                case "canada":
+                                case "luxemburg":
+                                case "netherlands":
+                                case "spain":
+                                case "finland":
+                                case "poland":
+                                case "australia":
+                                case "italy":
+                                    Data.connectionStorage.putString("imageV2ray", tag);
+                                    break;
+                                default:
+                                    Data.connectionStorage.putString("imageV2ray", "netherlands");
+                                    break;
+                            }
+                        }
+
 
                         res = connection + "\n" + res;
                     }

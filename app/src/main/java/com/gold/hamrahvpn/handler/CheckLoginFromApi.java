@@ -15,12 +15,6 @@ import com.gold.hamrahvpn.util.Data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +37,7 @@ public class CheckLoginFromApi {
         StringRequest sr = new StringRequest(Request.Method.POST, Data.ApiAdress,
                 response -> {
                     resLogin = response;
+                    Log.d("RES AGAIN", response);
                     checkLogin = checkUsernameAndPassword(username, password);
                     checkLogin = saveInformation();
                     callback.onLoginResult(checkLogin, message);
@@ -88,9 +83,9 @@ public class CheckLoginFromApi {
 
                 if (passIs && userIs) {
                     appValStorage.putString("usernameLogin", username);
-                    appValStorage.putString("usernamePassword", username);
+                    appValStorage.putString("usernamePassword", password);
                     res = true;
-                }else{
+                } else {
                     message = "پسورد یا یوزرنیم اشتباه است";
                 }
 
@@ -101,47 +96,65 @@ public class CheckLoginFromApi {
         return res;
     }
 
-    private static boolean saveInformation(){
+    private static boolean saveInformation() {
         boolean res = false;
         if (resLogin != null) {
             try {
                 JSONObject jsonResponse = new JSONObject(resLogin);
                 boolean resultApi = jsonResponse.getBoolean("result");
 
-                if (resultApi){
+                if (resultApi) {
                     JSONObject dataObject = jsonResponse.getJSONObject("data");
                     String objectName = dataObject.keys().next();
 
-                    JSONObject object = dataObject.getJSONObject(objectName);
-                    String basic_info = object.getJSONObject("basic_info").getString("group_name"); // service type
-                    String first_login = object.getJSONObject("attrs").getString("first_login"); // first connect
-                    String nearest_exp_date = object.getJSONObject("attrs").getString("nearest_exp_date"); // تاریخ انفضا
-                    String user_id = object.getJSONObject("attrs").getString("user_id"); // userid
-                    int days = object.getJSONObject("attrs").getInt("days"); // userid
+                    /**
+                     Pass, user
+                     User id
+                     */
 
-                    if (checkLogin){
-                        if (days != 0){
+                    JSONObject object = dataObject.getJSONObject(objectName);
+                    JSONObject attrs = object.getJSONObject("attrs");
+
+                    String first_login = null, nearest_exp_date = null, first_connection = null, expiration = null;
+
+                    String basic_info = object.getJSONObject("basic_info").getString("group_name"); // service type
+                    String user_id = attrs.getString("user_id"); // userid
+                    int days = (int) 1.1;
+
+                    try {
+                        first_login = attrs.getString("first_login"); // first connect
+                        first_connection = attrs.getString("first_connection");
+                        nearest_exp_date = attrs.getString("nearest_exp_date"); // تاریخ انفضا
+                        expiration = attrs.getString("expiration");
+                        days = attrs.getInt("days"); // userid
+                    } catch (JSONException ignored) {
+                    }
+
+                    if (checkLogin) {
+                        if (days != 0) {
                             appValStorage.putString("basic_info", basic_info);
-                            appValStorage.putString("first_login", first_login);
-                            appValStorage.putString("nearest_exp_date", nearest_exp_date);
+                            appValStorage.putString("first_login", first_login); //
+                            appValStorage.putString("first_connection", first_connection); //
+                            appValStorage.putString("nearest_exp_date", nearest_exp_date); //
                             appValStorage.putString("user_id", user_id);
+                            appValStorage.putString("expiration", expiration);
                             appValStorage.putInt("days", days);
                             res = true;
-                        }else{
+                        } else {
                             message = "تاریخ انقضا شما به پایان رسیده است!";
                         }
                     }
 
-                }else{
+                } else {
                     message = "مشخصات درست نیست!";
                 }
 
-
             } catch (JSONException e) {
+                appValStorage.putString("res_then_error", resLogin);
                 message = "مشکلی در ارسال داده ها وجود دارد!";
                 return false;
             }
-        }else{
+        } else {
             message = "داده ای از طرف سرور یافت نشد!";
         }
         return res;

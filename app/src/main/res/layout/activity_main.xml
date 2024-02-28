@@ -335,6 +335,8 @@
                     android:minLines="1"
                     android:text="@string/connection_test_pending"
                     android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/colorTextStats" />
 

@@ -28,13 +28,6 @@ public class ContactActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact);
 
-//        LogManager = FirebaseAnalytics.getInstance(this);
-
-//        tv_contact_title = findViewById(R.id.tv_contact_title);
-//        tv_about_about_contact_problem = findViewById(R.id.tv_about_contact_problem);
-//        tv_about_contact_other_problems = findViewById(R.id.tv_about_contact_other_problems);
-//        tv_about_contact_email = findViewById(R.id.tv_about_contact_email);
-//
 //        checkbox_about_contact_advertising = findViewById(R.id.checkbox_about_contact_advertising);
 //        checkbox_about_contact_speed = findViewById(R.id.checkbox_about_contact_speed);
 //        checkbox_about_contact_connecting = findViewById(R.id.checkbox_about_contact_connecting);

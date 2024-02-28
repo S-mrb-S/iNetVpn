@@ -1,5 +1,6 @@
 package com.xray.lite.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -34,10 +35,10 @@ class MainAngActivity : BaseActivity() {
         mItemTouchHelper = ItemTouchHelper(callback)
         mItemTouchHelper?.attachToRecyclerView(binding.recyclerView)
 
-//        binding.ivServerSettings.setOnClickListener {
-//            startActivity(Intent(this, MainSettingsV2ray::class.java))
-//            overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
-//        }
+        binding.ivServerSettings.setOnClickListener {
+            startActivity(Intent(this, MainSettingsV2ray::class.java))
+            overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+        }
 
         binding.llServerBack.setOnClickListener {
             finish();

@@ -22,16 +22,24 @@ public class Info extends BaseActivity {
         setSupportActionBar(null);
 
         String basic_info = appValStorage.getString("basic_info", null);
-        String first_login = appValStorage.getString("first_login", null);
-        String nearest_exp_date = appValStorage.getString("nearest_exp_date", null);
-        String user_id = appValStorage.getString("user_id", null);
+        String first_connection = appValStorage.getString("first_connection", null);
+        String expiration = appValStorage.getString("expiration", null);
+        String user_id = appValStorage.getString("usernameLogin", null);
         int days = appValStorage.getInt("days", 0);
 
-        binding.basicInfo.setText(basic_info);
-        binding.firstLogin.setText(first_login);
-        binding.nearestExpDate.setText(nearest_exp_date);
         binding.userId.setText(user_id);
-        binding.days.setText(String.valueOf(days));
+        binding.basicInfo.setText(basic_info);
+
+//        text_for_c --< v
+//        layout_info_c --> gone
+        if (days != 1.1 || expiration != null) {
+            binding.textForC.setVisibility(View.GONE);
+            binding.layoutInfoC.setVisibility(View.VISIBLE);
+
+            binding.firstLogin.setText(first_connection);
+            binding.nearestExpDate.setText(expiration);
+            binding.days.setText(String.valueOf(days));
+        }
 
         binding.llContactBack.setOnClickListener(v -> {
             finish();

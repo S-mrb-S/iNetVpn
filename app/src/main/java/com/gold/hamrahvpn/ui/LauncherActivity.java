@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -27,6 +28,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+
 public class LauncherActivity extends BaseActivity {
     TextView tv_welcome_status, tv_welcome_app;
     Thread thread;
@@ -34,8 +37,8 @@ public class LauncherActivity extends BaseActivity {
     Boolean isLoginBool = false;
     private long backPressedTime;
     CheckInternetConnection isOnline = new CheckInternetConnection();
-    String ID = null, FileID = null, File = null, FilePass = null, FileUser = null, City = null, Country = null, Image = null,
-            IP = null, Active = null, Signal = null;
+    String ID = null, FileID = null, File = null, City = null, Country = null, Image = null,
+            IP = null, Active = null, Signal = null, Tag = null;
 //    int Random;
 
     @Override
@@ -148,22 +151,6 @@ public class LauncherActivity extends BaseActivity {
             if (content != null) {
                 try {
 
-//                    JSONObject jsonObject = new JSONObject(jsonString);
-//        JSONArray dataArray = jsonObject.getJSONArray("data");
-//
-//        for (int i = 0; i < dataArray.length(); i++) {
-//            JSONObject dataObject = dataArray.getJSONObject(i);
-//            int id = dataObject.getInt("id");
-//            String tag = dataObject.getString("tag");
-//            String fileName = dataObject.getString("fileName");
-//            String connection = dataObject.getString("connection");
-//
-//            System.out.println("id: " + id);
-//            System.out.println("tag: " + tag);
-//            System.out.println("fileName: " + fileName);
-//            System.out.println("connection: " + connection);
-//        }
-
 
                     JSONObject jsonResponse = new JSONObject(content);
 
@@ -176,19 +163,9 @@ public class LauncherActivity extends BaseActivity {
                         for (int x = 0; x < dataArray.length(); x++) {
                             JSONObject dataObject = dataArray.getJSONObject(x);
 
-                            String id = dataObject.getString("id");
-
-
-                            String username = dataObject.getString("username");
-                            String password = dataObject.getString("password");
-//                                String tag = dataObject.getString("tag");
-                            String connection = dataObject.getString("connection");
-
-
-                            File = connection;
-//                                Data.DefaultOpenVpnC = connection;
-                            FilePass = password;
-                            FileUser = username;
+                            Tag = dataObject.getString("tag");
+                            File = dataObject.getString("connection");
+                            City = dataObject.getString("name");
 
                             getFileDetails();
 
@@ -213,21 +190,48 @@ public class LauncherActivity extends BaseActivity {
 
 
     void getFileDetails() {
-        tv_welcome_status.setText(get_details_from_file);
+        try {
+
+            tv_welcome_status.setText(get_details_from_file);
 
 //            final int min = 0;
 //            final int max = 4;
 //            Random = new Random().nextInt((max - min) + 1) + min;
 
-        // default
-        ID = "0";
-        FileID = "1";
-        City = "Essen";
-        Country = "Japan";
-        Image = "germany";
-        IP = "51.68.191.75";
-        Active = "true";
-        Signal = "a";
+            // default
+            ID = "0";
+            FileID = "1";
+            Country = "Japan";
+
+            switch (Tag) {
+                case "japan":
+                case "russia":
+                case "southkorea":
+                case "thailand":
+                case "vietnam":
+                case "unitedstates":
+                case "unitedkingdom":
+                case "singapore":
+                case "france":
+                case "germany":
+                case "canada":
+                case "luxemburg":
+                case "netherlands":
+                case "spain":
+                case "finland":
+                case "poland":
+                case "australia":
+                case "italy":
+                    Image = Tag;
+                    break;
+                default:
+                    Image = "netherlands";
+                    break;
+            }
+
+            IP = "51.68.191.75";
+            Active = "true";
+            Signal = "a";
 
 //                JSONObject json_response = new JSONObject(FileDetails);
 //                JSONArray jsonArray = json_response.getJSONArray("free");
@@ -249,7 +253,7 @@ public class LauncherActivity extends BaseActivity {
 //            LogManager.logEvent(params);
 //        }
 
-        // save details
+            // save details
 //            try {
 //                PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 //                cuVersion = pInfo.versionName;
@@ -268,41 +272,37 @@ public class LauncherActivity extends BaseActivity {
 //                params.putString("exception", "WA7" + e);
 //                LogManager.logEvent(params);
 //            }
-        try {
-            Data.connectionStorage.putString("id", ID);
-            Data.connectionStorage.putString("file_id", FileID);
-            Data.connectionStorage.putString("file", File);
-            Data.connectionStorage.putString("filePass", ENCRYPT_DATA.encrypt(FilePass));
-            Data.connectionStorage.putString("fileUser", ENCRYPT_DATA.encrypt(FileUser));
+            try {
+                Data.connectionStorage.putString("id", ID);
+                Data.connectionStorage.putString("file_id", FileID);
+                Data.connectionStorage.putString("file", File);
 
 //            Data.connectionStorage.putString("fileLocal", "client-114-tcp.ovpn");
 
-            Data.connectionStorage.putString("city", City);
-            Data.connectionStorage.putString("country", Country);
-            Data.connectionStorage.putString("image", Image);
-            Data.connectionStorage.putString("ip", IP);
-            Data.connectionStorage.putString("active", Active);
-            Data.connectionStorage.putString("signal", Signal);
-        } catch (Exception e) {
-            Bundle params = new Bundle();
-            params.putString("device_id", MainApplication.device_id);
-            params.putString("exception", "WA8" + e);
-            LogManager.logEvent(params);
-        }
-
-        try {
-            Data.appValStorage.putString("file_details", ENCRYPT_DATA.encrypt(FileDetails));
-        } catch (Exception e) {
-            Bundle params = new Bundle();
-            params.putString("device_id", MainApplication.device_id);
-            params.putString("exception", "WA9" + e);
-            LogManager.logEvent(params);
-        }
-
-        try {
-            if (FilePass == null && FileUser == null) {
-                tv_welcome_status.setText(disconnected);
+                Data.connectionStorage.putString("city", City);
+                Data.connectionStorage.putString("country", Country);
+                Data.connectionStorage.putString("image", Image);
+                Data.connectionStorage.putString("ip", IP);
+                Data.connectionStorage.putString("active", Active);
+                Data.connectionStorage.putString("signal", Signal);
+            } catch (Exception e) {
+                Bundle params = new Bundle();
+                params.putString("device_id", MainApplication.device_id);
+                params.putString("exception", "WA8" + e);
+                LogManager.logEvent(params);
             }
+
+            try {
+                Data.appValStorage.putString("file_details", ENCRYPT_DATA.encrypt(FileDetails));
+            } catch (Exception e) {
+                Bundle params = new Bundle();
+                params.putString("device_id", MainApplication.device_id);
+                params.putString("exception", "WA9" + e);
+                LogManager.logEvent(params);
+            }
+
+        }catch (Exception ignored) {
+
         } finally {
             endThisActivityWithCheck();
         }

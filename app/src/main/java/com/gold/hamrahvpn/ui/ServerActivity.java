@@ -210,7 +210,7 @@ public class ServerActivity extends Activity implements NavItemClickListener {
 
                                 ServerArray[x][0] = id;
                                 ServerArray[x][1] = connection;
-                                ServerArray[x][2] = tag;
+                                ServerArray[x][2] = tag; //
                                 ServerArray[x][3] = "Germany";
                                 ServerArray[x][4] = tag;
                                 ServerArray[x][5] = "51.68.191.75";

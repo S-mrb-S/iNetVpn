@@ -52,6 +52,7 @@ public class MainApplication extends MultiDexApplication implements Configuratio
         if (firstRun)
             defaultSharedPreferences.edit().putInt(PREF_LAST_VERSION, BuildConfig.VERSION_CODE).apply();
         MMKV.initialize(this);
+
         LogManager.setAppContext(this);
         // device id
         device_id = settingsStorage.getString("device_id", "NULL");

@@ -24,8 +24,8 @@ public class FAQActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faq);
 
-        LinearLayout ll_faq_go_back = findViewById(R.id.ll_faq_go_back);
-        ll_faq_go_back.setOnClickListener(v -> {
+        LinearLayout ll_about_contact_close = findViewById(R.id.ll_contact_back);
+        ll_about_contact_close.setOnClickListener(v -> {
             finish();
             overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
         });
