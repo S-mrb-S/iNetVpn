@@ -490,9 +490,9 @@
       resolved="com.google.guava:listenablefuture:1.0"/>
   <library
       name=":@@:openvpn::release"
-      jars="/home/merab/Desktop/MRB/JavaApp/Hamrah_Vpn/Hamrah/openvpn/build/.transforms/b340b2ad90dc80c5e7c922ad1fe93de7/transformed/out/jars/classes.jar:/home/merab/Desktop/MRB/JavaApp/Hamrah_Vpn/Hamrah/openvpn/build/.transforms/b340b2ad90dc80c5e7c922ad1fe93de7/transformed/out/jars/libs/R.jar"
+      jars="/home/merab/Desktop/MRB/Android/JavaApp/Hamrah_Vpn/Hamrah/openvpn/build/.transforms/b340b2ad90dc80c5e7c922ad1fe93de7/transformed/out/jars/classes.jar:/home/merab/Desktop/MRB/Android/JavaApp/Hamrah_Vpn/Hamrah/openvpn/build/.transforms/b340b2ad90dc80c5e7c922ad1fe93de7/transformed/out/jars/libs/R.jar"
       resolved="Hamrah Vpn:openvpn:unspecified"
-      folder="/home/merab/Desktop/MRB/JavaApp/Hamrah_Vpn/Hamrah/openvpn/build/.transforms/b340b2ad90dc80c5e7c922ad1fe93de7/transformed/out"
+      folder="/home/merab/Desktop/MRB/Android/JavaApp/Hamrah_Vpn/Hamrah/openvpn/build/.transforms/b340b2ad90dc80c5e7c922ad1fe93de7/transformed/out"
       manifest="AndroidManifest.xml"
       resFolder="res"
       assetsFolder="assets"

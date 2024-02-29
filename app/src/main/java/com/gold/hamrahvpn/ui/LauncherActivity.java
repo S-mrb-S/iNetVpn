@@ -148,6 +148,8 @@ public class LauncherActivity extends BaseActivity {
             FileDetails = content;
             Data.GetAllOpenVpnContent = content;
 
+            Log.d("GETALL OPEN", content);
+
             if (content != null) {
                 try {
 

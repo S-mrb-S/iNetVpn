@@ -248,7 +248,17 @@ class MainActivity : BaseActivity(),
         }
 
         binding.btnConnection.setOnClickListener {
-            fabOnClick()
+            if(vpnState != 1){
+                when (Data.defaultItemDialog) {
+                    1 -> connectToOpenVpn()
+                    0 -> connectToV2ray()
+                }
+            }else{
+                when (Data.defaultItemDialog) {
+                    1 -> stopVpn()
+                    0 -> connectToV2ray()
+                }
+            }
         }
 
         binding.layoutTest.setOnClickListener {
@@ -428,7 +438,15 @@ class MainActivity : BaseActivity(),
 
                 // bubble
 
-                binding.tvMessageTopText.text = Data.connecting_txt + ' ' + City
+                when (Data.defaultItemDialog) {
+                    1 -> {
+                        binding.tvMessageTopText.text = Data.connecting_txt + ' ' + City
+                    }
+                    0 -> {
+                        binding.tvMessageTopText.text = Data.connecting_txt
+                    }
+                }
+
                 binding.tvMessageBottomText.text = ""
             }
 
@@ -449,7 +467,15 @@ class MainActivity : BaseActivity(),
                 binding.laAnimation.scaleY = 1.5f
 
                 // bubble
-                binding.tvMessageTopText.text = Data.connected_txt + ' ' + City
+                when (Data.defaultItemDialog) {
+                    1 -> {
+                        binding.tvMessageTopText.text = Data.connected_txt + ' ' + City
+                    }
+                    0 -> {
+                        binding.tvMessageTopText.text = Data.connected_txt
+                    }
+                }
+
                 binding.tvMessageBottomText.text = "اتصال شما امن است"
             }
 
@@ -694,13 +720,13 @@ class MainActivity : BaseActivity(),
      */
     private fun confirmDisconnect() {
         val builder = AlertDialog.Builder(this)
-        builder.setMessage("تایید کنید")
+        builder.setMessage("ایا میخواهید اتصال را قطع کنید ؟")
         builder.setPositiveButton(
-            this.getString(R.string.yes)
+            "قطع اتصال"
         ) { _, _ -> stopVpn() }
 
         builder.setNegativeButton(
-            this.getString(R.string.no)
+            "لغو"
         ) { _, _ ->
             // User cancelled the dialog
         }
@@ -1007,13 +1033,6 @@ class MainActivity : BaseActivity(),
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
-    }
-
-    private fun fabOnClick() {
-        when (Data.defaultItemDialog) {
-            1 -> connectToOpenVpn()
-            0 -> connectToV2ray()
         }
     }
 

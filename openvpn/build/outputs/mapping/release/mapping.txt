@@ -1,0 +1,21 @@
+# compiler: R8
+# compiler_version: 8.2.47
+# common_typos_disable
+# {"id":"com.android.tools.r8.mapping","version":"2.2"}
+# pg_map_id: e3bc95a
+# pg_map_hash: SHA-256 e3bc95ab71c5f3633ee256e3437a8a260a9c5114faaa2ff29a5a8d8659608141
+androidx.databinding.DataBindingComponent -> a.a:
+# {"id":"sourceFile","fileName":"DataBindingComponent.java"}
+de.blinkt.openvpn.DataBinderMapperImpl -> de.blinkt.openvpn.DataBinderMapperImpl:
+# {"id":"sourceFile","fileName":"DataBinderMapperImpl.java"}
+    android.util.SparseIntArray INTERNAL_LAYOUT_ID_LOOKUP -> a
+    1:1:androidx.databinding.ViewDataBinding getDataBinder(androidx.databinding.DataBindingComponent,android.view.View,int):0:0 -> a
+      # {"id":"com.android.tools.r8.residualsignature","signature":"(La/a;Landroid/view/View;I)Landroidx/databinding/ViewDataBinding;"}
+    2:2:androidx.databinding.ViewDataBinding getDataBinder(androidx.databinding.DataBindingComponent,android.view.View[],int):0:0 -> a
+      # {"id":"com.android.tools.r8.residualsignature","signature":"(La/a;[Landroid/view/View;I)Landroidx/databinding/ViewDataBinding;"}
+de.blinkt.openvpn.DataBinderMapperImpl$InnerBrLookup -> de.blinkt.openvpn.DataBinderMapperImpl$a:
+# {"id":"sourceFile","fileName":"DataBinderMapperImpl.java"}
+    android.util.SparseArray sKeys -> a
+de.blinkt.openvpn.DataBinderMapperImpl$InnerLayoutIdLookup -> de.blinkt.openvpn.DataBinderMapperImpl$b:
+# {"id":"sourceFile","fileName":"DataBinderMapperImpl.java"}
+    java.util.HashMap sKeys -> a

@@ -194,23 +194,29 @@ public class ServerActivity extends Activity implements NavItemClickListener {
                         JSONObject jsonResponse = new JSONObject(Data.GetAllOpenVpnContent);
                         boolean result = jsonResponse.getBoolean("result");
 
+                        Log.d("LIS R", String.valueOf(result));
+
                         if (result) {
                             // دسترسی به مقادیر داخل data
                             JSONArray dataArray = jsonResponse.getJSONArray("data");
+
+                            Log.d("THIS IS DATA", String.valueOf(dataArray));
 
                             for (int x = 0; x < dataArray.length(); x++) {
 
                                 JSONObject dataObject = dataArray.getJSONObject(x);
                                 String id = dataObject.getString("id");
-                                String username = dataObject.getString("username");
-                                String password = dataObject.getString("password");
+//                                String username = dataObject.getString("username");
+//                                String password = dataObject.getString("password");
                                 String tag = dataObject.getString("tag");
-//                                String country = dataObject.getString("country");
+                                String name = dataObject.getString("name");
                                 String connection = dataObject.getString("connection");
+
+                                Log.d("THIS IS name", name);
 
                                 ServerArray[x][0] = id;
                                 ServerArray[x][1] = connection;
-                                ServerArray[x][2] = tag; //
+                                ServerArray[x][2] = name; //
                                 ServerArray[x][3] = "Germany";
                                 ServerArray[x][4] = tag;
                                 ServerArray[x][5] = "51.68.191.75";
