@@ -53,7 +53,6 @@
 
     <!-- Example settings for Notifications -->
 
-
     <string name="auth_username">Username</string>
     <string name="no_keystore_cert_selected">You must select a User certificate</string>
     <string name="no_ca_cert_selected">You must select a CA certificate</string>
@@ -226,6 +225,24 @@
     <string name="toast_services_stop">توقف خدمات</string>
     <string name="toast_services_success">خدمات با موفقیت شروع شد</string>
     <string name="toast_services_failure">شروع خدمات انجام نشد</string>
+
+    <string name="server_lab_public_key" translatable="false">PublicKey</string>
+    <string name="server_lab_short_id" translatable="false">ShortId</string>
+    <string name="server_lab_spider_x" translatable="false">SpiderX</string>
+    <string name="server_lab_secret_key" translatable="false">SecretKey</string>
+
+    <string name="sub_auto_update">Enable automatic update</string>
+
+    <string name="title_pref_auto_update_subscription">Automatic update subscriptions</string>
+    <string name="summary_pref_auto_update_subscription">Update your subscriptions automatically with an interval in background. Depending on the device, this feature may not always work</string>
+    <string name="title_pref_auto_update_interval">Auto Update Interval (Minutes, Min value 15)</string>
+
+     <string name="title_pref_mux_concurency">TCP connections（range -1 to 1024）</string>
+
+     <string name="title_privacy_policy">Privacy policy</string>
+
+    <string name="server_lab_stream_fingerprint" translatable="false">Fingerprint</string>
+    <string name="server_lab_stream_alpn" translatable="false">Alpn</string>
 
     <!--ServerActivity-->
     <string name="title_server">پرونده پیکربندی</string>
