@@ -5,16 +5,16 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import androidx.activity.viewModels
-import androidx.preference.*
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.multiprocess.RemoteWorkManager
+import androidx.preference.CheckBoxPreference
+import androidx.preference.EditTextPreference
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
+import sp.hamrahvpn.R
 import com.xray.lite.AppConfig
-import com.gold.hamrahvpn.R
-import com.xray.lite.service.SubscriptionUpdater
 import com.xray.lite.util.Utils
 import com.xray.lite.viewmodel.SettingsViewModel
-import java.util.concurrent.TimeUnit
 
 class SettingsActivity : BaseActivity() {
     private val settingsViewModel: SettingsViewModel by viewModels()

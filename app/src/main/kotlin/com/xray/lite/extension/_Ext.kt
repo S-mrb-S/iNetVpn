@@ -3,7 +3,7 @@ package com.xray.lite.extension
 import android.content.Context
 import android.os.Build
 import android.widget.Toast
-import com.gold.hamrahvpn.MainApplication
+import sp.hamrahvpn.MainApplication
 import me.drakeet.support.toast.ToastCompat
 import org.json.JSONObject
 import java.net.URI

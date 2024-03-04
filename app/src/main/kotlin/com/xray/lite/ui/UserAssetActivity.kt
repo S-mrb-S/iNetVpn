@@ -8,19 +8,22 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivitySubSettingBinding
+import sp.hamrahvpn.databinding.ItemRecyclerUserAssetBinding
 import com.tbruyelle.rxpermissions.RxPermissions
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
-import com.gold.hamrahvpn.R
-import com.gold.hamrahvpn.databinding.ActivitySubSettingBinding
-import com.gold.hamrahvpn.databinding.ItemRecyclerUserAssetBinding
 import com.xray.lite.extension.toTrafficString
 import com.xray.lite.extension.toast
 import com.xray.lite.util.MmkvManager
@@ -34,7 +37,7 @@ import java.net.InetSocketAddress
 import java.net.Proxy
 import java.net.URL
 import java.text.DateFormat
-import java.util.*
+import java.util.Date
 
 class UserAssetActivity : BaseActivity() {
     private lateinit var binding: ActivitySubSettingBinding

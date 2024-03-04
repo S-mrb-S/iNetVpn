@@ -11,10 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivityBypassListBinding
 import com.xray.lite.AppConfig
 import com.xray.lite.AppConfig.ANG_PACKAGE
-import com.gold.hamrahvpn.R
-import com.gold.hamrahvpn.databinding.ActivityBypassListBinding
 import com.xray.lite.dto.AppInfo
 import com.xray.lite.extension.toast
 import com.xray.lite.extension.v2RayApplication
@@ -26,7 +26,6 @@ import kotlinx.coroutines.launch
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.text.Collator
-import java.util.*
 
 class PerAppProxyActivity : BaseActivity() {
     private lateinit var binding: ActivityBypassListBinding

@@ -7,7 +7,6 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import com.xray.lite.dto.AppInfo
 import rx.Observable
-import java.util.*
 
 object AppManagerUtil {
     fun loadNetworkAppList(ctx: Context): ArrayList<AppInfo> {

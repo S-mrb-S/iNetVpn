@@ -2,16 +2,14 @@ package com.xray.lite.util
 
 import android.content.Context
 import android.text.TextUtils
-import android.util.Log
-import com.google.gson.*
+import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
-import com.xray.lite.AppConfig.ANG_PACKAGE
 import com.xray.lite.AppConfig.WIREGUARD_LOCAL_ADDRESS_V4
 import com.xray.lite.AppConfig.WIREGUARD_LOCAL_ADDRESS_V6
-import com.xray.lite.dto.V2rayConfig
 import com.xray.lite.dto.EConfigType
 import com.xray.lite.dto.ERoutingMode
+import com.xray.lite.dto.V2rayConfig
 import com.xray.lite.dto.V2rayConfig.Companion.DEFAULT_NETWORK
 import com.xray.lite.dto.V2rayConfig.Companion.HTTP
 

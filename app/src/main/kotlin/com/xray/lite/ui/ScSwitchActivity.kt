@@ -1,9 +1,9 @@
 package com.xray.lite.ui
 
-import com.gold.hamrahvpn.R
-import com.xray.lite.util.Utils
 import android.os.Bundle
+import sp.hamrahvpn.R
 import com.xray.lite.service.V2RayServiceManager
+import com.xray.lite.util.Utils
 
 class ScSwitchActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -3,9 +3,9 @@ package com.xray.lite.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivityLogcatBinding
 import com.xray.lite.AppConfig
-import com.gold.hamrahvpn.R
-import com.gold.hamrahvpn.databinding.ActivityLogcatBinding
 import com.xray.lite.extension.toast
 import com.xray.lite.util.AngConfigManager
 import java.net.URLDecoder

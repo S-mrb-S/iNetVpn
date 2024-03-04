@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.text.TextUtils
 import android.util.Log
 import androidx.preference.PreferenceManager
+import sp.hamrahvpn.R
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
@@ -14,16 +15,18 @@ import com.xray.lite.AppConfig.HTTPS_PROTOCOL
 import com.xray.lite.AppConfig.HTTP_PROTOCOL
 import com.xray.lite.AppConfig.WIREGUARD_LOCAL_ADDRESS_V4
 import com.xray.lite.AppConfig.WIREGUARD_LOCAL_MTU
-import com.gold.hamrahvpn.R
-import com.xray.lite.dto.*
+import com.xray.lite.dto.AngConfig
+import com.xray.lite.dto.EConfigType
+import com.xray.lite.dto.ServerConfig
+import com.xray.lite.dto.SubscriptionItem
+import com.xray.lite.dto.V2rayConfig
 import com.xray.lite.dto.V2rayConfig.Companion.DEFAULT_SECURITY
 import com.xray.lite.dto.V2rayConfig.Companion.TLS
-import com.xray.lite.util.MmkvManager.KEY_SELECTED_SERVER
-import java.net.URI
-import java.util.*
+import com.xray.lite.dto.VmessQRCode
 import com.xray.lite.extension.idnHost
 import com.xray.lite.extension.removeWhiteSpace
-import com.xray.lite.extension.toast
+import com.xray.lite.util.MmkvManager.KEY_SELECTED_SERVER
+import java.net.URI
 
 object AngConfigManager {
     private val mainStorage by lazy {

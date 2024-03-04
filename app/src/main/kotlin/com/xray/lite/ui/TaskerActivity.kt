@@ -1,19 +1,18 @@
 package com.xray.lite.ui
 
 import android.app.Activity
-import android.os.Bundle
-import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import java.util.ArrayList
-import com.gold.hamrahvpn.R
 import android.content.Intent
+import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivityTaskerBinding
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
-import com.gold.hamrahvpn.databinding.ActivityTaskerBinding
 import com.xray.lite.util.MmkvManager
 
 class TaskerActivity : BaseActivity() {

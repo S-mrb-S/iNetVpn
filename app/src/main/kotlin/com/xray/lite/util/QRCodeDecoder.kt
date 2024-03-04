@@ -2,11 +2,16 @@ package com.xray.lite.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.google.zxing.*
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.DecodeHintType
+import com.google.zxing.EncodeHintType
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.GlobalHistogramBinarizer
 import com.google.zxing.common.HybridBinarizer
 import com.google.zxing.qrcode.QRCodeWriter
-import java.util.*
+import java.util.EnumMap
 
 /**
  * 描述:解析二维码图片

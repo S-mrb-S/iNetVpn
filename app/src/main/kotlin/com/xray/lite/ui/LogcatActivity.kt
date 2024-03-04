@@ -1,24 +1,21 @@
 package com.xray.lite.ui
 
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.lifecycleScope
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivityLogcatBinding
 import com.xray.lite.AppConfig.ANG_PACKAGE
-import com.gold.hamrahvpn.R
-import com.gold.hamrahvpn.databinding.ActivityLogcatBinding
 import com.xray.lite.extension.toast
 import com.xray.lite.util.Utils
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-
 import java.io.IOException
-import java.util.LinkedHashSet
 
 class LogcatActivity : BaseActivity() {
     private lateinit var binding: ActivityLogcatBinding

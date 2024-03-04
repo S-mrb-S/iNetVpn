@@ -15,8 +15,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
-import com.gold.hamrahvpn.R
-import com.gold.hamrahvpn.databinding.FragmentRoutingSettingsBinding
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.FragmentRoutingSettingsBinding
 import com.tbruyelle.rxpermissions.RxPermissions
 import com.xray.lite.AppConfig
 import com.xray.lite.extension.toast

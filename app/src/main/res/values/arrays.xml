@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="securitys" translatable="false">
+
+<string-array name="securitys" translatable="false">
         <item>chacha20-poly1305</item>
         <item>aes-128-gcm</item>
         <item>auto</item>

@@ -5,10 +5,10 @@ import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivitySubEditBinding
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
-import com.gold.hamrahvpn.R
-import com.gold.hamrahvpn.databinding.ActivitySubEditBinding
 import com.xray.lite.dto.SubscriptionItem
 import com.xray.lite.extension.toast
 import com.xray.lite.util.MmkvManager

@@ -2,17 +2,17 @@ package com.xray.lite.ui
 
 import android.Manifest
 import android.app.Activity
-import android.os.Bundle
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
+import sp.hamrahvpn.R
 import com.tbruyelle.rxpermissions.RxPermissions
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
-import com.gold.hamrahvpn.R
 import com.xray.lite.extension.toast
 import com.xray.lite.util.MmkvManager
 import com.xray.lite.util.QRCodeDecoder

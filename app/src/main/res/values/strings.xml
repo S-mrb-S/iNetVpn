@@ -88,7 +88,7 @@
     <string name="error_rsa_sign">Error signing with Android keystore key %1$s: %2$s</string>
     <string name="warn_no_dns">No DNS servers being used. Name resolution may not work. Consider setting custom DNS Servers. Please also note that Android will keep using your proxy settings specified for your mobile/Wi-Fi connection when no DNS servers are set.</string>
     <string name="dns_add_error">Could not add DNS OpenVpnServerList \"%1$s\", rejected by the system: %2$s</string>
-    <string name="ip_add_error">Could not configure IP Address \"%1$s\", rejected by the system: %2$s</string>
+    <string formatted="true" name="ip_add_error">Could not configure IP Address \"%1$s\", rejected by the system: %2$s</string>
     <string name="getproxy_error">Error getting proxy settings: %s</string>
     <string name="using_proxy">Using proxy %1$s %2$d</string>
     <string name="minidump_generated">OpenVPN crashed unexpectedly. Please consider using the send Minidump option in the main menu</string>
@@ -237,9 +237,9 @@
     <string name="summary_pref_auto_update_subscription">Update your subscriptions automatically with an interval in background. Depending on the device, this feature may not always work</string>
     <string name="title_pref_auto_update_interval">Auto Update Interval (Minutes, Min value 15)</string>
 
-     <string name="title_pref_mux_concurency">TCP connections（range -1 to 1024）</string>
+    <string name="title_pref_mux_concurency">TCP connections（range -1 to 1024）</string>
 
-     <string name="title_privacy_policy">Privacy policy</string>
+    <string name="title_privacy_policy">Privacy policy</string>
 
     <string name="server_lab_stream_fingerprint" translatable="false">Fingerprint</string>
     <string name="server_lab_stream_alpn" translatable="false">Alpn</string>
@@ -494,6 +494,10 @@
     <string name="iv_flag">name of the country</string>
     <string name="tv_country">New York, USA</string>
     <string name="testlogincaptcha">یوزرنیم و پسورد خود را وارد کنید</string>
+    <string name="checkbox_about_contact_crashed">- برنامه کرش میکند</string>
+    <string name="checkbox_about_contact_servers">- سرعت خیلی کم است</string>
+    <string name="checkbox_about_contact_connecting">- هیچ وقت وصل نمیشود</string>
+    <string name="btn_about_contact_submit">ارسال بازخورد</string>
 
     <string-array name="share_method">
         <item>QRcode</item>

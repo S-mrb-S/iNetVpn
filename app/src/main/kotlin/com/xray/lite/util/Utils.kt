@@ -16,10 +16,10 @@ import android.util.Base64
 import android.util.Log
 import android.util.Patterns
 import android.webkit.URLUtil
+import sp.hamrahvpn.R
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
 import com.xray.lite.AppConfig.ANG_PACKAGE
-import com.gold.hamrahvpn.R
 import com.xray.lite.extension.toast
 import com.xray.lite.service.V2RayServiceManager
 import java.io.IOException

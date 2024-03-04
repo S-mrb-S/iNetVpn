@@ -1,11 +1,12 @@
 package com.xray.lite.ui
 
 import android.os.Bundle
-import com.gold.hamrahvpn.R
 import androidx.fragment.app.Fragment
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivityRoutingSettingsBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import com.xray.lite.AppConfig
-import com.gold.hamrahvpn.databinding.ActivityRoutingSettingsBinding
+import com.xray.lite.ui.adapters.FragmentAdapter
 
 class RoutingSettingsActivity : BaseActivity() {
     private lateinit var binding: ActivityRoutingSettingsBinding

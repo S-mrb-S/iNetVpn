@@ -11,10 +11,10 @@ android {
     ndkVersion rootProject.ext.ndkVersion
 
     defaultConfig {
-        applicationId "com.gold.hamrahvpn"
+        applicationId "sp.hamrahvpn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        resConfigs "en", "fa"
+//        resConfigs "en", "fa"
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         multiDexEnabled true
@@ -87,17 +87,14 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    namespace 'com.gold.hamrahvpn'
-    testNamespace 'com.gold.hamrahvpnTest'
+    namespace 'sp.hamrahvpn'
+    testNamespace 'sp.hamrahvpnTest'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
-//    implementation project(path: ':xraylite')
-    implementation project(path: ':openvpn')
     testImplementation 'junit:junit:4.13.2'
 
-    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
     // Androidx
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -109,6 +106,7 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.6.2'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.viewpager2:viewpager2:1.1.0-beta02'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
 
     // Animation lottie
     implementation("com.airbnb.android:lottie:6.3.0")

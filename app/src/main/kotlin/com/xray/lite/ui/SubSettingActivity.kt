@@ -1,12 +1,12 @@
 package com.xray.lite.ui
 
 import android.content.Intent
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import com.gold.hamrahvpn.R
-import android.os.Bundle
-import com.gold.hamrahvpn.databinding.ActivitySubSettingBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivitySubSettingBinding
 import com.xray.lite.dto.SubscriptionItem
 import com.xray.lite.ui.adapters.SubSettingRecyclerAdapter
 import com.xray.lite.util.MmkvManager

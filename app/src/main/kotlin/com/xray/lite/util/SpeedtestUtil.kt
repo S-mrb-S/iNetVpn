@@ -4,14 +4,18 @@ import android.content.Context
 import android.os.SystemClock
 import android.text.TextUtils
 import android.util.Log
+import sp.hamrahvpn.R
 import com.xray.lite.AppConfig
-import com.gold.hamrahvpn.R
 import com.xray.lite.extension.responseLength
 import kotlinx.coroutines.isActive
 import libv2ray.Libv2ray
 import java.io.IOException
-import java.net.*
-import java.util.*
+import java.net.HttpURLConnection
+import java.net.InetSocketAddress
+import java.net.Proxy
+import java.net.Socket
+import java.net.URL
+import java.net.UnknownHostException
 import kotlin.coroutines.coroutineContext
 
 object SpeedtestUtil {

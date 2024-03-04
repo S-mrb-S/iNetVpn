@@ -10,7 +10,11 @@ import com.xray.lite.util.MessageUtil
 import com.xray.lite.util.SpeedtestUtil
 import com.xray.lite.util.Utils
 import go.Seq
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.launch
 import libv2ray.Libv2ray
 import java.util.concurrent.Executors
 

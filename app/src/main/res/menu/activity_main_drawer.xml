@@ -16,10 +16,6 @@
             android:id="@+id/info"
             android:icon="@drawable/ic_whatshot_24dp"
             android:title="حساب من" />
-        <item
-            android:id="@+id/aboutMe"
-            android:icon="@drawable/ic_about_black"
-            android:title="@string/about_me_drawer" />
     </group>
 
     <group android:id="@+id/group_id2">
@@ -27,10 +23,6 @@
             android:id="@+id/getUpdate"
             android:icon="@drawable/ic_uptodown"
             android:title="نسخه های برنامه"/>
-        <item
-            android:id="@+id/errorLog"
-            android:icon="@drawable/logo_effected"
-            android:title="@string/log_manage_drawer" />
         <item
             android:id="@+id/feedback"
             android:icon="@drawable/logo_effected"

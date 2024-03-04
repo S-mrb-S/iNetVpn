@@ -58,7 +58,6 @@
                     android:text="بازخورد"
                     android:textSize="18sp" />
 
-
                 <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -70,7 +69,6 @@
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/lo_16dpGrid"
                     android:background="@drawable/logo_effected" />
-
 
             </LinearLayout>
 
@@ -84,93 +82,61 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:layout_editor_absoluteY="72dp">
 
-                <TextView
-                    android:id="@+id/tv_about_contact_problem"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/lo_8dpGrid"
-                    android:text="چه مشکلاتی دارید؟"
-                    android:textColor="#444444"
-                    android:textSize="@dimen/ts_Body1"
-                    android:textStyle="bold" />
-
-                <CheckedTextView
-                    android:id="@+id/cb_male"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-                    android:checked="false"
+                    android:layout_gravity="right"
                     android:gravity="right"
-                    android:text="مشکلات درون برنامه ای"
-                    android:textColor="#000000"
-                    android:textSize="18dp" />
+                    android:orientation="vertical">
 
-                <CheckBox
-                    android:id="@+id/checkbox_about_contact_advertising"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/lo_8dpGrid"
-                    android:buttonTint="@color/colorLightPrimary"
-                    android:text=""
-                    android:textColor="#686868"
-                    android:textSize="@dimen/ts_Body2"
-                    android:textStyle="bold"
-                    app:buttonTint="@color/colorLightPrimary" />
+                    <CheckBox
+                        android:id="@+id/checkbox_about_contact_connecting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/lo_8dpGrid"
+                        android:buttonTint="@color/colorLightPrimary"
+                        android:text="@string/checkbox_about_contact_connecting"
+                        android:textColor="#686868"
+                        android:textSize="@dimen/ts_Body2"
+                        android:textStyle="bold"
+                        app:buttonTint="@color/colorLightPrimary" />
 
-                <CheckBox
-                    android:id="@+id/checkbox_about_contact_speed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/lo_8dpGrid"
-                    android:buttonTint="@color/colorLightPrimary"
-                    android:text="سرعت کم"
-                    android:textColor="#686868"
-                    android:textSize="@dimen/ts_Body2"
-                    android:textStyle="bold"
-                    app:buttonTint="@color/colorLightPrimary" />
+                    <CheckBox
+                        android:id="@+id/checkbox_about_contact_servers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/lo_8dpGrid"
+                        android:buttonTint="@color/colorLightPrimary"
+                        android:text="@string/checkbox_about_contact_servers"
+                        android:textColor="#686868"
+                        android:textSize="@dimen/ts_Body2"
+                        android:textStyle="bold"
+                        app:buttonTint="@color/colorLightPrimary" />
 
-                <CheckBox
-                    android:id="@+id/checkbox_about_contact_connecting"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/lo_8dpGrid"
-                    android:buttonTint="@color/colorLightPrimary"
-                    android:text="Always connecting"
-                    android:textColor="#686868"
-                    android:textSize="@dimen/ts_Body2"
-                    android:textStyle="bold"
-                    app:buttonTint="@color/colorLightPrimary" />
+                    <CheckBox
+                        android:id="@+id/checkbox_about_contact_crashed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/lo_8dpGrid"
+                        android:buttonTint="@color/colorLightPrimary"
+                        android:freezesText="false"
+                        android:hapticFeedbackEnabled="true"
+                        android:singleLine="true"
+                        android:soundEffectsEnabled="true"
+                        android:text="@string/checkbox_about_contact_crashed"
+                        android:textColor="#686868"
+                        android:textSize="@dimen/ts_Body2"
+                        android:textStyle="bold"
+                        app:buttonTint="@color/colorLightPrimary" />
 
-                <CheckBox
-                    android:id="@+id/checkbox_about_contact_servers"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/lo_8dpGrid"
-                    android:buttonTint="@color/colorLightPrimary"
-                    android:text="Servers are not connecting"
-                    android:textColor="#686868"
-                    android:textSize="@dimen/ts_Body2"
-                    android:textStyle="bold"
-                    app:buttonTint="@color/colorLightPrimary" />
-
-                <CheckBox
-                    android:id="@+id/checkbox_about_contact_crashed"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/lo_8dpGrid"
-                    android:buttonTint="@color/colorLightPrimary"
-                    android:text="App crashed"
-                    android:textColor="#686868"
-                    android:textSize="@dimen/ts_Body2"
-                    android:textStyle="bold"
-                    app:buttonTint="@color/colorLightPrimary" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_about_contact_other_problems"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/lo_8dpGrid"
-                    android:text="Other problems"
+                    android:text="بقیه موارد .. لطفا اینجا بنویسید:"
                     android:textColor="#444444"
                     android:textSize="@dimen/ts_Body1"
                     android:textStyle="bold" />
@@ -191,7 +157,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/lo_8dpGrid"
-                    android:text="Your Contact Email"
+                    android:text="ادرس ایمیل خود را برای ارتباط با ما وارد کنید:"
                     android:textColor="#444444"
                     android:textSize="@dimen/ts_Body1"
                     android:textStyle="bold" />
@@ -223,7 +189,7 @@
                     android:paddingEnd="@dimen/lo_24dpGrid"
                     android:paddingRight="@dimen/lo_24dpGrid"
                     android:paddingBottom="@dimen/lo_4dpGrid"
-                    android:text="SUBMIT"
+                    android:text="@string/btn_about_contact_submit"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
             </LinearLayout>

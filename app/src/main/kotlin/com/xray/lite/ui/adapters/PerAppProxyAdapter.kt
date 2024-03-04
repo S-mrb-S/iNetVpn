@@ -1,14 +1,13 @@
 package com.xray.lite.ui.adapters
 
 import android.view.LayoutInflater
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import com.gold.hamrahvpn.R
-import com.gold.hamrahvpn.databinding.ItemRecyclerBypassListBinding
+import androidx.recyclerview.widget.RecyclerView
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ItemRecyclerBypassListBinding
 import com.xray.lite.dto.AppInfo
 import com.xray.lite.ui.BaseActivity
-import java.util.*
 
 class PerAppProxyAdapter(val activity: BaseActivity, val apps: List<AppInfo>, blacklist: MutableSet<String>?) :
         RecyclerView.Adapter<PerAppProxyAdapter.BaseViewHolder>() {

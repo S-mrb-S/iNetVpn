@@ -1,0 +1,76 @@
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/Theme.MaterialComponents.Light"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="1dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/split_icon_list"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:src="@drawable/ic_profile"
+                android:contentDescription="@string/todo" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/recycler_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="40dp"
+                    android:text="App name"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:gravity="start" />
+
+                <TextView
+                    android:id="@+id/recycler_package_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="50dp"
+                    android:text="Package name"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="13sp"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:gravity="center" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/recycler_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            app:buttonTint="@color/colorBubble" />
+
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

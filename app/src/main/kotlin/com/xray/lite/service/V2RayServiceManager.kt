@@ -1,6 +1,9 @@
 package com.xray.lite.service
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,11 +13,11 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import sp.hamrahvpn.R
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
 import com.xray.lite.AppConfig.ANG_PACKAGE
 import com.xray.lite.AppConfig.TAG_DIRECT
-import com.gold.hamrahvpn.R
 import com.xray.lite.dto.ServerConfig
 import com.xray.lite.extension.toSpeedString
 import com.xray.lite.extension.toast

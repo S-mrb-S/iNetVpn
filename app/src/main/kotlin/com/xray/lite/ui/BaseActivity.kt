@@ -7,8 +7,6 @@ import android.view.MenuItem
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import com.gold.hamrahvpn.R
-import com.xray.lite.extension.toast
 import com.xray.lite.util.MyContextWrapper
 import com.xray.lite.util.Utils
 
