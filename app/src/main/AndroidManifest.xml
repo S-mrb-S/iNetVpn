@@ -49,7 +49,6 @@
         android:supportsRtl="false"
         android:theme="@style/AppThemeDayNight"
         android:usesCleartextTraffic="true"
-        tools:replace="android:extractNativeLibs"
         tools:targetApi="m">
         <activity
             android:name="sp.hamrahvpn.ui.SplitActivity"

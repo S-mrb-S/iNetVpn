@@ -9,6 +9,9 @@ def shrinkEnable = false
 android {
     compileSdk rootProject.ext.compileSdk
     ndkVersion rootProject.ext.ndkVersion
+    
+    namespace 'sp.hamrahvpn'
+    testNamespace 'sp.hamrahvpnTest'
 
     defaultConfig {
         applicationId "sp.hamrahvpn"
@@ -87,8 +90,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    namespace 'sp.hamrahvpn'
-    testNamespace 'sp.hamrahvpnTest'
 }
 
 dependencies {

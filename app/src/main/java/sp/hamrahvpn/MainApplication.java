@@ -36,6 +36,7 @@ public class MainApplication extends MultiDexApplication implements Configuratio
     public void onCreate() {
         super.onCreate();
 
+        // openvpn-client
         App.setOpenVpn(this, "sp.hamrahvpn", "sphamrahvpn", "HamrahVpn");
 
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
