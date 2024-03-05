@@ -15,7 +15,6 @@ import android.os.Handler
 import android.os.RemoteException
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
@@ -55,6 +54,7 @@ import sp.hamrahvpn.handler.GetAllV2ray
 import sp.hamrahvpn.handler.SetupMain
 import sp.hamrahvpn.interfaces.ChangeServer
 import sp.hamrahvpn.model.OpenVpnServerList
+import sp.hamrahvpn.util.Animations
 import sp.hamrahvpn.util.CheckInternetConnection
 import sp.hamrahvpn.util.CountryListManager
 import sp.hamrahvpn.util.Data
@@ -226,12 +226,12 @@ class MainActivity : BaseActivity(),
         }
 
         binding.btnConnection.setOnClickListener {
-            if(vpnState != 1){
+            if (vpnState != 1) {
                 when (Data.defaultItemDialog) {
                     1 -> connectToOpenVpn()
                     0 -> connectToV2ray()
                 }
-            }else{
+            } else {
                 when (Data.defaultItemDialog) {
                     1 -> stopVpn()
                     0 -> connectToV2ray()
@@ -325,7 +325,7 @@ class MainActivity : BaseActivity(),
         // cancel animation first (fade in)
         if (!isSetupFirst) {
 
-            startAnimation(
+            Animations.startAnimation(
                 this@MainActivity,
                 R.id.la_animation,
                 R.anim.fade_in_1000,
@@ -389,6 +389,7 @@ class MainActivity : BaseActivity(),
                     1 -> {
                         binding.tvMessageTopText.text = Data.connecting_txt + ' ' + City
                     }
+
                     0 -> {
                         binding.tvMessageTopText.text = Data.connecting_txt
                     }
@@ -418,6 +419,7 @@ class MainActivity : BaseActivity(),
                     1 -> {
                         binding.tvMessageTopText.text = Data.connected_txt + ' ' + City
                     }
+
                     0 -> {
                         binding.tvMessageTopText.text = Data.connected_txt
                     }
@@ -454,7 +456,7 @@ class MainActivity : BaseActivity(),
 
 //                val handlerToday12 = Handler()
 //                handlerToday12.postDelayed({
-//                    startAnimation(
+//                    Animations.startAnimation(
 //                        this@MainActivity,
 //                        R.id.ll_main_today,
 //                        R.anim.slide_down_800,
@@ -464,7 +466,7 @@ class MainActivity : BaseActivity(),
 //                }, 500)
                 val handlerData = Handler()
                 handlerData.postDelayed({
-                    startAnimation(
+                    Animations.startAnimation(
                         this@MainActivity,
                         R.id.ll_main_data,
                         R.anim.slide_up_800,
@@ -479,7 +481,7 @@ class MainActivity : BaseActivity(),
                 // main today
 //                val handlerToday12 = Handler()
 //                handlerToday12.postDelayed({
-//                    startAnimation(
+//                    Animations.startAnimation(
 //                        this@MainActivity,
 //                        R.id.ll_main_data,
 //                        R.anim.slide_down_800,
@@ -491,7 +493,7 @@ class MainActivity : BaseActivity(),
 //                // stop vpn
 //                val handlerToday12 = Handler()
 //                handlerToday12.postDelayed({
-//                    startAnimation(
+//                    Animations.startAnimation(
 //                        this@MainActivity,
 //                        R.id.ll_main_data,
 //                        R.anim.slide_down_800,
@@ -502,7 +504,7 @@ class MainActivity : BaseActivity(),
 
                 val handlerData = Handler()
                 handlerData.postDelayed({
-                    startAnimation(
+                    Animations.startAnimation(
                         this@MainActivity,
                         R.id.ll_main_today,
                         R.anim.slide_up_800,
@@ -517,7 +519,7 @@ class MainActivity : BaseActivity(),
 
                 val handlerData = Handler()
                 handlerData.postDelayed({
-                    startAnimation(
+                    Animations.startAnimation(
                         this@MainActivity,
                         R.id.ll_main_layout_test,
                         R.anim.slide_up_800,
@@ -539,13 +541,13 @@ class MainActivity : BaseActivity(),
 
             val handlerToday = Handler()
             handlerToday.postDelayed({
-                startAnimation(
+                Animations.startAnimation(
                     this@MainActivity,
                     R.id.linearLayoutMainHome,
                     R.anim.anim_slide_down,
                     true
                 )
-                startAnimation(
+                Animations.startAnimation(
                     this@MainActivity,
                     R.id.linearLayoutMainServers,
                     R.anim.anim_slide_down,
@@ -579,18 +581,6 @@ class MainActivity : BaseActivity(),
                 CountryListManager.OpenVpnSetServerList(imageCountry, binding.ivServers)
             }
         }
-    }
-
-    // set animations
-    private fun startAnimation(ctx: Context, view: Int, animation: Int, show: Boolean) {
-        val element = findViewById<View>(view)
-        if (show) {
-            element.visibility = View.VISIBLE
-        } else {
-            element.visibility = View.INVISIBLE
-        }
-        val anim = AnimationUtils.loadAnimation(ctx, animation)
-        element.startAnimation(anim)
     }
 
     /*

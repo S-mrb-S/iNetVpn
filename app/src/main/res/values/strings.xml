@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Hamrah Vpn</string>
-
+    <string name="app_name" translatable="false">iNet</string>
 
     <string name="yes">YES</string>
     <string name="no">NO</string>

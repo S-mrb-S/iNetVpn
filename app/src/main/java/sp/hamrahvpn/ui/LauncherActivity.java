@@ -5,14 +5,9 @@ import static sp.hamrahvpn.util.Data.disconnected;
 import static sp.hamrahvpn.util.Data.get_details_from_file;
 import static sp.hamrahvpn.util.Data.get_info_from_app;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +20,7 @@ import org.json.JSONObject;
 import sp.hamrahvpn.MainApplication;
 import sp.hamrahvpn.R;
 import sp.hamrahvpn.handler.GetAllOpenVpn;
+import sp.hamrahvpn.util.Animations;
 import sp.hamrahvpn.util.CheckInternetConnection;
 import sp.hamrahvpn.util.Data;
 import sp.hamrahvpn.util.LogManager;
@@ -38,7 +34,6 @@ public class LauncherActivity extends BaseActivity {
     CheckInternetConnection isOnline = new CheckInternetConnection();
     String ID = null, FileID = null, File = null, City = null, Country = null, Image = null,
             IP = null, Active = null, Signal = null, Tag = null;
-//    int Random;
 
     @Override
     public void onBackPressed() {
@@ -65,9 +60,9 @@ public class LauncherActivity extends BaseActivity {
         tv_welcome_app = findViewById(R.id.tv_welcome_app);
 
         try {
-            startAnimation(LauncherActivity.this, R.id.ll_welcome_loading, R.anim.slide_up_800, true);
+            Animations.startAnimation(LauncherActivity.this, R.id.ll_welcome_loading, R.anim.slide_up_800, true);
             Handler handler = new Handler();
-            handler.postDelayed(() -> startAnimation(this, R.id.ll_welcome_details, R.anim.slide_up_800, true), 200);
+            handler.postDelayed(() -> Animations.startAnimation(this, R.id.ll_welcome_details, R.anim.slide_up_800, true), 200);
             try {
                 isLoginBool = Data.appValStorage.decodeBool("isLoginBool", false);
             } catch (Exception e) {
@@ -87,11 +82,6 @@ public class LauncherActivity extends BaseActivity {
             checkInternetLayer();
         }
     }
-
-//    private void runAnyWay() {
-//        Handler handler = new Handler();
-//        handler.postDelayed(this::endThisActivityWithCheck, 100);
-//    }
 
     void checkInternetLayer() {
         if (isOnline.netCheck(this)) {
@@ -147,11 +137,8 @@ public class LauncherActivity extends BaseActivity {
             FileDetails = content;
             Data.GetAllOpenVpnContent = content;
 
-            Log.d("GETALL OPEN", content);
-
             if (content != null) {
                 try {
-
 
                     JSONObject jsonResponse = new JSONObject(content);
 
@@ -177,13 +164,9 @@ public class LauncherActivity extends BaseActivity {
 
                 } catch (JSONException e) {
                     tv_welcome_status.setText(disconnected);
-                } finally {
-
                 }
             } else {
                 tv_welcome_status.setText(disconnected);
-//                runAnyWay();
-
             }
         });
 
@@ -192,12 +175,7 @@ public class LauncherActivity extends BaseActivity {
 
     void getFileDetails() {
         try {
-
             tv_welcome_status.setText(get_details_from_file);
-
-//            final int min = 0;
-//            final int max = 4;
-//            Random = new Random().nextInt((max - min) + 1) + min;
 
             // default
             ID = "0";
@@ -280,8 +258,6 @@ public class LauncherActivity extends BaseActivity {
                 Data.connectionStorage.putString("file_id", FileID);
                 Data.connectionStorage.putString("file", File);
 
-//            Data.connectionStorage.putString("fileLocal", "client-114-tcp.ovpn");
-
                 Data.connectionStorage.putString("city", City);
                 Data.connectionStorage.putString("country", Country);
                 Data.connectionStorage.putString("image", Image);
@@ -304,8 +280,8 @@ public class LauncherActivity extends BaseActivity {
                 LogManager.logEvent(params);
             }
 
-        } catch (Exception ignored) {
-
+        } catch (Exception e) {
+            tv_welcome_status.setText(disconnected);
         } finally {
             endThisActivityWithCheck();
         }
@@ -326,17 +302,6 @@ public class LauncherActivity extends BaseActivity {
         } finally {
             finish();
         }
-    }
-
-    public void startAnimation(Context ctx, int view, int animation, boolean show) {
-        final View Element = findViewById(view);
-        if (show) {
-            Element.setVisibility(View.VISIBLE);
-        } else {
-            Element.setVisibility(View.INVISIBLE);
-        }
-        Animation anim = AnimationUtils.loadAnimation(ctx, animation);
-        Element.startAnimation(anim);
     }
 
 }

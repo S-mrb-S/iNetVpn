@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.View
 import com.tencent.mmkv.MMKV
 import com.xray.lite.ui.MainSettingsV2ray
+import sp.hamrahvpn.BuildConfig
 import sp.hamrahvpn.MainApplication
 import sp.hamrahvpn.R
 import sp.hamrahvpn.databinding.ActivityUsageBinding
@@ -32,7 +33,6 @@ class UsageActivity : Activity() {
     // mmkv
     private var prefUsageStorage: MMKV = MmkvManager.getDUStorage()
     private var settingsStorage: MMKV = MmkvManager.getSettingsStorage()
-    private var appAppDetailsStorage: MMKV = MmkvManager.getADStorage()
 
     // today
     private val today: Date = Calendar.getInstance().time
@@ -248,9 +248,7 @@ class UsageActivity : Activity() {
 
     @SuppressLint("SetTextI18n")
     private fun setupBindingUsage() {
-        val cuVersion = appAppDetailsStorage.getString("cu_version", "NULL")
-
-        binding.tvUsageCuVersion.text = "${Data.Version_txt} $cuVersion"
+        binding.tvUsageCuVersion.text = "${Data.Version_txt} ${BuildConfig.VERSION_CODE}"
 
         if (todayUsage < 1000) {
             binding.tvUsageDataTodaySize.text = Data.default_byte_txt

@@ -33,50 +33,46 @@ public class ContactActivity extends Activity {
         View view = binding.getRoot();
         setContentView(view);
 
-        binding.btnAboutContactSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //http://sposcdn.com/buzzvpn/contact_log.php?ip=0000:0000:0000:0000&advertise=adv&speed=speed&connecting=connect&working=working&crashed=crashed&other=otherdata&email=someemail
-                // advertising
-                if (hasInternetConnection()) {
+        binding.btnAboutContactSubmit.setOnClickListener(v -> {
+            // advertising
+            if (hasInternetConnection()) {
 
-                    if (binding.checkboxAboutContactConnecting.isChecked()) {
-                        Connecting = "true";
-                    } else {
-                        Connecting = "false";
-                    }
-
-                    // speed
-                    if (binding.checkboxAboutContactCrashed.isChecked()) {
-                        Crashed = "true";
-                    } else {
-                        Crashed = "false";
-                    }
-
-                    // connecting
-                    if (binding.checkboxAboutContactServers.isChecked()) {
-                        Servers = "true";
-                    } else {
-                        Servers = "false";
-                    }
-
-
-                    Bundle paramsFeed = new Bundle();
-                    paramsFeed.putString("Connecting", Connecting);
-                    paramsFeed.putString("Crashed", Crashed);
-                    paramsFeed.putString("Servers", Servers);
-
-                    feedback = String.valueOf(paramsFeed);
-                    more = binding.etAboutContactOtherProblems.getText().toString();
-                    email = binding.etAboutContactEmail.getText().toString();
-
-                    SendContactLog Object = new SendContactLog();
-                    Object.start();
-
-                    binding.btnAboutContactSubmit.setText("ارسال شد");
-                    binding.btnAboutContactSubmit.setEnabled(false);
-
+                if (binding.checkboxAboutContactConnecting.isChecked()) {
+                    Connecting = "true";
+                } else {
+                    Connecting = "false";
                 }
+
+                // speed
+                if (binding.checkboxAboutContactCrashed.isChecked()) {
+                    Crashed = "true";
+                } else {
+                    Crashed = "false";
+                }
+
+                // connecting
+                if (binding.checkboxAboutContactServers.isChecked()) {
+                    Servers = "true";
+                } else {
+                    Servers = "false";
+                }
+
+
+                Bundle paramsFeed = new Bundle();
+                paramsFeed.putString("Connecting", Connecting);
+                paramsFeed.putString("Crashed", Crashed);
+                paramsFeed.putString("Servers", Servers);
+
+                feedback = String.valueOf(paramsFeed);
+                more = binding.etAboutContactOtherProblems.getText().toString();
+                email = binding.etAboutContactEmail.getText().toString();
+
+                SendContactLog Object = new SendContactLog();
+                Object.start();
+
+                binding.btnAboutContactSubmit.setText("ارسال شد");
+                binding.btnAboutContactSubmit.setEnabled(false);
+
             }
         });
 

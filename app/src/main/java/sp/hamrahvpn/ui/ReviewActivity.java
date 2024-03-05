@@ -2,23 +2,21 @@ package sp.hamrahvpn.ui;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
 import com.airbnb.lottie.LottieAnimationView;
+
 import sp.hamrahvpn.MainApplication;
 import sp.hamrahvpn.R;
+import sp.hamrahvpn.util.Animations;
 import sp.hamrahvpn.util.LogManager;
 
 
@@ -39,16 +37,16 @@ public class ReviewActivity extends Activity {
         LottieAnimationView la_review = findViewById(R.id.la_review);
         Button btn_review_submit = findViewById(R.id.btn_review_submit);
 
-        startAnimation(ReviewActivity.this, R.id.la_review, R.anim.slide_up_800, true);
-        startAnimation(ReviewActivity.this, R.id.ll_about_back, R.anim.anim_slide_down, true);
-        startAnimation(ReviewActivity.this, R.id.tv_review_title, R.anim.slide_up_800, true);
-        startAnimation(ReviewActivity.this, R.id.tv_review_sup, R.anim.slide_up_800, true);
+        Animations.startAnimation(ReviewActivity.this, R.id.la_review, R.anim.slide_up_800, true);
+        Animations.startAnimation(ReviewActivity.this, R.id.ll_about_back, R.anim.anim_slide_down, true);
+        Animations.startAnimation(ReviewActivity.this, R.id.tv_review_title, R.anim.slide_up_800, true);
+        Animations.startAnimation(ReviewActivity.this, R.id.tv_review_sup, R.anim.slide_up_800, true);
 
         Handler handler = new Handler();
-        handler.postDelayed(() -> startAnimation(ReviewActivity.this, R.id.btn_review_submit, R.anim.slide_up_800, true), 500);
+        handler.postDelayed(() -> Animations.startAnimation(ReviewActivity.this, R.id.btn_review_submit, R.anim.slide_up_800, true), 500);
 
         handler = new Handler();
-        handler.postDelayed(() -> startAnimation(ReviewActivity.this, R.id.tv_review_sub, R.anim.slide_up_800, true), 1000);
+        handler.postDelayed(() -> Animations.startAnimation(ReviewActivity.this, R.id.tv_review_sub, R.anim.slide_up_800, true), 1000);
 
         ll_about_back.setOnClickListener(v -> {
             finish();
@@ -125,14 +123,4 @@ public class ReviewActivity extends Activity {
         });
     }
 
-    public void startAnimation(Context ctx, int view, int animation, boolean show) {
-        final View Element = findViewById(view);
-        if (show) {
-            Element.setVisibility(View.VISIBLE);
-        } else {
-            Element.setVisibility(View.INVISIBLE);
-        }
-        Animation anim = AnimationUtils.loadAnimation(ctx, animation);
-        Element.startAnimation(anim);
-    }
 }

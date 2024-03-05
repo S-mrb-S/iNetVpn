@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.SplitActivity">
 
     <LinearLayout
@@ -63,10 +63,44 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/round_input_active"
-                android:text="ذخیره"
-                android:textSize="16dp"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                android:text="ذخیره"
+                android:textSize="16dp" />
+
+        </LinearLayout>
+
+        <!--Loading-->
+        <LinearLayout
+            android:id="@+id/ll_split_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/animation_split_view"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/loading_circle" />
+
+            <TextView
+                android:id="@+id/tv_split_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/lo_4dpGrid"
+                android:text="در حال دریافت اطلاعات"
+                android:textColor="@color/colorText"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -116,8 +150,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/split_recycler_view"
                 android:layout_width="match_parent"
-                android:visibility="visible"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:visibility="visible" />
 
         </LinearLayout>
 

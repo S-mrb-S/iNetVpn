@@ -5,24 +5,21 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
 import android.widget.CompoundButton;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import sp.hamrahvpn.R;
-import sp.hamrahvpn.databinding.ActivitySplitBinding;
-import sp.hamrahvpn.listview.CustomAdapter;
-import sp.hamrahvpn.model.SplitList;
 import com.xray.lite.ui.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
-import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
+import sp.hamrahvpn.R;
+import sp.hamrahvpn.databinding.ActivitySplitBinding;
+import sp.hamrahvpn.listview.CustomAdapter;
+import sp.hamrahvpn.model.SplitList;
 
 /**
  * by Mehrab on 2024
@@ -39,18 +36,13 @@ public class SplitActivity extends BaseActivity {
         super.onResume();
 
         Thread thread = new Thread(() -> runOnUiThread(() -> {
-            adapter = new CustomAdapter(SplitActivity.this, splitLists);
-
-            // new adapter
-            AnimationAdapter defaultAdapter = new AlphaInAnimationAdapter(adapter);
-            defaultAdapter.setFirstOnly(true);
-            defaultAdapter.setDuration(500);
-            defaultAdapter.setInterpolator(new OvershootInterpolator(0.1f));
-
-            binding.splitRecyclerView.setAdapter(defaultAdapter);
-
             loadLazyData();
 
+            adapter = new CustomAdapter(SplitActivity.this, splitLists);
+            binding.splitRecyclerView.setAdapter(adapter);
+
+//            binding.animationSplitView.cancelAnimation();
+            binding.llSplitLoading.setVisibility(View.GONE);
         }));
         thread.start();
     }
@@ -62,6 +54,9 @@ public class SplitActivity extends BaseActivity {
         View view = binding.getRoot();
         setContentView(view);
         setSupportActionBar(null);
+
+        binding.animationSplitView.setAnimation(R.raw.loading_circle);
+        binding.animationSplitView.playAnimation();
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
 
@@ -97,33 +92,25 @@ public class SplitActivity extends BaseActivity {
      * بارگذاری داده‌های تنبل
      */
     private void loadLazyData() {
-        Thread thread = new Thread(() -> {
-            try {
-                final PackageManager pm = getPackageManager();
-                List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+        try {
+            final PackageManager pm = getPackageManager();
+            List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
-//                Thread.sleep(100);
-                for (ApplicationInfo packageInfo : packages) {
-                    SplitList SplitList = new SplitList();
+            for (ApplicationInfo packageInfo : packages) {
+                SplitList SplitList = new SplitList();
 
-                    SplitList.setAppName(pm.getApplicationLabel(packageInfo).toString());
-                    SplitList.setSplitIconList(packageInfo.loadIcon(pm));
-                    SplitList.setPackageName(packageInfo.packageName);
+                SplitList.setAppName(pm.getApplicationLabel(packageInfo).toString());
+                SplitList.setSplitIconList(packageInfo.loadIcon(pm));
+                SplitList.setPackageName(packageInfo.packageName);
 
-                    splitLists.add(SplitList);  // تولید داده‌ها برای هر لیست به صورت تنبل
+                splitLists.add(SplitList);  // تولید داده‌ها برای هر لیست به صورت تنبل
 
-                    runOnUiThread(() -> adapter.notifyItemInserted(splitLists.size() - 1));
+//                    runOnUiThread(() -> adapter.notifyItemInserted(splitLists.size() - 1));
 
-//                    Thread.sleep(100);
-                }
-
-//                binding.progressLoader.setVisibility(View.GONE);
-//                binding.splitRecyclerView.setVisibility(View.VISIBLE);
-
-            } catch (Exception ignored) {
             }
-        });
-        thread.start();
+
+        } catch (Exception ignored) {
+        }
     }
 
     @Override

@@ -1,7 +1,6 @@
 package sp.hamrahvpn.util;
 
 import static sp.hamrahvpn.util.Data.ID_PREF_USAGE;
-import static sp.hamrahvpn.util.Data.ID_app_details;
 import static sp.hamrahvpn.util.Data.ID_app_values;
 import static sp.hamrahvpn.util.Data.ID_connection_data;
 import static sp.hamrahvpn.util.Data.ID_log_data;
@@ -16,7 +15,6 @@ public class MmkvManager {
     private static MMKV logStorage;
     private static MMKV appValStorage;
     private static MMKV prefUsageStorage;
-    private static MMKV appDetailsStorage;
 
     public static synchronized MMKV getConnectionStorage() {
         if (connectionStorage == null) {
@@ -54,11 +52,4 @@ public class MmkvManager {
         return prefUsageStorage;
     }
 
-    // App details
-    public static synchronized MMKV getADStorage() {
-        if (appDetailsStorage == null) {
-            appDetailsStorage = MMKV.mmkvWithID(ID_app_details, MMKV.MULTI_PROCESS_MODE);
-        }
-        return appDetailsStorage;
-    }
 }
