@@ -58,6 +58,7 @@ import sp.hamrahvpn.model.OpenVpnServerList
 import sp.hamrahvpn.util.CheckInternetConnection
 import sp.hamrahvpn.util.CountryListManager
 import sp.hamrahvpn.util.Data
+import sp.hamrahvpn.util.Data.TODAY
 import sp.hamrahvpn.util.Data.appValStorage
 import sp.hamrahvpn.util.EncryptData
 import java.io.File
@@ -726,6 +727,14 @@ class MainActivity : BaseActivity(),
      * Start the VPN
      */
     fun startVpn() {
+        Data.prefUsageStorage
+
+        val connection_today = Data.prefUsageStorage.getLong(TODAY + "_connections", 0);
+        val connection_total = Data.prefUsageStorage.getLong("total_connections", 0);
+
+        Data.prefUsageStorage.putLong(TODAY + "_connections", connection_today + 1);
+        Data.prefUsageStorage.putLong("total_connections", connection_total + 1);
+        
         try {
             val file = Data.connectionStorage.getString("file", null)
 //            val filePass = MainActivity.ENCRYPT_DATA.decrypt(
