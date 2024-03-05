@@ -8,13 +8,14 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import com.tencent.mmkv.MMKV
+import com.xray.lite.ui.MainSettingsV2ray
 import sp.hamrahvpn.MainApplication
 import sp.hamrahvpn.R
 import sp.hamrahvpn.databinding.ActivityUsageBinding
 import sp.hamrahvpn.util.Data
 import sp.hamrahvpn.util.LogManager
 import sp.hamrahvpn.util.MmkvManager
-import com.tencent.mmkv.MMKV
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -130,6 +131,15 @@ class UsageActivity : Activity() {
         showUsageCuTitle()
         checkDeviceFun()
 
+
+//                startActivity(Intent(this, LogActivity::class.java))
+//                startActivity(Intent(this, ContactActivity::class.java))
+//                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
+
+        binding.settingAngMain.setOnClickListener {
+            startActivity(Intent(this, MainSettingsV2ray::class.java))
+            overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+        }
         binding.llAboutForward.setOnClickListener {
             openAboutActivity()
         }

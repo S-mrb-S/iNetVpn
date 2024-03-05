@@ -339,7 +339,7 @@ class MainActivity : BaseActivity(),
         // set new animation
         val animationResource = when (vpnState) {
             0 -> R.raw.ninjainsecure // disconnected
-            1 -> R.raw.conneting // connecting
+            1 -> R.raw.loading_circle // connecting
             2 -> R.raw.connected_wifi // connected
             else -> R.raw.ninjainsecure // ??
         }
@@ -380,8 +380,8 @@ class MainActivity : BaseActivity(),
                     }
 
                 // scale
-                binding.laAnimation.scaleX = 1.5f
-                binding.laAnimation.scaleY = 1.5f
+                binding.laAnimation.scaleX = 0.5f
+                binding.laAnimation.scaleY = 0.5f
 
                 // bubble
 
@@ -556,15 +556,13 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    // public
-    fun setNewVpnState(newState: Int) {
+    private fun setNewVpnState(newState: Int) {
         vpnState = newState
 
         handleNewVpnState()
     }
 
-    // public
-    fun setNewFooterState(newState: Int) {
+    private fun setNewFooterState(newState: Int) {
         footerState = newState
 
         handleNewFooterState()
@@ -596,8 +594,6 @@ class MainActivity : BaseActivity(),
     }
 
     /*
-    
-    
      */
 
     private fun connectToV2ray() {
@@ -623,11 +619,6 @@ class MainActivity : BaseActivity(),
             prepareVpn()
         }
     }
-
-//    private fun Int.dpToPx(): Int {
-//        return (this * Resources.getSystem().displayMetrics.density).toInt()
-//    }
-
 
     /**
      * openvpn fun
@@ -726,15 +717,15 @@ class MainActivity : BaseActivity(),
     /**
      * Start the VPN
      */
-    fun startVpn() {
+    private fun startVpn() {
         Data.prefUsageStorage
 
-        val connection_today = Data.prefUsageStorage.getLong(TODAY + "_connections", 0);
-        val connection_total = Data.prefUsageStorage.getLong("total_connections", 0);
+        val connectionToday = Data.prefUsageStorage.getLong(TODAY + "_connections", 0);
+        val connectionTotal = Data.prefUsageStorage.getLong("total_connections", 0);
 
-        Data.prefUsageStorage.putLong(TODAY + "_connections", connection_today + 1);
-        Data.prefUsageStorage.putLong("total_connections", connection_total + 1);
-        
+        Data.prefUsageStorage.putLong(TODAY + "_connections", connectionToday + 1);
+        Data.prefUsageStorage.putLong("total_connections", connectionTotal + 1);
+
         try {
             val file = Data.connectionStorage.getString("file", null)
 //            val filePass = MainActivity.ENCRYPT_DATA.decrypt(

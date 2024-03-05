@@ -16,17 +16,18 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xray.lite.ui.BaseActivity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import sp.hamrahvpn.MainApplication;
 import sp.hamrahvpn.R;
 import sp.hamrahvpn.handler.GetAllOpenVpn;
 import sp.hamrahvpn.util.CheckInternetConnection;
 import sp.hamrahvpn.util.Data;
 import sp.hamrahvpn.util.LogManager;
-import com.xray.lite.ui.BaseActivity;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class LauncherActivity extends BaseActivity {
     TextView tv_welcome_status, tv_welcome_app;
@@ -219,6 +220,8 @@ public class LauncherActivity extends BaseActivity {
                 case "netherlands":
                 case "spain":
                 case "finland":
+                case "norwegen":
+                case "turkey":
                 case "poland":
                 case "australia":
                 case "italy":
@@ -301,7 +304,7 @@ public class LauncherActivity extends BaseActivity {
                 LogManager.logEvent(params);
             }
 
-        }catch (Exception ignored) {
+        } catch (Exception ignored) {
 
         } finally {
             endThisActivityWithCheck();

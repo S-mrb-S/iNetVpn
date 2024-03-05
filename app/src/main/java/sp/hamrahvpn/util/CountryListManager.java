@@ -6,7 +6,7 @@ import sp.hamrahvpn.R;
 
 public class CountryListManager {
 
-    public static void OpenVpnSetServerList(String boolSwitch, ImageView holderIv){
+    public static void OpenVpnSetServerList(String boolSwitch, ImageView holderIv) {
         switch (boolSwitch) {
             case "japan":
                 holderIv.setImageResource(R.drawable.ic_flag_japan);
@@ -61,6 +61,12 @@ public class CountryListManager {
                 break;
             case "italy":
                 holderIv.setImageResource(R.drawable.ic_flag_italy);
+                break;
+            case "turkey":
+                holderIv.setImageResource(R.drawable.ic_flag_turkey);
+                break;
+            case "norwegen":
+                holderIv.setImageResource(R.drawable.ic_flag_norwegen);
                 break;
             default:
                 holderIv.setImageResource(R.drawable.ic_flag_unknown_mali);

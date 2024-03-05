@@ -8,7 +8,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import sp.hamrahvpn.util.Data;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +15,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import sp.hamrahvpn.util.Data;
 
 /**
  * by MehrabSp
@@ -99,6 +100,8 @@ public class GetAllV2ray {
                                 case "finland":
                                 case "poland":
                                 case "australia":
+                                case "norwegen":
+                                case "turkey":
                                 case "italy":
                                     Data.connectionStorage.putString("imageV2ray", tag);
                                     break;

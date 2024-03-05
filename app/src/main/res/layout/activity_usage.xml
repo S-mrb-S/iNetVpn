@@ -764,51 +764,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/colorLineUsageList" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/lo_16dpGrid"
-                    android:layout_marginTop="@dimen/lo_16dpGrid"
-                    android:layout_marginEnd="@dimen/lo_16dpGrid"
-                    android:layout_marginBottom="@dimen/lo_16dpGrid"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:background="@drawable/ic_split"
-                        android:contentDescription="@string/todo" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/lo_16dpGrid"
-                        android:layout_marginEnd="@dimen/lo_16dpGrid"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/tv_usage_contact_title"
-                            android:textSize="@dimen/ts_Body1"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/tv_usage_contact_description"
-                            android:textSize="@dimen/ts_Body2" />
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_marginTop="5dp"
                     android:background="@color/colorLineUsageList" />
 
             </LinearLayout>
@@ -818,6 +774,45 @@
             <!--                android:layout_height="1dp"-->
             <!--                android:background="@color/colorLineUsageList"/>-->
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/lo_16dpGrid"
+                android:layout_marginEnd="@dimen/lo_16dpGrid"
+                android:layout_marginBottom="@dimen/lo_16dpGrid"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/ic_split"
+                    android:contentDescription="@string/todo" />
+
+                <LinearLayout
+                    android:id="@+id/settingAngMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/lo_16dpGrid"
+                    android:layout_marginEnd="@dimen/lo_16dpGrid"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="اتصال به ازای هر برنامه"
+                        android:textSize="@dimen/ts_Body1"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="برای مدیریت و سفارشی کردن کلیک کنید"
+                        android:textSize="@dimen/ts_Body2" />
+
+                </LinearLayout>
+            </LinearLayout>
 
             <View
                 android:id="@+id/linearLineLayoutBattery"
