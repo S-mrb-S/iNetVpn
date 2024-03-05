@@ -21,23 +21,11 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import sp.hamrahvpn.R
-import sp.hamrahvpn.databinding.ActivityMainBinding
-import sp.hamrahvpn.handler.CheckLoginFromApi
-import sp.hamrahvpn.handler.GetAllV2ray
-import sp.hamrahvpn.interfaces.ChangeServer
-import sp.hamrahvpn.model.OpenVpnServerList
-import sp.hamrahvpn.util.CheckInternetConnection
-import sp.hamrahvpn.util.CountryListManager
-import sp.hamrahvpn.util.Data
-import sp.hamrahvpn.util.Data.appValStorage
-import sp.hamrahvpn.util.EncryptData
 import com.google.android.material.navigation.NavigationView
 import com.tbruyelle.rxpermissions.RxPermissions
 import com.tencent.mmkv.MMKV
@@ -60,6 +48,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivityMainBinding
+import sp.hamrahvpn.handler.CheckVipUser.checkInformationUser
+import sp.hamrahvpn.handler.GetAllV2ray
+import sp.hamrahvpn.handler.SetupMain
+import sp.hamrahvpn.interfaces.ChangeServer
+import sp.hamrahvpn.model.OpenVpnServerList
+import sp.hamrahvpn.util.CheckInternetConnection
+import sp.hamrahvpn.util.CountryListManager
+import sp.hamrahvpn.util.Data
+import sp.hamrahvpn.util.Data.appValStorage
+import sp.hamrahvpn.util.EncryptData
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -145,7 +145,8 @@ class MainActivity : BaseActivity(),
     private val mainViewModel: MainViewModel by viewModels()
 
     // Usage
-    private val df = SimpleDateFormat("dd-MMM-yyyy")
+    private val df: SimpleDateFormat
+        get() = SimpleDateFormat("dd-MMM-yyyy")
     private var today: String = df.format(Calendar.getInstance().time)
 
     @Deprecated("Deprecated in Java")
@@ -158,43 +159,19 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    private fun checkInformationUser() {
-        val uL = appValStorage.getString("usernameLogin", null);
-        val uU = appValStorage.getString("usernamePassword", null);
-
-        CheckLoginFromApi.checkIsLogin(
-            this@MainActivity,
-            uL,
-            uU
-        ) { getApi, _ ->
-            try {
-//                Log.d("API", getApi.toString())
-                if (!getApi) {
-                    showToast("اشتراک شما به پایان رسیده است")
-                    startActivity(Intent(this, LoginActivity::class.java))
-                    overridePendingTransition(R.anim.fade_in_1000, R.anim.fade_out_500)
-                    finish()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        checkInformationUser()
+        checkInformationUser(this)
 //        Data.isStart = Data.connectionStorage.getBoolean("isStart", false)
 //        vpnState = Data.connectionStorage.getInt("stateVpn", 0)
 
         handlerSetupFirst()
 
-        setupDrawer()
+        SetupMain.setupDrawer(this, binding)
         initializeAll() // openvpn
         // save default config for v2ray
         initializeApp()
@@ -264,37 +241,6 @@ class MainActivity : BaseActivity(),
         binding.layoutTest.setOnClickListener {
             layoutTest();
         }
-    }
-
-    private fun setupDrawer() {
-        // drawer layout instance to toggle the menu icon to open
-        // drawer and back button to close drawer
-        val actionBarDrawerToggle =
-            ActionBarDrawerToggle(this, binding.drawerLayout, R.string.nav_open, R.string.nav_close)
-
-        // pass the Open and Close toggle for the drawer layout listener
-        // to toggle the button
-        binding.drawerLayout.addDrawerListener(actionBarDrawerToggle)
-        // set listener
-        val navigationView = findViewById<NavigationView>(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener(this)
-        actionBarDrawerToggle.syncState()
-
-        // to make the Navigation drawer icon always appear on the action bar
-        val toggle = ActionBarDrawerToggle(
-            this,
-            binding.drawerLayout,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
-        )
-        binding.drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-        binding.drawerLayout.useCustomBehavior(GravityCompat.START) //assign custom behavior for "Left" drawer
-        binding.drawerLayout.useCustomBehavior(GravityCompat.END) //assign custom behavior for "Right" drawer
-        binding.drawerLayout.setRadius(
-            GravityCompat.START,
-            25f
-        ) //set end container's corner radius (dimension)
     }
 
     private fun setupMainDialog() {
@@ -860,7 +806,7 @@ class MainActivity : BaseActivity(),
 
                 "CONNECTED" -> {
                     setNewVpnState(2)
-                    checkInformationUser()
+                    checkInformationUser(this)
                 }
 
                 "WAIT" -> {
@@ -1002,7 +948,7 @@ class MainActivity : BaseActivity(),
         binding.fabProgressCircle.show()
     }
 
-    private fun hideCircle() {
+    fun hideCircle() {
         try {
             Observable.timer(300, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -1058,7 +1004,7 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    private fun setTestState(content: String?) {
+    fun setTestState(content: String?) {
         binding.tvTestState.text = content
     }
 

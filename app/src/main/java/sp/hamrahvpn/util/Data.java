@@ -1,9 +1,10 @@
 package sp.hamrahvpn.util;
 
-import sp.hamrahvpn.model.OpenVpnServerList;
 import com.tencent.mmkv.MMKV;
 
 import java.util.ArrayList;
+
+import sp.hamrahvpn.model.OpenVpnServerList;
 
 /**
  * @MehraB832 --> github
@@ -96,6 +97,7 @@ public class Data {
     public static final String ApiLoginName = "getuser";
     public static final String ApiOpenVpnName = "getallopenvpn";
     public static final String ApiV2rayName = "getallv2ray";
+    public static final String ApiFeedBack = "addcontacts";
     //
 
     public static String GetAllOpenVpnContent;
