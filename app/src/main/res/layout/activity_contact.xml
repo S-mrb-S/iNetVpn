@@ -96,7 +96,7 @@
                         android:layout_marginBottom="@dimen/lo_8dpGrid"
                         android:buttonTint="@color/colorLightPrimary"
                         android:text="@string/checkbox_about_contact_connecting"
-                        android:textColor="#686868"
+                        android:textColor="@color/colorText"
                         android:textSize="@dimen/ts_Body2"
                         android:textStyle="bold"
                         app:buttonTint="@color/colorLightPrimary" />
@@ -108,7 +108,7 @@
                         android:layout_marginBottom="@dimen/lo_8dpGrid"
                         android:buttonTint="@color/colorLightPrimary"
                         android:text="@string/checkbox_about_contact_servers"
-                        android:textColor="#686868"
+                        android:textColor="@color/colorText"
                         android:textSize="@dimen/ts_Body2"
                         android:textStyle="bold"
                         app:buttonTint="@color/colorLightPrimary" />
@@ -124,7 +124,7 @@
                         android:singleLine="true"
                         android:soundEffectsEnabled="true"
                         android:text="@string/checkbox_about_contact_crashed"
-                        android:textColor="#686868"
+                        android:textColor="@color/colorText"
                         android:textSize="@dimen/ts_Body2"
                         android:textStyle="bold"
                         app:buttonTint="@color/colorLightPrimary" />
@@ -137,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/lo_8dpGrid"
                     android:text="بقیه موارد .. لطفا اینجا بنویسید:"
-                    android:textColor="#444444"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/ts_Body1"
                     android:textStyle="bold" />
 
@@ -158,7 +158,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/lo_8dpGrid"
                     android:text="ادرس ایمیل خود را برای ارتباط با ما وارد کنید:"
-                    android:textColor="#444444"
+                    android:textColor="@color/colorText"
                     android:textSize="@dimen/ts_Body1"
                     android:textStyle="bold" />
 

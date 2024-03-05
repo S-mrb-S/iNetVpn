@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -363,8 +364,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:orientation="vertical"
-                android:paddingTop="@dimen/lo_8dpGrid"
-                android:paddingBottom="@dimen/lo_16dpGrid">
+                android:paddingTop="@dimen/lo_8dpGrid">
 
                 <TextView
                     android:id="@+id/tv_usage_time_title"
@@ -761,18 +761,107 @@
                         android:textSize="@dimen/ts_Body2" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/colorLineUsageList" />
-
             </LinearLayout>
 
-            <!--            <View-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="1dp"-->
-            <!--                android:background="@color/colorLineUsageList"/>-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="10dp"
+                android:background="@color/colorLineUsageList" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="نوع پروتکل"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="نوع پروتکل مورد نظر خود را انتخاب کنید"
+                        android:textSize="@dimen/ts_H6" />
+
+                    <RadioGroup
+                        android:id="@+id/radio_portocol_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
+
+                        <RadioButton
+                            android:id="@+id/v2ray_c"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="10dp"
+                            android:buttonTint="@color/colorBubble"
+                            android:checked="true"
+                            android:padding="8dp"
+                            android:text="V2ray"
+                            android:textColor="@color/colorText"
+                            android:textSize="15sp" />
+
+                        <RadioButton
+                            android:id="@+id/open_vpn_c"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="10dp"
+                            android:buttonTint="@color/colorBubble"
+                            android:checked="false"
+                            android:padding="8dp"
+                            android:text="OpenVpn"
+                            android:textColor="@color/colorText"
+                            android:textSize="15sp" />
+
+                    </RadioGroup>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="نوع پورت و DNS"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="نوع پورت و تنظیمات شخصی سازی اتصال را شخصی سازی کنید"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/open_setting_v2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/button_protocol"
+                        android:text="VPN رفتن به تنظیمات"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -812,6 +901,38 @@
                         android:textSize="@dimen/ts_Body2" />
 
                 </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLineUsageList" />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutDarkMode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical"
+                android:padding="@dimen/lo_16dpGrid">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="کلید قطع اضطراری"
+                    android:textSize="@dimen/ts_Body1"
+                    android:textStyle="bold" />
+
+                <Switch
+                    android:id="@+id/switch_usage_fast_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="این قابلیت باعث میشود که وقتی اتصال شما ناپایدار بود و نیاز به قطع اینترنت داشتید بتوانید فورا ان را قطع کنید"
+                    android:textColor="@color/colorText"
+                    android:textSize="14sp"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+
             </LinearLayout>
 
             <View

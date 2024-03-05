@@ -20,8 +20,6 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import sp.hamrahvpn.R
-import sp.hamrahvpn.databinding.ActivityMainSettingsV2rayBinding
 import com.google.android.material.navigation.NavigationView
 import com.tbruyelle.rxpermissions.RxPermissions
 import com.tencent.mmkv.MMKV
@@ -42,6 +40,8 @@ import kotlinx.coroutines.launch
 import me.drakeet.support.toast.ToastCompat
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivityMainSettingsV2rayBinding
 import java.util.concurrent.TimeUnit
 
 class MainSettingsV2ray : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -714,25 +714,25 @@ class MainSettingsV2ray : BaseActivity(), NavigationView.OnNavigationItemSelecte
             R.id.sub_setting -> {
                 startActivity(Intent(this, SubSettingActivity::class.java))
             }
-            R.id.settings -> {
-                startActivity(Intent(this, SettingsActivity::class.java)
-                        .putExtra("isRunning", mainViewModel.isRunning.value == true))
-            }
+//            R.id.settings -> {
+//                startActivity(Intent(this, SettingsActivity::class.java)
+//                        .putExtra("isRunning", mainViewModel.isRunning.value == true))
+//            }
             R.id.user_asset_setting -> {
                 startActivity(Intent(this, UserAssetActivity::class.java))
             }
             R.id.feedback -> {
                 Utils.openUri(this, AppConfig.v2rayNGIssues)
             }
-            R.id.promotion -> {
-                Utils.openUri(this, "${Utils.decode(AppConfig.promotionUrl)}?t=${System.currentTimeMillis()}")
-            }
+//            R.id.promotion -> {
+//                Utils.openUri(this, "${Utils.decode(AppConfig.promotionUrl)}?t=${System.currentTimeMillis()}")
+//            }
             R.id.logcat -> {
                 startActivity(Intent(this, LogcatActivity::class.java))
             }
-            R.id.privacy_policy-> {
-                Utils.openUri(this, AppConfig.v2rayNGPrivacyPolicy)
-            }
+//            R.id.privacy_policy-> {
+//                Utils.openUri(this, AppConfig.v2rayNGPrivacyPolicy)
+//            }
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true

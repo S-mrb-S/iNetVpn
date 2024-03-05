@@ -143,7 +143,7 @@ class MainActivity : BaseActivity(),
         }
 
     // ViewModel (V2ray)
-    private val mainViewModel: MainViewModel by viewModels()
+    val mainViewModel: MainViewModel by viewModels()
 
     // Usage
     private val df: SimpleDateFormat
@@ -181,6 +181,7 @@ class MainActivity : BaseActivity(),
 
         // Load default config type and save.
         Data.defaultItemDialog = Data.settingsStorage.getInt("default_connection_type", 0)
+        Data.cancelFast = Data.settingsStorage.getBoolean("cancel_fast", false)
 
         setupClickListener()
 
@@ -647,21 +648,25 @@ class MainActivity : BaseActivity(),
      * Show show disconnect confirm dialog
      */
     private fun confirmDisconnect() {
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage("ایا میخواهید اتصال را قطع کنید ؟")
-        builder.setPositiveButton(
-            "قطع اتصال"
-        ) { _, _ -> stopVpn() }
+        if (Data.cancelFast) {
+            stopVpn()
+        } else {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("ایا میخواهید اتصال را قطع کنید ؟")
+            builder.setPositiveButton(
+                "قطع اتصال"
+            ) { _, _ -> stopVpn() }
 
-        builder.setNegativeButton(
-            "لغو"
-        ) { _, _ ->
-            // User cancelled the dialog
+            builder.setNegativeButton(
+                "لغو"
+            ) { _, _ ->
+                // User cancelled the dialog
+            }
+
+            // Create the AlertDialog
+            val dialog = builder.create()
+            dialog.show()
         }
-
-        // Create the AlertDialog
-        val dialog = builder.create()
-        dialog.show()
     }
 
     /**

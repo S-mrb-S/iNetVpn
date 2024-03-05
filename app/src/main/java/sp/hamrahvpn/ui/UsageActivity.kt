@@ -8,8 +8,11 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.RadioButton
+import android.widget.Toast
 import com.tencent.mmkv.MMKV
 import com.xray.lite.ui.MainSettingsV2ray
+import com.xray.lite.ui.SettingsActivity
 import sp.hamrahvpn.BuildConfig
 import sp.hamrahvpn.MainApplication
 import sp.hamrahvpn.R
@@ -131,6 +134,17 @@ class UsageActivity : Activity() {
         showUsageCuTitle()
         checkDeviceFun()
 
+        when (Data.defaultItemDialog) {
+            1 -> {
+                binding.openVpnC.isChecked = true
+                binding.v2rayC.isChecked = false
+            }
+
+            0 -> {
+                binding.openVpnC.isChecked = false
+                binding.v2rayC.isChecked = true
+            }
+        }
 
 //                startActivity(Intent(this, LogActivity::class.java))
 //                startActivity(Intent(this, ContactActivity::class.java))
@@ -150,7 +164,41 @@ class UsageActivity : Activity() {
             openContactActivity()
         }
 
+        binding.switchUsageFastMode.setOnCheckedChangeListener { _, isChecked ->
+            Data.settingsStorage.putBoolean("cancel_fast", isChecked)
+            Data.cancelFast = isChecked
+        }
 
+        if (Data.cancelFast) {
+            binding.switchUsageFastMode.setChecked(true);
+        } else {
+            binding.switchUsageFastMode.setChecked(false);
+        }
+
+        // on below line we are adding check
+        // change listener for our radio group.
+        binding.radioPortocolGroup.setOnCheckedChangeListener { _, checkedId ->
+            // on below line we are getting radio button from our group.
+            val radioButton = findViewById<RadioButton>(checkedId)
+
+            if (radioButton.text == "OpenVpn") {
+                Data.settingsStorage.putInt("default_connection_type", 1)
+                Data.defaultItemDialog = 1
+            } else if (radioButton.text == "V2ray") {
+                Data.settingsStorage.putInt("default_connection_type", 0)
+                Data.defaultItemDialog = 0
+            }
+            // on below line we are displaying a toast message.
+            Toast.makeText(
+                this@UsageActivity,
+                "تنظیم شد : " + radioButton.text,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        binding.openSettingV2.setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
 //                startActivity(Intent(this, LogActivity::class.java))
 //                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
 
