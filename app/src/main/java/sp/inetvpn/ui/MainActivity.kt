@@ -67,7 +67,7 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 /**
- * @MehrabSp
+ * MehrabSp
  */
 class MainActivity : BaseActivity(),
     NavigationView.OnNavigationItemSelectedListener,

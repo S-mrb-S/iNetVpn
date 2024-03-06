@@ -3,7 +3,7 @@ package sp.inetvpn.util;
 import com.tencent.mmkv.MMKV;
 
 /**
- * @MehrabSp
+ * MehrabSp
  */
 public class Data {
 

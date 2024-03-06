@@ -3,6 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+// no effect
+// اگر مقدار درست باشد حجم برنامه فقط به اندازه 2 مگابایت کم میشود
+// و بخاطر فایل های بیلد گرفت شده در هسته برنامه بهم میریزد و کرش میکند
 def proguardEnable = false
 def shrinkEnable = false
 
@@ -17,7 +20,6 @@ android {
         applicationId "sp.inetvpn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-//        resConfigs "en", "fa"
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         multiDexEnabled true
