@@ -47,10 +47,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
+import sp.inetvpn.BuildConfig
 import sp.inetvpn.R
 import sp.inetvpn.databinding.ActivityMainBinding
 import sp.inetvpn.handler.CheckVipUser.checkInformationUser
 import sp.inetvpn.handler.GetAllV2ray
+import sp.inetvpn.handler.GetVersionApi
 import sp.inetvpn.handler.SetupMain
 import sp.inetvpn.interfaces.ChangeServer
 import sp.inetvpn.model.OpenVpnServerList
@@ -99,7 +101,7 @@ class MainActivity : BaseActivity(),
 
     private var imageCountry: String? = Data.connectionStorage.getString("image", Data.NA)
     private var imageCountryV2ray: String? = null
-    private var City: String? = Data.connectionStorage.getString("city", Data.NA)
+    private var city: String? = Data.connectionStorage.getString("city", Data.NA)
 
     private var vpnState: Int =
         0 // 0 --> ninja (no connect) \\ 1 --> loading (ninja (load again)) (connecting) \\ 2 --> connected (wifi (green logo))
@@ -387,7 +389,7 @@ class MainActivity : BaseActivity(),
 
                 when (Data.defaultItemDialog) {
                     1 -> {
-                        binding.tvMessageTopText.text = Data.connecting_txt + ' ' + City
+                        binding.tvMessageTopText.text = Data.connecting_txt + ' ' + city
                     }
 
                     0 -> {
@@ -417,7 +419,7 @@ class MainActivity : BaseActivity(),
                 // bubble
                 when (Data.defaultItemDialog) {
                     1 -> {
-                        binding.tvMessageTopText.text = Data.connected_txt + ' ' + City
+                        binding.tvMessageTopText.text = Data.connected_txt + ' ' + city
                     }
 
                     0 -> {
@@ -767,8 +769,8 @@ class MainActivity : BaseActivity(),
             val uU = appValStorage.getString("usernamePassword", null);
 
             if (file != null) {
-                City = Data.connectionStorage.getString("city", Data.NA)
-                City?.let { Log.d("TAG NAME", it) }
+                city = Data.connectionStorage.getString("city", Data.NA)
+                city?.let { Log.d("TAG NAME", it) }
                 setNewVpnState(1)
 
                 OpenVpnApi.startVpn(this, file, "Japan", uL, uU)
@@ -1083,14 +1085,27 @@ class MainActivity : BaseActivity(),
             }
 
             R.id.getUpdate -> {
+
                 try {
-                    val intent = Intent(Intent.ACTION_VIEW)
-                    intent.data = Uri.parse("http://45.88.8.210:3008/update")
-                    startActivity(intent)
+                    GetVersionApi.setRetVersion(
+                        this
+                    ) { retVersion ->
+                        try {
+//                            Log.d("SSSSSS", retVersion.toString());
+                            if (retVersion != BuildConfig.VERSION_CODE) {
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.data = Uri.parse("http://45.88.8.210:3008/update")
+                                startActivity(intent)
+                            } else {
+                                showToast("برنامه شما به اخرین ورژن اپدیت هست!")
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+
                 } catch (activityNotFound: ActivityNotFoundException) {
-
                     showToast("اپدیتی یافت نشد")
-
                 } catch (_: Exception) {
                 }
             }
@@ -1140,7 +1155,7 @@ class MainActivity : BaseActivity(),
     override fun onResume() {
         super.onResume()
         imageCountry = Data.connectionStorage.getString("image", Data.NA)
-        City = Data.connectionStorage.getString("city", Data.NA)
+        city = Data.connectionStorage.getString("city", Data.NA)
 
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(broadcastReceiver, IntentFilter("connectionState"))

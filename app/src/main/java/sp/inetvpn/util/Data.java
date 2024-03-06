@@ -73,6 +73,7 @@ public class Data {
     public static final String ApiOpenVpnName = "getallopenvpn";
     public static final String ApiV2rayName = "getallv2ray";
     public static final String ApiFeedBack = "addcontacts";
+    public static final String ApiGetVersion = "getversion";
     //
     public static String GetAllOpenVpnContent;
     public static int defaultItemDialog = 0; // 0 --> V2ray, 1 --> OpenVpn
