@@ -17,9 +17,7 @@ import sp.inetvpn.util.CountryListManager;
 import sp.inetvpn.util.LogManager;
 
 /**
- * Dev by MehraB832 --> github
- *
- * @MehrabSp
+ * by MehrabSp on 2024
  */
 public class SetHolderHelper {
     private final sp.inetvpn.model.OpenVpnServerList OpenVpnServerList;

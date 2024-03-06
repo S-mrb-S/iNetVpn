@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import sp.inetvpn.R;
 
 /**
- * @MehraB832
+ * @MehrabSp
  */
 public class FAQActivity extends Activity {
 

@@ -5,8 +5,10 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+/**
+ * Animations
+ */
 public class Animations {
-
     public static void startAnimation(Activity ctx, int view, int animation, boolean show) {
         final View Element = ctx.findViewById(view);
         if (show) {

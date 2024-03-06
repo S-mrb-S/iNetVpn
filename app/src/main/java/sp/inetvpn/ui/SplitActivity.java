@@ -18,8 +18,8 @@ import java.util.List;
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
 import sp.inetvpn.R;
 import sp.inetvpn.databinding.ActivitySplitBinding;
-import sp.inetvpn.listview.CustomAdapter;
 import sp.inetvpn.model.SplitList;
+import sp.inetvpn.recyclerview.SplitAdapter;
 
 /**
  * by Mehrab on 2024
@@ -28,7 +28,7 @@ import sp.inetvpn.model.SplitList;
  */
 public class SplitActivity extends BaseActivity {
     private ActivitySplitBinding binding;
-    private CustomAdapter adapter;
+    private SplitAdapter adapter;
     private final List<SplitList> splitLists = new ArrayList<>();
 
     @Override
@@ -38,7 +38,7 @@ public class SplitActivity extends BaseActivity {
         Thread thread = new Thread(() -> runOnUiThread(() -> {
             loadLazyData();
 
-            adapter = new CustomAdapter(SplitActivity.this, splitLists);
+            adapter = new SplitAdapter(SplitActivity.this, splitLists);
             binding.splitRecyclerView.setAdapter(adapter);
 
 //            binding.animationSplitView.cancelAnimation();

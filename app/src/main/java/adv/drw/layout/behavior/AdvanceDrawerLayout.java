@@ -1,8 +1,7 @@
 package adv.drw.layout.behavior;
 
 /*/===========================================================
-  by MehrabSp --> github.com/MehraB832 && github.com/MehrabSp
-  T.me/MehrabSp
+  by MehrabSp
 //===========================================================*/
 
 import android.annotation.SuppressLint;
@@ -316,6 +315,5 @@ public class AdvanceDrawerLayout extends DrawerLayout {
     private static final String TAG = AdvanceDrawerLayout.class.getSimpleName();
 }
 /*/===========================================================
-  by MehrabSp --> github.com/MehraB832 && github.com/MehrabSp
-  T.me/MehrabSp
+  by MehrabSp
 //===========================================================*/

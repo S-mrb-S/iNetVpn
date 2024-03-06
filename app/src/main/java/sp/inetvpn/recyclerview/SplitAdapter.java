@@ -1,4 +1,4 @@
-package sp.inetvpn.listview;
+package sp.inetvpn.recyclerview;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,20 +11,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import sp.inetvpn.R;
 import sp.inetvpn.model.SplitList;
-
-import java.util.List;
 
 /**
  * Created by Jay on 24-02-2018.
  * Edited by Mehrab on 04-2024
  */
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
+public class SplitAdapter extends RecyclerView.Adapter<SplitAdapter.ViewHolder> {
     public List<SplitList> splitList;
     private final Context context;
 
-    public CustomAdapter(Context context, List<SplitList> lstStudent) {
+    public SplitAdapter(Context context, List<SplitList> lstStudent) {
         this.context = context;
         this.splitList = lstStudent;
     }

@@ -1,7 +1,5 @@
 package sp.inetvpn.ui;
 
-import static sp.inetvpn.interfaces.SafeParcelable.NULL;
-import static sp.inetvpn.ui.MainActivity.ENCRYPT_DATA;
 import static sp.inetvpn.util.Data.KEY_GRID;
 
 import android.annotation.SuppressLint;
@@ -22,14 +20,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import sp.inetvpn.MainApplication;
-import sp.inetvpn.R;
-import sp.inetvpn.interfaces.NavItemClickListener;
-import sp.inetvpn.model.OpenVpnServerList;
-import sp.inetvpn.recyclerview.MainAdapter;
-import sp.inetvpn.util.Data;
-import sp.inetvpn.util.LogManager;
-import sp.inetvpn.util.MmkvManager;
 import com.tencent.mmkv.MMKV;
 
 import org.json.JSONArray;
@@ -42,10 +32,17 @@ import java.util.List;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
+import sp.inetvpn.MainApplication;
+import sp.inetvpn.R;
+import sp.inetvpn.interfaces.NavItemClickListener;
+import sp.inetvpn.model.OpenVpnServerList;
+import sp.inetvpn.recyclerview.MainAdapter;
+import sp.inetvpn.util.Data;
+import sp.inetvpn.util.LogManager;
+import sp.inetvpn.util.MmkvManager;
 
 /*/===========================================================
-  by MehrabSp --> github.com/MehraB832 && github.com/MehrabSp
-  T.me/MehrabSp
+  by MehrabSp
 //===========================================================*/
 public class ServerActivity extends Activity implements NavItemClickListener {
     RecyclerView recyclerView; // list
@@ -134,7 +131,7 @@ public class ServerActivity extends Activity implements NavItemClickListener {
             queue.addRequestFinishedListener((RequestQueue.RequestFinishedListener<String>) request -> {
                 try {
 //                    appValStorage.putString("app_details", ENCRYPT_DATA.encrypt(AppDetails));
-                    appValStorage.putString("file_details", ENCRYPT_DATA.encrypt(FileDetails));
+                    appValStorage.encode("file_details", FileDetails);
                 } catch (Exception e) {
                     Bundle params = new Bundle();
                     params.putString("device_id", MainApplication.device_id);
@@ -156,7 +153,7 @@ public class ServerActivity extends Activity implements NavItemClickListener {
 
         void Load() {
 //            AppDetails = ENCRYPT_DATA.decrypt(appValStorage.getString("app_details", NULL));
-            FileDetails = ENCRYPT_DATA.decrypt(appValStorage.getString("file_details", NULL));
+            FileDetails = appValStorage.decodeString("file_details", null);
 //            int NumServers = 0;
 //            try {
 //                JSONObject json_response = new JSONObject(AppDetails);
@@ -311,6 +308,5 @@ public class ServerActivity extends Activity implements NavItemClickListener {
 
 }
 /*/===========================================================
-  by MehrabSp --> github.com/MehraB832 && github.com/MehrabSp
-  T.me/MehrabSp
+  by MehrabSp
 //===========================================================*/

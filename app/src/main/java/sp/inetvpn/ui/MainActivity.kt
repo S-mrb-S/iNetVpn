@@ -60,7 +60,6 @@ import sp.inetvpn.util.CountryListManager
 import sp.inetvpn.util.Data
 import sp.inetvpn.util.Data.TODAY
 import sp.inetvpn.util.Data.appValStorage
-import sp.inetvpn.util.EncryptData
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -68,7 +67,7 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 /**
- * @MehrabSp && Github.com/MehraB832 || MehrabSp
+ * @MehrabSp
  */
 class MainActivity : BaseActivity(),
     NavigationView.OnNavigationItemSelectedListener,
@@ -983,8 +982,6 @@ class MainActivity : BaseActivity(),
         }
         val append = subid.isEmpty()
 
-        Log.d("SUBID 2 ", subid2)
-
         var count = AngConfigManager.importBatchConfig(server, subid2, append)
         if (count <= 0) {
             count = AngConfigManager.importBatchConfig(Utils.decode(server!!), subid2, append)
@@ -995,7 +992,7 @@ class MainActivity : BaseActivity(),
         if (count > 0) {
             mainViewModel.reloadServerList()
         } else {
-            showToast("داده ها ذخیره نشد !")
+            showToast("داده های سرور v2ray ذخیره نشد!")
         }
     }
 
@@ -1165,8 +1162,4 @@ class MainActivity : BaseActivity(),
         super.onPause()
     }
 
-    companion object {
-        @JvmField
-        val ENCRYPT_DATA = EncryptData()
-    }
 }

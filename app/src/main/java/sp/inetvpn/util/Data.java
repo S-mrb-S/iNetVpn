@@ -3,7 +3,7 @@ package sp.inetvpn.util;
 import com.tencent.mmkv.MMKV;
 
 /**
- * @MehraB832 --> github
+ * @MehrabSp
  */
 public class Data {
 
@@ -67,7 +67,7 @@ public class Data {
     public static boolean isStart = false;
 
     // api
-    public static final String ApiAdress = "http://45.88.8.210:3008/api";
+    public static final String ApiAdress = "https://panel.se2ven.sbs/api";
     public static final String ApiKey = "RuOq4gdOYT-rgdgrd4tedgr";
     public static final String ApiLoginName = "getuser";
     public static final String ApiOpenVpnName = "getallopenvpn";

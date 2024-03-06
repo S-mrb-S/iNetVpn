@@ -1,6 +1,5 @@
 package sp.inetvpn.ui;
 
-import static sp.inetvpn.ui.MainActivity.ENCRYPT_DATA;
 import static sp.inetvpn.util.Data.disconnected;
 import static sp.inetvpn.util.Data.get_details_from_file;
 import static sp.inetvpn.util.Data.get_info_from_app;
@@ -272,7 +271,7 @@ public class LauncherActivity extends BaseActivity {
             }
 
             try {
-                Data.appValStorage.putString("file_details", ENCRYPT_DATA.encrypt(FileDetails));
+                Data.appValStorage.encode("file_details", FileDetails);
             } catch (Exception e) {
                 Bundle params = new Bundle();
                 params.putString("device_id", MainApplication.device_id);
