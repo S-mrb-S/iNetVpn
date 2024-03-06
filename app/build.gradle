@@ -10,11 +10,11 @@ android {
     compileSdk rootProject.ext.compileSdk
     ndkVersion rootProject.ext.ndkVersion
     
-    namespace 'sp.hamrahvpn'
-    testNamespace 'sp.hamrahvpnTest'
+    namespace 'sp.inetvpn'
+    testNamespace 'sp.inetvpnTest'
 
     defaultConfig {
-        applicationId "sp.hamrahvpn"
+        applicationId "sp.inetvpn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
 //        resConfigs "en", "fa"
@@ -60,7 +60,7 @@ android {
     android.applicationVariants.configureEach { variant ->
         // assign different version code for each output
         variant.outputs.each { output ->
-            output.outputFileName = "HamrahVpn" + variant.versionName + "_" + output.getFilter(com.android.build.OutputFile.ABI) + ".apk"
+            output.outputFileName = "iNet" + variant.versionName + "_" + output.getFilter(com.android.build.OutputFile.ABI) + ".apk"
 
             output.versionCodeOverride =
                     project.ext.versionCodes.get(output.getFilter(com.android.build.OutputFile.ABI), 0) *

@@ -9,7 +9,7 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import sp.hamrahvpn.R
+import sp.inetvpn.R
 import com.xray.lite.AppConfig
 import com.xray.lite.util.MessageUtil
 import com.xray.lite.util.Utils

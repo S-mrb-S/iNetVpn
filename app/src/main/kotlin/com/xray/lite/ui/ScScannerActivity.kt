@@ -4,7 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
-import sp.hamrahvpn.R
+import sp.inetvpn.R
 import com.tbruyelle.rxpermissions.RxPermissions
 import com.xray.lite.extension.toast
 import com.xray.lite.util.AngConfigManager

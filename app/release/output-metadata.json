@@ -4,16 +4,16 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "sp.hamrahvpn",
+  "applicationId": "sp.inetvpn",
   "variantName": "release",
   "elements": [
     {
       "type": "UNIVERSAL",
       "filters": [],
       "attributes": [],
-      "versionCode": 26,
-      "versionName": "2.0.6",
-      "outputFile": "HamrahVpn2.0.6_null.apk"
+      "versionCode": 28,
+      "versionName": "2.0.8",
+      "outputFile": "iNetVpn2.0.8_null.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -24,9 +24,9 @@
         }
       ],
       "attributes": [],
-      "versionCode": 1000026,
-      "versionName": "2.0.6",
-      "outputFile": "HamrahVpn2.0.6_armeabi-v7a.apk"
+      "versionCode": 1000028,
+      "versionName": "2.0.8",
+      "outputFile": "iNetVpn2.0.8_armeabi-v7a.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -37,9 +37,9 @@
         }
       ],
       "attributes": [],
-      "versionCode": 3000026,
-      "versionName": "2.0.6",
-      "outputFile": "HamrahVpn2.0.6_x86.apk"
+      "versionCode": 3000028,
+      "versionName": "2.0.8",
+      "outputFile": "iNetVpn2.0.8_x86.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -50,9 +50,9 @@
         }
       ],
       "attributes": [],
-      "versionCode": 4000026,
-      "versionName": "2.0.6",
-      "outputFile": "HamrahVpn2.0.6_x86_64.apk"
+      "versionCode": 4000028,
+      "versionName": "2.0.8",
+      "outputFile": "iNetVpn2.0.8_x86_64.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -63,9 +63,9 @@
         }
       ],
       "attributes": [],
-      "versionCode": 2000026,
-      "versionName": "2.0.6",
-      "outputFile": "HamrahVpn2.0.6_arm64-v8a.apk"
+      "versionCode": 2000028,
+      "versionName": "2.0.8",
+      "outputFile": "iNetVpn2.0.8_arm64-v8a.apk"
     }
   ],
   "elementType": "File"

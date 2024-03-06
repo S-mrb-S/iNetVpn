@@ -8,9 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import sp.hamrahvpn.R
-import sp.hamrahvpn.databinding.ItemQrcodeBinding
-import sp.hamrahvpn.databinding.ItemRecyclerSubSettingBinding
+import sp.inetvpn.R
+import sp.inetvpn.databinding.ItemQrcodeBinding
+import sp.inetvpn.databinding.ItemRecyclerSubSettingBinding
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.xray.lite.extension.toast

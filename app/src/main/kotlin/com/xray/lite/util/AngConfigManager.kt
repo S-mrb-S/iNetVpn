@@ -6,7 +6,7 @@ import android.graphics.Bitmap
 import android.text.TextUtils
 import android.util.Log
 import androidx.preference.PreferenceManager
-import sp.hamrahvpn.R
+import sp.inetvpn.R
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig

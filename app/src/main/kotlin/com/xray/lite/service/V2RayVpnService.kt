@@ -16,7 +16,7 @@ import android.os.ParcelFileDescriptor
 import android.os.StrictMode
 import android.util.Log
 import androidx.annotation.RequiresApi
-import sp.hamrahvpn.R
+import sp.inetvpn.R
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
 import com.xray.lite.dto.ERoutingMode

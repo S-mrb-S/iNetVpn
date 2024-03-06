@@ -18,9 +18,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import sp.hamrahvpn.R
-import sp.hamrahvpn.databinding.ActivitySubSettingBinding
-import sp.hamrahvpn.databinding.ItemRecyclerUserAssetBinding
+import sp.inetvpn.R
+import sp.inetvpn.databinding.ActivitySubSettingBinding
+import sp.inetvpn.databinding.ItemRecyclerUserAssetBinding
 import com.tbruyelle.rxpermissions.RxPermissions
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig

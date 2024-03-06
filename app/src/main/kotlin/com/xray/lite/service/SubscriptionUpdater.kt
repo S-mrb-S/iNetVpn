@@ -10,7 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import sp.hamrahvpn.R
+import sp.inetvpn.R
 import com.xray.lite.AppConfig
 import com.xray.lite.util.AngConfigManager
 import com.xray.lite.util.MmkvManager

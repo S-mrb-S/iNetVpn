@@ -8,8 +8,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.blacksquircle.ui.editorkit.utils.EditorTheme
 import com.blacksquircle.ui.language.json.JsonLanguage
-import sp.hamrahvpn.R
-import sp.hamrahvpn.databinding.ActivityServerCustomConfigBinding
+import sp.inetvpn.R
+import sp.inetvpn.databinding.ActivityServerCustomConfigBinding
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.xray.lite.dto.EConfigType

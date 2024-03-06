@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import sp.hamrahvpn.R
-import sp.hamrahvpn.databinding.ItemQrcodeBinding
-import sp.hamrahvpn.databinding.ItemRecyclerFooterBinding
-import sp.hamrahvpn.databinding.ItemRecyclerV2rayMainBinding
+import sp.inetvpn.R
+import sp.inetvpn.databinding.ItemQrcodeBinding
+import sp.inetvpn.databinding.ItemRecyclerFooterBinding
+import sp.inetvpn.databinding.ItemRecyclerV2rayMainBinding
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig

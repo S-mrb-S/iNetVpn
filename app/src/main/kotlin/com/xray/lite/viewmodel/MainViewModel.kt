@@ -14,9 +14,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import sp.hamrahvpn.MainApplication
-import sp.hamrahvpn.R
-import sp.hamrahvpn.databinding.DialogConfigFilterBinding
+import sp.inetvpn.MainApplication
+import sp.inetvpn.R
+import sp.inetvpn.databinding.DialogConfigFilterBinding
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig

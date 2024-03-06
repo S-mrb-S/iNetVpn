@@ -2,8 +2,8 @@ package com.xray.lite.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import sp.hamrahvpn.R
-import sp.hamrahvpn.databinding.ActivityRoutingSettingsBinding
+import sp.inetvpn.R
+import sp.inetvpn.databinding.ActivityRoutingSettingsBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import com.xray.lite.AppConfig
 import com.xray.lite.ui.adapters.FragmentAdapter

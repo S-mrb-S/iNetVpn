@@ -9,8 +9,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import sp.hamrahvpn.R
-import sp.hamrahvpn.databinding.ActivityTaskerBinding
+import sp.inetvpn.R
+import sp.inetvpn.databinding.ActivityTaskerBinding
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
 import com.xray.lite.util.MmkvManager

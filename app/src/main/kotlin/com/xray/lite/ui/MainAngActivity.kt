@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import sp.hamrahvpn.R
-import sp.hamrahvpn.databinding.ActivityAngMainBinding
+import sp.inetvpn.R
+import sp.inetvpn.databinding.ActivityAngMainBinding
 import com.xray.lite.helper.SimpleItemTouchHelperCallback
 import com.xray.lite.ui.adapters.MainRecyclerAdapter
 import com.xray.lite.viewmodel.MainViewModel

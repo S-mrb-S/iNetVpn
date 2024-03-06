@@ -39,7 +39,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!--Hamrah text-->
+    <!--iNet text-->
     <LinearLayout
         android:id="@+id/ll_welcome_details"
         android:layout_width="match_parent"
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/lo_4dpGrid"
-            android:text="@string/Hamrah"
+            android:text="@string/iNet"
             android:textColor="@color/colorText"
             android:textSize="16sp"
             android:textStyle="bold" />

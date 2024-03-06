@@ -1,7 +1,7 @@
 package com.xray.lite.ui
 
 import android.os.Bundle
-import sp.hamrahvpn.R
+import sp.inetvpn.R
 import com.xray.lite.service.V2RayServiceManager
 import com.xray.lite.util.Utils
 

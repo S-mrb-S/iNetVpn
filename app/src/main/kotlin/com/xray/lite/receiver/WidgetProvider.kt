@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
-import sp.hamrahvpn.R
+import sp.inetvpn.R
 import com.xray.lite.AppConfig
 import com.xray.lite.service.V2RayServiceManager
 import com.xray.lite.util.Utils
