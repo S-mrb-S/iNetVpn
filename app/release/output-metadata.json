@@ -11,48 +11,9 @@
       "type": "UNIVERSAL",
       "filters": [],
       "attributes": [],
-      "versionCode": 28,
-      "versionName": "2.0.8",
-      "outputFile": "iNetVpn2.0.8_null.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
-          "value": "armeabi-v7a"
-        }
-      ],
-      "attributes": [],
-      "versionCode": 1000028,
-      "versionName": "2.0.8",
-      "outputFile": "iNetVpn2.0.8_armeabi-v7a.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
-          "value": "x86"
-        }
-      ],
-      "attributes": [],
-      "versionCode": 3000028,
-      "versionName": "2.0.8",
-      "outputFile": "iNetVpn2.0.8_x86.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
-          "value": "x86_64"
-        }
-      ],
-      "attributes": [],
-      "versionCode": 4000028,
-      "versionName": "2.0.8",
-      "outputFile": "iNetVpn2.0.8_x86_64.apk"
+      "versionCode": 30,
+      "versionName": "2.1.0",
+      "outputFile": "iNet2.1.0_null.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -63,9 +24,48 @@
         }
       ],
       "attributes": [],
-      "versionCode": 2000028,
-      "versionName": "2.0.8",
-      "outputFile": "iNetVpn2.0.8_arm64-v8a.apk"
+      "versionCode": 2000030,
+      "versionName": "2.1.0",
+      "outputFile": "iNet2.1.0_arm64-v8a.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "x86"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 3000030,
+      "versionName": "2.1.0",
+      "outputFile": "iNet2.1.0_x86.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "x86_64"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 4000030,
+      "versionName": "2.1.0",
+      "outputFile": "iNet2.1.0_x86_64.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "armeabi-v7a"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 1000030,
+      "versionName": "2.1.0",
+      "outputFile": "iNet2.1.0_armeabi-v7a.apk"
     }
   ],
   "elementType": "File"
