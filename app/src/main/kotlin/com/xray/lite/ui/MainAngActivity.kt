@@ -5,11 +5,11 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import sp.inetvpn.R
-import sp.inetvpn.databinding.ActivityAngMainBinding
 import com.xray.lite.helper.SimpleItemTouchHelperCallback
 import com.xray.lite.ui.adapters.MainRecyclerAdapter
 import com.xray.lite.viewmodel.MainViewModel
+import sp.inetvpn.R
+import sp.inetvpn.databinding.ActivityAngMainBinding
 
 class MainAngActivity : BaseActivity() {
     private lateinit var binding: ActivityAngMainBinding
@@ -25,7 +25,7 @@ class MainAngActivity : BaseActivity() {
         val view = binding.root
         setContentView(view)
         // hide toolbar!
-        supportActionBar?.hide();
+        supportActionBar?.hide()
 
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -37,12 +37,12 @@ class MainAngActivity : BaseActivity() {
 
         binding.ivServerSettings.setOnClickListener {
             startActivity(Intent(this, MainSettingsV2ray::class.java))
-            overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+            overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
         }
 
         binding.llServerBack.setOnClickListener {
-            finish();
-            overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+            finish()
+            overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)
         }
 
         setupViewModel()
@@ -65,8 +65,8 @@ class MainAngActivity : BaseActivity() {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         super.onBackPressed()
-        finish();
-        overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+        finish()
+        overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)
     }
 
 }

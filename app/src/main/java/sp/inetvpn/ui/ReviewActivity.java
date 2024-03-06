@@ -75,7 +75,7 @@ public class ReviewActivity extends Activity {
             } catch (ActivityNotFoundException activityNotFound) {
                 params = new Bundle();
                 params.putString("device_id", MainApplication.device_id);
-                params.putString("exception", "RA1" + activityNotFound.toString());
+                params.putString("exception", "RA1" + activityNotFound);
                 LogManager.logEvent(params);
 
 //                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https:/")));
@@ -109,7 +109,7 @@ public class ReviewActivity extends Activity {
             } catch (ActivityNotFoundException activityNotFound) {
                 params = new Bundle();
                 params.putString("device_id", MainApplication.device_id);
-                params.putString("exception", "RA2" + activityNotFound.toString());
+                params.putString("exception", "RA2" + activityNotFound);
                 LogManager.logEvent(params);
 //                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https:/")));
             } catch (Exception e) {

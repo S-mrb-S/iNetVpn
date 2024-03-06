@@ -72,12 +72,8 @@ public class SplitAdapter extends RecyclerView.Adapter<SplitAdapter.ViewHolder> 
             holder.recycler_checkbox.setTag(splitList.get(position));
 
             holder.recycler_checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                if (isChecked) {
-                    splitList.get(position).setSelected(true);//Checked
-                } else {
-                    splitList.get(position).setSelected(false);//Unchecked
-
-                }
+                //Unchecked
+                splitList.get(position).setSelected(isChecked);//Checked
             });
         }
     }

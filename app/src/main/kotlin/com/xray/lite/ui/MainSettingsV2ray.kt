@@ -703,8 +703,8 @@ class MainSettingsV2ray : BaseActivity(), NavigationView.OnNavigationItemSelecte
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         super.onBackPressed()
-        finish();
-        overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+        finish()
+        overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

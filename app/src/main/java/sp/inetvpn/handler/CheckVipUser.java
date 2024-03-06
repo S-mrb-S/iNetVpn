@@ -11,10 +11,8 @@ import sp.inetvpn.util.Data;
 
 public class CheckVipUser {
 
-    static CheckInternetConnection isOnline = new CheckInternetConnection();
-
     public static void checkInformationUser(MainActivity context) {
-        if (isOnline.netCheck(context)) {
+        if (CheckInternetConnection.netCheck(context)) {
 
             String uL = Data.appValStorage.getString("usernameLogin", null);
             String uU = Data.appValStorage.getString("usernamePassword", null);

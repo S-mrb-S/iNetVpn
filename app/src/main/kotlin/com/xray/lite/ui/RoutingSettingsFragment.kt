@@ -15,8 +15,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
-import sp.inetvpn.R
-import sp.inetvpn.databinding.FragmentRoutingSettingsBinding
 import com.tbruyelle.rxpermissions.RxPermissions
 import com.xray.lite.AppConfig
 import com.xray.lite.extension.toast
@@ -24,6 +22,8 @@ import com.xray.lite.extension.v2RayApplication
 import com.xray.lite.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import sp.inetvpn.R
+import sp.inetvpn.databinding.FragmentRoutingSettingsBinding
 
 class RoutingSettingsFragment : Fragment() {
     private lateinit var binding: FragmentRoutingSettingsBinding
@@ -34,7 +34,8 @@ class RoutingSettingsFragment : Fragment() {
     val defaultSharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentRoutingSettingsBinding.inflate(layoutInflater)
         return binding.root// inflater.inflate(R.layout.fragment_routing_settings, container, false)

@@ -81,11 +81,11 @@ class MainActivity : BaseActivity(),
      * openvpn state
      *
      */
-    private val internetStatus: Boolean
-        /**
-         * Internet connection status.
-         */
-        get() = connection!!.netCheck(this)
+//    private val internetStatus: Boolean
+//        /**
+//         * Internet connection status.
+//         */
+//        get() = connection!!.netCheck(this)
     private val isServiceRunning: Unit
         /**
          * Get service status
@@ -117,7 +117,7 @@ class MainActivity : BaseActivity(),
     /**
      *
      */
-    private var connection: CheckInternetConnection? = null
+//    private var connection: CheckInternetConnection? = null
 //    private var testoo: IOpenVPNAPIService? = null
 
     // MMKV
@@ -242,7 +242,7 @@ class MainActivity : BaseActivity(),
         }
 
         binding.layoutTest.setOnClickListener {
-            layoutTest();
+            layoutTest()
         }
     }
 
@@ -616,8 +616,6 @@ class MainActivity : BaseActivity(),
      * openvpn fun
      */
     private fun initializeAll() {
-        connection = CheckInternetConnection()
-
         // Create New Profile (OpenVpn)
 //        val file = ENCRYPT_DATA.decrypt(Data.connectionStorage.getString("file", null))
 //        val name = "Profile from remote App"
@@ -675,11 +673,11 @@ class MainActivity : BaseActivity(),
      */
     private fun prepareVpn() {
         if (!Data.isStart) {
-            if (internetStatus) {
+            if (CheckInternetConnection.netCheck(this)) {
                 // Checking permission for network monitor
                 val intent = VpnService.prepare(this)
                 if (intent != null) {
-                    startActivityForResult(intent, 1);
+                    startActivityForResult(intent, 1)
                 } else startVpn() //have already permission
 
             } else {
@@ -703,9 +701,9 @@ class MainActivity : BaseActivity(),
         if (resultCode == RESULT_OK) {
 
             //Permission granted, start the VPN
-            startVpn();
+            startVpn()
         } else {
-            showToast("دسترسی رد شد !! ");
+            showToast("دسترسی رد شد !! ")
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -716,11 +714,11 @@ class MainActivity : BaseActivity(),
     private fun startVpn() {
         Data.prefUsageStorage
 
-        val connectionToday = Data.prefUsageStorage.getLong(TODAY + "_connections", 0);
-        val connectionTotal = Data.prefUsageStorage.getLong("total_connections", 0);
+        val connectionToday = Data.prefUsageStorage.getLong(TODAY + "_connections", 0)
+        val connectionTotal = Data.prefUsageStorage.getLong("total_connections", 0)
 
-        Data.prefUsageStorage.putLong(TODAY + "_connections", connectionToday + 1);
-        Data.prefUsageStorage.putLong("total_connections", connectionTotal + 1);
+        Data.prefUsageStorage.putLong(TODAY + "_connections", connectionToday + 1)
+        Data.prefUsageStorage.putLong("total_connections", connectionTotal + 1)
 
         try {
             val file = Data.connectionStorage.getString("file", null)
@@ -765,8 +763,8 @@ class MainActivity : BaseActivity(),
 
 //            Log.d("THIS is file", config)
 
-            val uL = appValStorage.getString("usernameLogin", null);
-            val uU = appValStorage.getString("usernamePassword", null);
+            val uL = appValStorage.getString("usernameLogin", null)
+            val uU = appValStorage.getString("usernamePassword", null)
 
             if (file != null) {
                 city = Data.connectionStorage.getString("city", Data.NA)
@@ -1023,7 +1021,7 @@ class MainActivity : BaseActivity(),
 //                    fab.setImageResource(R.drawable.ic_stat_name)
                 }
 //                fab.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_orange))
-                setNewVpnState(2);
+                setNewVpnState(2)
                 setTestState(getString(R.string.connection_connected))
                 binding.layoutTest.isFocusable = true
             } else {

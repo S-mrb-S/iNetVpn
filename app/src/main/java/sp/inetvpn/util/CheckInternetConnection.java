@@ -11,11 +11,10 @@ public class CheckInternetConnection {
     /**
      * Check internet status
      */
-    public boolean netCheck(Context context){
+    public static boolean netCheck(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo nInfo = cm.getActiveNetworkInfo();
 
         return nInfo != null && nInfo.isConnectedOrConnecting();
     }
 }
-

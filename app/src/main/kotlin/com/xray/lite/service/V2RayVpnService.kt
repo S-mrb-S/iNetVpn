@@ -16,7 +16,6 @@ import android.os.ParcelFileDescriptor
 import android.os.StrictMode
 import android.util.Log
 import androidx.annotation.RequiresApi
-import sp.inetvpn.R
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
 import com.xray.lite.dto.ERoutingMode
@@ -26,6 +25,7 @@ import com.xray.lite.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import sp.inetvpn.R
 import java.io.File
 import java.lang.ref.SoftReference
 
@@ -279,7 +279,7 @@ class V2RayVpnService : VpnService(), ServiceControl {
 //        val emptyInfo = VpnNetworkInfo()
 //        val info = loadVpnNetworkInfo(configName, emptyInfo)!! + (lastNetworkInfo ?: emptyInfo)
 //        saveVpnNetworkInfo(configName, info)
-        isRunning = false;
+        isRunning = false
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             try {
                 connectivity.unregisterNetworkCallback(defaultNetworkCallback)

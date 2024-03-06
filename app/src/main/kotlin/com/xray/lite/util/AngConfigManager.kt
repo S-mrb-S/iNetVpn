@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.text.TextUtils
 import android.util.Log
 import androidx.preference.PreferenceManager
-import sp.inetvpn.R
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
@@ -26,6 +25,7 @@ import com.xray.lite.dto.VmessQRCode
 import com.xray.lite.extension.idnHost
 import com.xray.lite.extension.removeWhiteSpace
 import com.xray.lite.util.MmkvManager.KEY_SELECTED_SERVER
+import sp.inetvpn.R
 import java.net.URI
 
 object AngConfigManager {
@@ -275,7 +275,7 @@ object AngConfigManager {
                             vmessQRCode.path
                         )
 
-                        val fingerprint = vmessQRCode.fp ?: streamSetting.tlsSettings?.fingerprint
+                        val fingerprint = vmessQRCode.fp
                         streamSetting.populateTlsSettings(
                             vmessQRCode.tls, allowInsecure,
                             if (TextUtils.isEmpty(vmessQRCode.sni)) sni else vmessQRCode.sni,

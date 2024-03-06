@@ -1,9 +1,6 @@
 package sp.inetvpn.ui;
 
 import android.app.Activity;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,6 +10,7 @@ import androidx.annotation.Nullable;
 import sp.inetvpn.R;
 import sp.inetvpn.databinding.ActivityContactBinding;
 import sp.inetvpn.handler.SendFeedback;
+import sp.inetvpn.util.CheckInternetConnection;
 
 public class ContactActivity extends Activity {
     private ActivityContactBinding binding;
@@ -35,7 +33,7 @@ public class ContactActivity extends Activity {
 
         binding.btnAboutContactSubmit.setOnClickListener(v -> {
             // advertising
-            if (hasInternetConnection()) {
+            if (CheckInternetConnection.netCheck(this)) {
 
                 if (binding.checkboxAboutContactConnecting.isChecked()) {
                     Connecting = "true";
@@ -56,7 +54,6 @@ public class ContactActivity extends Activity {
                 } else {
                     Servers = "false";
                 }
-
 
                 Bundle paramsFeed = new Bundle();
                 paramsFeed.putString("Connecting", Connecting);
@@ -82,26 +79,6 @@ public class ContactActivity extends Activity {
             overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
         });
 
-    }
-
-    private boolean hasInternetConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-        try {
-            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-            for (NetworkInfo ni : netInfo) {
-                if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                    if (ni.isConnected())
-                        haveConnectedWifi = true;
-                if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                    if (ni.isConnected())
-                        haveConnectedMobile = true;
-            }
-        } catch (Exception ignored) {
-        }
-
-        return haveConnectedWifi || haveConnectedMobile;
     }
 
     class SendContactLog extends Thread {

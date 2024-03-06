@@ -152,7 +152,7 @@ class UsageActivity : Activity() {
 
         binding.settingAngMain.setOnClickListener {
             startActivity(Intent(this, MainSettingsV2ray::class.java))
-            overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+            overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
         }
         binding.llAboutForward.setOnClickListener {
             openAboutActivity()
@@ -170,9 +170,9 @@ class UsageActivity : Activity() {
         }
 
         if (Data.cancelFast) {
-            binding.switchUsageFastMode.setChecked(true);
+            binding.switchUsageFastMode.setChecked(true)
         } else {
-            binding.switchUsageFastMode.setChecked(false);
+            binding.switchUsageFastMode.setChecked(false)
         }
 
         // on below line we are adding check

@@ -202,9 +202,7 @@ public class AdvanceDrawerLayout extends DrawerLayout {
 
     public void removeCustomBehavior(int gravity) {
         int absGravity = getDrawerViewAbsoluteGravity(gravity);
-        if (settings.containsKey(absGravity)) {
-            settings.remove(absGravity);
-        }
+        settings.remove(absGravity);
     }
 
     @Override

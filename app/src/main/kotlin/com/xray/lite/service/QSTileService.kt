@@ -9,10 +9,10 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import sp.inetvpn.R
 import com.xray.lite.AppConfig
 import com.xray.lite.util.MessageUtil
 import com.xray.lite.util.Utils
+import sp.inetvpn.R
 import java.lang.ref.SoftReference
 
 @TargetApi(Build.VERSION_CODES.N)
@@ -67,7 +67,7 @@ class QSTileService : TileService() {
     private var mMsgReceive: BroadcastReceiver? = null
 
     private class ReceiveMessageHandler(context: QSTileService) : BroadcastReceiver() {
-        internal var mReference: SoftReference<QSTileService> = SoftReference(context)
+        var mReference: SoftReference<QSTileService> = SoftReference(context)
         override fun onReceive(ctx: Context?, intent: Intent?) {
             val context = mReference.get()
             when (intent?.getIntExtra("key", 0)) {

@@ -30,7 +30,6 @@ public class LauncherActivity extends BaseActivity {
     String FileDetails;
     Boolean isLoginBool = false;
     private long backPressedTime;
-    CheckInternetConnection isOnline = new CheckInternetConnection();
     String ID = null, FileID = null, File = null, City = null, Country = null, Image = null,
             IP = null, Active = null, Signal = null, Tag = null;
 
@@ -83,7 +82,7 @@ public class LauncherActivity extends BaseActivity {
     }
 
     void checkInternetLayer() {
-        if (isOnline.netCheck(this)) {
+        if (CheckInternetConnection.netCheck(this)) {
             getAppDetails();
         } else {
             tv_welcome_status.setText(disconnected);
@@ -113,7 +112,7 @@ public class LauncherActivity extends BaseActivity {
                                 tv_welcome_status.setText("هنگام اتصال به سرور به مشکل خوردیم.. لطفا از اتصال خود اطمینان حاصل کنید!");
                             }
 
-                            if (isOnline.netCheck(LauncherActivity.this)) {
+                            if (CheckInternetConnection.netCheck(LauncherActivity.this)) {
                                 checkInternetLayer();
                                 isThread = true;
                             }
