@@ -617,9 +617,10 @@ class MainActivity : BaseActivity(),
      */
     private fun initializeAll() {
         // Create New Profile (OpenVpn)
-//        val file = ENCRYPT_DATA.decrypt(Data.connectionStorage.getString("file", null))
+//        val file = Data.connectionStorage.getString("file", null)
 //        val name = "Profile from remote App"
 //        val profile: APIVpnProfile? = testoo?.addNewVPNProfile(name, false, file)
+//
 //        testoo?.startProfile(profile?.mUUID);
 
         // Checking is vpn already running or not (OpenVpn)
@@ -1092,7 +1093,7 @@ class MainActivity : BaseActivity(),
 //                            Log.d("SSSSSS", retVersion.toString());
                             if (retVersion != BuildConfig.VERSION_CODE) {
                                 val intent = Intent(Intent.ACTION_VIEW)
-                                intent.data = Uri.parse("http://45.88.8.210:3008/update")
+                                intent.data = Uri.parse("https://panel.se2ven.sbs/api/update")
                                 startActivity(intent)
                             } else {
                                 showToast("برنامه شما به اخرین ورژن اپدیت هست!")

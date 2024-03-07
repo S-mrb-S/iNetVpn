@@ -857,6 +857,7 @@
                         android:layout_marginTop="20dp"
                         android:background="@drawable/button_protocol"
                         android:text="VPN رفتن به تنظیمات"
+                        android:textColor="@color/colorTextStats"
                         android:textSize="18sp" />
 
                 </LinearLayout>
