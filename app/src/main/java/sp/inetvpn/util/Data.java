@@ -2,6 +2,8 @@ package sp.inetvpn.util;
 
 import com.tencent.mmkv.MMKV;
 
+import java.util.ArrayList;
+
 /**
  * MehrabSp
  */
@@ -74,6 +76,8 @@ public class Data {
     public static final String ApiV2rayName = "getallv2ray";
     public static final String ApiFeedBack = "addcontacts";
     public static final String ApiGetVersion = "getversion";
+    //
+    public static ArrayList<String> disableAppsList = new ArrayList<>();
     //
     public static String GetAllOpenVpnContent;
     public static int defaultItemDialog = 0; // 0 --> V2ray, 1 --> OpenVpn

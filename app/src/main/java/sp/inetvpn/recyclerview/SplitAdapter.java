@@ -15,6 +15,7 @@ import java.util.List;
 
 import sp.inetvpn.R;
 import sp.inetvpn.model.SplitList;
+import sp.inetvpn.util.manageDisableList;
 
 /**
  * Created by Jay on 24-02-2018.
@@ -29,13 +30,15 @@ public class SplitAdapter extends RecyclerView.Adapter<SplitAdapter.ViewHolder> 
         this.splitList = lstStudent;
     }
 
-    public void toggleSelection(boolean isChecked) {
-        if (!splitList.isEmpty()) {
-            for (int i = 0; i < splitList.size(); i++) {
-                splitList.get(i).setSelected(isChecked);
-            }
-        }
-    }
+//    public void toggleSelection(boolean isChecked) {
+//        if (!splitList.isEmpty()) {
+//            Log.d("SPLIT", "SIZE " + splitList.size());
+//            for (int i = 0; i < splitList.size(); i++) {
+//                Log.d("S: ", "S " + splitList.get(i).getAppName());
+//                splitList.get(i).setSelected(isChecked);
+//            }
+//        }
+//    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView recycler_name;
@@ -71,9 +74,29 @@ public class SplitAdapter extends RecyclerView.Adapter<SplitAdapter.ViewHolder> 
             holder.recycler_checkbox.setChecked(splitList.get(position).isSelected());
             holder.recycler_checkbox.setTag(splitList.get(position));
 
+//            holder.recycler_checkbox.setOnClickListener(v -> {
+//                CheckBox cb = (CheckBox) v;
+//                boolean isChecked = cb.isChecked();
+//                Toast.makeText(context, "changhe", Toast.LENGTH_SHORT).show();
+//                // اعمال تغییرات مورد نیاز بر اساس isChecked
+//            });
+
             holder.recycler_checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                //Unchecked
-                splitList.get(position).setSelected(isChecked);//Checked
+//                Toast.makeText(context, "changhe", Toast.LENGTH_SHORT).show();
+//                Log.d("uu", "uu: " + splitList.get(position).getAppName());
+                if (isChecked) {
+                    splitList.get(position).setSelected(true);//Checked
+
+//                    Log.d("On", "On: " + splitList.get(position).getAppName());
+                    manageDisableList.removePackage(splitList.get(position).getPackageName());
+//                    Toast.makeText(context, "on: " + splitList.get(position).getAppName(), Toast.LENGTH_SHORT).show();
+                } else {
+                    splitList.get(position).setSelected(false);//Unchecked
+
+//                    Log.d("Un", "un: " + splitList.get(position).getAppName());
+                    manageDisableList.addPackage(splitList.get(position).getPackageName());
+//                    Toast.makeText(context, "un: " + splitList.get(position).getAppName(), Toast.LENGTH_SHORT).show();
+                }
             });
         }
     }

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.StrictMode;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,9 @@ public class MainApplication extends MultiDexApplication implements Configuratio
 
         // openvpn-client
         App.setOpenVpn(this, "sp.inetvpn", "spinetvpn", "iNet");
+
+        if (BuildConfig.DEBUG)
+            StrictMode.enableDefaults();
 
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean firstRun = defaultSharedPreferences.getInt(PREF_LAST_VERSION, 0) != BuildConfig.VERSION_CODE;

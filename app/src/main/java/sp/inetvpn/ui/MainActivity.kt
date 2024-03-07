@@ -1,6 +1,7 @@
 package sp.inetvpn.ui
 
 import android.Manifest
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -39,6 +40,7 @@ import com.xray.lite.util.MmkvManager
 import com.xray.lite.util.Utils
 import com.xray.lite.viewmodel.MainViewModel
 import de.blinkt.openvpn.OpenVpnApi
+import de.blinkt.openvpn.core.App
 import de.blinkt.openvpn.core.OpenVPNService
 import de.blinkt.openvpn.core.OpenVPNService.setDefaultStatus
 import de.blinkt.openvpn.core.OpenVPNThread
@@ -54,14 +56,13 @@ import sp.inetvpn.handler.CheckVipUser.checkInformationUser
 import sp.inetvpn.handler.GetAllV2ray
 import sp.inetvpn.handler.GetVersionApi
 import sp.inetvpn.handler.SetupMain
-import sp.inetvpn.interfaces.ChangeServer
-import sp.inetvpn.model.OpenVpnServerList
 import sp.inetvpn.util.Animations
 import sp.inetvpn.util.CheckInternetConnection
 import sp.inetvpn.util.CountryListManager
 import sp.inetvpn.util.Data
 import sp.inetvpn.util.Data.TODAY
 import sp.inetvpn.util.Data.appValStorage
+import sp.inetvpn.util.manageDisableList
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -72,8 +73,8 @@ import java.util.concurrent.TimeUnit
  * MehrabSp
  */
 class MainActivity : BaseActivity(),
-    NavigationView.OnNavigationItemSelectedListener,
-    ChangeServer { // , VpnStatus.ByteCountListener, VpnStatus.StateListener
+    NavigationView.OnNavigationItemSelectedListener {
+
     //====== Variable =======
     private lateinit var binding: ActivityMainBinding
 
@@ -81,11 +82,6 @@ class MainActivity : BaseActivity(),
      * openvpn state
      *
      */
-//    private val internetStatus: Boolean
-//        /**
-//         * Internet connection status.
-//         */
-//        get() = connection!!.netCheck(this)
     private val isServiceRunning: Unit
         /**
          * Get service status
@@ -117,8 +113,6 @@ class MainActivity : BaseActivity(),
     /**
      *
      */
-//    private var connection: CheckInternetConnection? = null
-//    private var testoo: IOpenVPNAPIService? = null
 
     // MMKV
     private val mainStorage by lazy {
@@ -144,7 +138,7 @@ class MainActivity : BaseActivity(),
         }
 
     // ViewModel (V2ray)
-    val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
 
     // Usage
     private val df: SimpleDateFormat
@@ -174,6 +168,7 @@ class MainActivity : BaseActivity(),
         handlerSetupFirst()
 
         SetupMain.setupDrawer(this, binding)
+        manageDisableList.restoreList() // disable list
         initializeAll() // openvpn
         // save default config for v2ray
         initializeApp()
@@ -616,13 +611,6 @@ class MainActivity : BaseActivity(),
      * openvpn fun
      */
     private fun initializeAll() {
-        // Create New Profile (OpenVpn)
-//        val file = Data.connectionStorage.getString("file", null)
-//        val name = "Profile from remote App"
-//        val profile: APIVpnProfile? = testoo?.addNewVPNProfile(name, false, file)
-//
-//        testoo?.startProfile(profile?.mUUID);
-
         // Checking is vpn already running or not (OpenVpn)
         isServiceRunning
         VpnStatus.initLogCache(this.cacheDir)
@@ -699,13 +687,29 @@ class MainActivity : BaseActivity(),
      */
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == RESULT_OK) {
+        when (requestCode) {
+            33 -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    // اطلاعاتی که از اکتیویتی دوم دریافت می‌کنید
+                    val result = data?.getBooleanExtra("restart", false)
+                    if (result == true) {
+                        restartServer()
+                    }
+                    // انجام کار خاص با استفاده از callback
+                }
+            }
 
-            //Permission granted, start the VPN
-            startVpn()
-        } else {
-            showToast("دسترسی رد شد !! ")
+            else -> {
+                if (resultCode == RESULT_OK) {
+
+                    //Permission granted, start the VPN
+                    startVpn()
+                } else {
+                    showToast("دسترسی رد شد !! ")
+                }
+            }
         }
+
         super.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -771,6 +775,9 @@ class MainActivity : BaseActivity(),
                 city = Data.connectionStorage.getString("city", Data.NA)
                 city?.let { Log.d("TAG NAME", it) }
                 setNewVpnState(1)
+
+                App.clearDisallowedPackageApplication()
+                App.addArrayDisallowedPackageApplication(Data.disableAppsList)
 
                 OpenVpnApi.startVpn(this, file, "Japan", uL, uU)
 
@@ -898,16 +905,16 @@ class MainActivity : BaseActivity(),
      * Change server when user select new server
      * //     * @param server ovpn server details
      */
-//    fun newServer() { // Server server
-////        this.server = server;
-////        updateCurrentServerIcon(server.getFlagUrl());
-//
-//        // Stop previous connection
-//        if (Data.isStart) {
-//            stopVpn()
-//        }
-//        prepareVpn()
-//    }
+    fun restartServer() { // Server server
+//        this.server = server;
+//        updateCurrentServerIcon(server.getFlagUrl());
+
+        // Stop previous connection
+        if (Data.isStart) {
+            stopVpn()
+        }
+        prepareVpn()
+    }
 
     /**
      * v2ray
@@ -1110,7 +1117,7 @@ class MainActivity : BaseActivity(),
             }
 
             R.id.splitTun -> {
-                startActivity(Intent(this, SplitActivity::class.java))
+                startActivityForResult(Intent(this, SplitActivity::class.java), 33)
                 overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)
             }
 
@@ -1161,14 +1168,15 @@ class MainActivity : BaseActivity(),
         restoreTodayTextTv()
     }
 
-    /**
-     * On navigation item click, close activity and change server
-     *
-     * @param index: server index
-     */
-    override fun newServer(server: OpenVpnServerList) {
-//        changeServer.newServer(serverLists.get(index));
-    }
+//    /**
+//     * On navigation item click, close activity and change server
+//     *
+//     * @param index: server index
+//     */
+//    override fun onRestartServer() {
+////        changeServer.newServer(serverLists.get(index));
+//        showToast("RESTART")
+//    }
 
     override fun onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)

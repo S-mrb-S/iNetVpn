@@ -932,7 +932,8 @@
                     android:text="این قابلیت باعث میشود که وقتی اتصال شما ناپایدار بود و نیاز به قطع اینترنت داشتید بتوانید فورا ان را قطع کنید"
                     android:textColor="@color/colorText"
                     android:textSize="14sp"
-                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+                    tools:ignore="UseSwitchCompatOrMaterialXml"
+                    android:theme="@style/bubbleSwitch" />
 
             </LinearLayout>
 
