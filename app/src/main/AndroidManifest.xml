@@ -51,7 +51,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
-            android:name="sp.inetvpn.ui.SplitActivity"
+            android:name="sp.inetvpn.ui.split.SplitActivity"
             android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
         <activity

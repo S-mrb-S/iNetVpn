@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import sp.inetvpn.util.Data;
+import sp.inetvpn.Data.Data;
 
 /**
  * by MehrabSp

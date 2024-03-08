@@ -50,18 +50,19 @@ import kotlinx.coroutines.launch
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import sp.inetvpn.BuildConfig
+import sp.inetvpn.Data.Data
+import sp.inetvpn.Data.Data.TODAY
+import sp.inetvpn.Data.Data.appValStorage
 import sp.inetvpn.R
 import sp.inetvpn.databinding.ActivityMainBinding
 import sp.inetvpn.handler.CheckVipUser.checkInformationUser
 import sp.inetvpn.handler.GetAllV2ray
 import sp.inetvpn.handler.GetVersionApi
 import sp.inetvpn.handler.SetupMain
+import sp.inetvpn.ui.split.SplitActivity
 import sp.inetvpn.util.Animations
 import sp.inetvpn.util.CheckInternetConnection
 import sp.inetvpn.util.CountryListManager
-import sp.inetvpn.util.Data
-import sp.inetvpn.util.Data.TODAY
-import sp.inetvpn.util.Data.appValStorage
 import sp.inetvpn.util.manageDisableList
 import java.io.File
 import java.io.FileOutputStream
@@ -1117,8 +1118,15 @@ class MainActivity : BaseActivity(),
             }
 
             R.id.splitTun -> {
-                startActivityForResult(Intent(this, SplitActivity::class.java), 33)
-                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)
+                if (!Data.isStart) {
+                    startActivityForResult(Intent(this, SplitActivity::class.java), 33)
+                    overridePendingTransition(
+                        R.anim.anim_slide_in_left,
+                        R.anim.anim_slide_out_right
+                    )
+                } else {
+                    showToast("لطفا اول اتصال را قطع کنید")
+                }
             }
 
             R.id.info -> {

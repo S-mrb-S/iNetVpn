@@ -1,10 +1,10 @@
 package sp.inetvpn.util;
 
-import static sp.inetvpn.util.Data.ID_PREF_USAGE;
-import static sp.inetvpn.util.Data.ID_app_values;
-import static sp.inetvpn.util.Data.ID_connection_data;
-import static sp.inetvpn.util.Data.ID_log_data;
-import static sp.inetvpn.util.Data.ID_settings_data;
+import static sp.inetvpn.Data.Data.ID_PREF_USAGE;
+import static sp.inetvpn.Data.Data.ID_app_values;
+import static sp.inetvpn.Data.Data.ID_connection_data;
+import static sp.inetvpn.Data.Data.ID_log_data;
+import static sp.inetvpn.Data.Data.ID_settings_data;
 
 import com.tencent.mmkv.MMKV;
 

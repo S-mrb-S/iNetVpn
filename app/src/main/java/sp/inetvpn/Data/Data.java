@@ -1,8 +1,10 @@
-package sp.inetvpn.util;
+package sp.inetvpn.Data;
 
 import com.tencent.mmkv.MMKV;
 
 import java.util.ArrayList;
+
+import sp.inetvpn.util.MmkvManager;
 
 /**
  * MehrabSp

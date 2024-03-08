@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import sp.inetvpn.Data.Data;
+
 public class manageDisableList {
 
     public static void saveList() {

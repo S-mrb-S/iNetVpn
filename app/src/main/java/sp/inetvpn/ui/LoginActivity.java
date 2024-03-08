@@ -1,6 +1,6 @@
 package sp.inetvpn.ui;
 
-import static sp.inetvpn.util.Data.appValStorage;
+import static sp.inetvpn.Data.Data.appValStorage;
 
 import android.content.Intent;
 import android.os.Bundle;

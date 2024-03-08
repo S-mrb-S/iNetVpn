@@ -2,7 +2,7 @@ package sp.inetvpn.recyclerview.cmp;
 
 //import static sp.inetvpn.ui.ServerActivity.FileArray;
 
-import static sp.inetvpn.util.Data.connectionStorage;
+import static sp.inetvpn.Data.Data.connectionStorage;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -90,7 +90,7 @@ public class SetHolderHelper {
 //            EncryptData En = new EncryptData();
                 try {
                     connectionStorage.putString("id", OpenVpnServerList.GetID());
-                    connectionStorage.putString("file_id", OpenVpnServerList.GetFileID());
+//                    connectionStorage.putString("file_id", OpenVpnServerList.GetFileID());
 
 //                    connectionStorage.putString("fileLocal", "client-114-udp.ovpn");
 //                    connectionStorage.putString("file", File);

@@ -139,6 +139,7 @@ dependencies {
     implementation 'io.github.g00fy2.quickie:quickie-bundled:1.9.0'
     implementation 'com.google.zxing:core:3.5.3'
 
+    implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.4"
     // OpenVpn
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

@@ -12,7 +12,7 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
-import sp.inetvpn.util.Data;
+import sp.inetvpn.Data.Data;
 
 public class SendFeedback {
 

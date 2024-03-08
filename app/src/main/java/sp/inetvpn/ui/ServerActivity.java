@@ -1,6 +1,6 @@
 package sp.inetvpn.ui;
 
-import static sp.inetvpn.util.Data.KEY_GRID;
+import static sp.inetvpn.Data.Data.KEY_GRID;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -32,12 +32,12 @@ import java.util.List;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
+import sp.inetvpn.Data.Data;
 import sp.inetvpn.MainApplication;
 import sp.inetvpn.R;
 import sp.inetvpn.interfaces.NavItemClickListener;
 import sp.inetvpn.model.OpenVpnServerList;
 import sp.inetvpn.recyclerview.MainAdapter;
-import sp.inetvpn.util.Data;
 import sp.inetvpn.util.LogManager;
 import sp.inetvpn.util.MmkvManager;
 

@@ -3,11 +3,11 @@ package sp.inetvpn.handler;
 import android.content.Intent;
 import android.widget.Toast;
 
+import sp.inetvpn.Data.Data;
 import sp.inetvpn.R;
 import sp.inetvpn.ui.LoginActivity;
 import sp.inetvpn.ui.MainActivity;
 import sp.inetvpn.util.CheckInternetConnection;
-import sp.inetvpn.util.Data;
 
 public class CheckVipUser {
 

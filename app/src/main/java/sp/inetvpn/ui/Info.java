@@ -1,13 +1,14 @@
 package sp.inetvpn.ui;
 
-import static sp.inetvpn.util.Data.appValStorage;
+import static sp.inetvpn.Data.Data.appValStorage;
 
 import android.os.Bundle;
 import android.view.View;
 
+import com.xray.lite.ui.BaseActivity;
+
 import sp.inetvpn.R;
 import sp.inetvpn.databinding.ActivityInfoBinding;
-import com.xray.lite.ui.BaseActivity;
 
 public class Info extends BaseActivity {
 

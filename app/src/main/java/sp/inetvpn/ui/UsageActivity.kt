@@ -14,10 +14,10 @@ import com.tencent.mmkv.MMKV
 import com.xray.lite.ui.MainSettingsV2ray
 import com.xray.lite.ui.SettingsActivity
 import sp.inetvpn.BuildConfig
+import sp.inetvpn.Data.Data
 import sp.inetvpn.MainApplication
 import sp.inetvpn.R
 import sp.inetvpn.databinding.ActivityUsageBinding
-import sp.inetvpn.util.Data
 import sp.inetvpn.util.LogManager
 import sp.inetvpn.util.MmkvManager
 import java.text.NumberFormat
@@ -154,7 +154,8 @@ class UsageActivity : Activity() {
             startActivity(Intent(this, MainSettingsV2ray::class.java))
             overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
         }
-        binding.llAboutForward.setOnClickListener {
+
+        binding.headerLayout.llForward.setOnClickListener {
             openAboutActivity()
         }
         binding.linearLayoutBattery.setOnClickListener {

@@ -2,15 +2,13 @@ package sp.inetvpn.handler;
 
 import android.content.Context;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import sp.inetvpn.util.Data;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import sp.inetvpn.Data.Data;
 
 /**
  * by MehrabSp
@@ -22,26 +20,24 @@ public class GetAllOpenVpn {
     }
 
     public static void setRetOpenV(Context context, OpenVCallback callback) {
-        RequestQueue queue = Volley.newRequestQueue(context);
+        VolleySingleton volleySingleton = new VolleySingleton(context);
         StringRequest sr = new StringRequest(Request.Method.POST, Data.ApiAdress,
                 callback::onOpenVResult,
                 error -> callback.onOpenVResult(null)) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("query", Data.ApiOpenVpnName);
                 return params;
             }
 
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<>();
                 params.put("Authorization", Data.ApiKey);
                 return params;
             }
         };
-        queue.add(sr);
+        volleySingleton.addToRequestQueue(sr);
     }
-
 }
-
