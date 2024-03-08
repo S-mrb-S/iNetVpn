@@ -68,6 +68,9 @@ public class CountryListManager {
             case "norwegen":
                 holderIv.setImageResource(R.drawable.ic_flag_norwegen);
                 break;
+            case "v2ray":
+                holderIv.setImageResource(R.drawable.ic_qu_switch_24dp);
+                break;
             default:
                 holderIv.setImageResource(R.drawable.ic_flag_unknown_mali);
                 break;

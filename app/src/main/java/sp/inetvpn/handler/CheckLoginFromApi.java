@@ -1,6 +1,6 @@
 package sp.inetvpn.handler;
 
-import static sp.inetvpn.Data.Data.appValStorage;
+import static sp.inetvpn.Data.GlobalData.appValStorage;
 
 import android.content.Context;
 import android.util.Log;
@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import sp.inetvpn.Data.Data;
+import sp.inetvpn.Data.GlobalData;
 
 /**
  * by MehrabSp
@@ -35,7 +35,7 @@ public class CheckLoginFromApi {
     public static void checkIsLogin(Context context, String username, String password, LoginCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context);
         //for POST requests, only the following line should be changed to
-        StringRequest sr = new StringRequest(Request.Method.POST, Data.ApiAdress,
+        StringRequest sr = new StringRequest(Request.Method.POST, GlobalData.ApiAdress,
                 response -> {
                     resLogin = response;
                     Log.d("RES AGAIN", response);
@@ -49,7 +49,7 @@ public class CheckLoginFromApi {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("query", Data.ApiLoginName);
+                params.put("query", GlobalData.ApiLoginName);
                 params.put("username", username);
                 return params;
             }
@@ -57,7 +57,7 @@ public class CheckLoginFromApi {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Authorization", Data.ApiKey);
+                params.put("Authorization", GlobalData.ApiKey);
                 return params;
             }
         };

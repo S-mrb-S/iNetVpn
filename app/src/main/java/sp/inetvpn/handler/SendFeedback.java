@@ -12,7 +12,7 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
-import sp.inetvpn.Data.Data;
+import sp.inetvpn.Data.GlobalData;
 
 public class SendFeedback {
 
@@ -20,7 +20,7 @@ public class SendFeedback {
 
     public static void sendFeedBack(Context context, String feedback, String more, String email) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest sr = new StringRequest(Request.Method.POST, Data.ApiAdress,
+        StringRequest sr = new StringRequest(Request.Method.POST, GlobalData.ApiAdress,
                 response -> {
                     Log.d("RESSS Feed", response);
                 },
@@ -30,7 +30,7 @@ public class SendFeedback {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("query", Data.ApiFeedBack);
+                params.put("query", GlobalData.ApiFeedBack);
                 params.put("feedback", feedback);
                 params.put("more", more);
                 params.put("email", email);
@@ -40,7 +40,7 @@ public class SendFeedback {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Authorization", Data.ApiKey);
+                params.put("Authorization", GlobalData.ApiKey);
                 return params;
             }
         };

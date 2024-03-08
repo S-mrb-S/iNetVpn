@@ -1,6 +1,6 @@
 package sp.inetvpn.ui;
 
-import static sp.inetvpn.Data.Data.KEY_GRID;
+import static sp.inetvpn.Data.GlobalData.KEY_GRID;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -32,7 +32,7 @@ import java.util.List;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.AnimationAdapter;
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
-import sp.inetvpn.Data.Data;
+import sp.inetvpn.Data.GlobalData;
 import sp.inetvpn.MainApplication;
 import sp.inetvpn.R;
 import sp.inetvpn.interfaces.NavItemClickListener;
@@ -182,10 +182,10 @@ public class ServerActivity extends Activity implements NavItemClickListener {
 
             List<OpenVpnServerList> openVpnServerListItemList = new ArrayList<>();
 
-            Log.d("T", Data.GetAllOpenVpnContent);
-                if (Data.GetAllOpenVpnContent != null) {
+            Log.d("T", GlobalData.GetAllOpenVpnContent);
+            if (GlobalData.GetAllOpenVpnContent != null) {
                     try {
-                        JSONObject jsonResponse = new JSONObject(Data.GetAllOpenVpnContent);
+                        JSONObject jsonResponse = new JSONObject(GlobalData.GetAllOpenVpnContent);
                         boolean result = jsonResponse.getBoolean("result");
 
                         Log.d("LIS R", String.valueOf(result));

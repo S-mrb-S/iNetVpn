@@ -12,6 +12,7 @@
         android:normalScreens="true"
         android:smallScreens="true"
         android:xlargeScreens="true" /> <!-- Global permissions -->
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -59,13 +60,14 @@
             android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
         <activity
-            android:name="sp.inetvpn.ui.Info"
+            android:name="sp.inetvpn.ui.InfoActivity"
             android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
 
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1" /> <!-- App -->
+
         <activity
             android:name="sp.inetvpn.ui.LauncherActivity"
             android:exported="true"
@@ -77,7 +79,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="sp.inetvpn.ui.MainActivity"
+            android:name="sp.inetvpn.ui.main.MainActivity"
             android:exported="false"
             android:launchMode="singleTask"
             android:theme="@style/AppThemeDayNight.NoActionBar">
@@ -100,7 +102,7 @@
         <activity
             android:name="sp.inetvpn.ui.UsageActivity"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
-        <activity android:name="sp.inetvpn.ui.ContactActivity" />
+        <activity android:name="sp.inetvpn.ui.FeedbackActivity" />
         <activity android:name="sp.inetvpn.ui.FAQActivity" />
         <activity android:name="sp.inetvpn.ui.ReviewActivity" /> <!-- OpenVpn -->
         <service

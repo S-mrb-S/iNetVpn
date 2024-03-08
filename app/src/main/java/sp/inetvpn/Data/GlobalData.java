@@ -9,7 +9,7 @@ import sp.inetvpn.util.MmkvManager;
 /**
  * MehrabSp
  */
-public class Data {
+public class GlobalData {
 
     // default text
     public static final String default_usage_permissions_txt = "اجازه دهید برنامه همیشه در پس‌زمینه اجرا شود؟";

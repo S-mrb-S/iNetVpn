@@ -1,6 +1,6 @@
 package sp.inetvpn.ui;
 
-import static sp.inetvpn.Data.Data.appValStorage;
+import static sp.inetvpn.Data.GlobalData.appValStorage;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +20,7 @@ import java.util.Objects;
 import sp.inetvpn.MainApplication;
 import sp.inetvpn.R;
 import sp.inetvpn.handler.CheckLoginFromApi;
+import sp.inetvpn.ui.main.MainActivity;
 import sp.inetvpn.util.Animations;
 import sp.inetvpn.util.LogManager;
 
@@ -33,8 +34,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // hide toolbar!
-        setSupportActionBar(null);
 
         txtUsername = findViewById(R.id.inputUsername);
         txtPassword = findViewById(R.id.inputPassword);

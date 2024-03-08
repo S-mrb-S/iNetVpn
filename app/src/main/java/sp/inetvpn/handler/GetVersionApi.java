@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import sp.inetvpn.Data.Data;
+import sp.inetvpn.Data.GlobalData;
 
 /**
  * by MehrabSp
@@ -31,7 +31,7 @@ public class GetVersionApi {
     public static void setRetVersion(Context context, VersionCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context);
         //for POST requests, only the following line should be changed to
-        StringRequest sr = new StringRequest(Request.Method.POST, Data.ApiAdress,
+        StringRequest sr = new StringRequest(Request.Method.POST, GlobalData.ApiAdress,
                 response -> {
 //                    Log.d("SSS", response);
                     resVersion = response;
@@ -43,14 +43,14 @@ public class GetVersionApi {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("query", Data.ApiGetVersion);
+                params.put("query", GlobalData.ApiGetVersion);
                 return params;
             }
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Authorization", Data.ApiKey);
+                params.put("Authorization", GlobalData.ApiKey);
                 return params;
             }
         };

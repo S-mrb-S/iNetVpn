@@ -14,7 +14,7 @@ import com.tencent.mmkv.MMKV
 import com.xray.lite.ui.MainSettingsV2ray
 import com.xray.lite.ui.SettingsActivity
 import sp.inetvpn.BuildConfig
-import sp.inetvpn.Data.Data
+import sp.inetvpn.Data.GlobalData
 import sp.inetvpn.MainApplication
 import sp.inetvpn.R
 import sp.inetvpn.databinding.ActivityUsageBinding
@@ -134,7 +134,7 @@ class UsageActivity : Activity() {
         showUsageCuTitle()
         checkDeviceFun()
 
-        when (Data.defaultItemDialog) {
+        when (GlobalData.defaultItemDialog) {
             1 -> {
                 binding.openVpnC.isChecked = true
                 binding.v2rayC.isChecked = false
@@ -166,11 +166,11 @@ class UsageActivity : Activity() {
         }
 
         binding.switchUsageFastMode.setOnCheckedChangeListener { _, isChecked ->
-            Data.settingsStorage.putBoolean("cancel_fast", isChecked)
-            Data.cancelFast = isChecked
+            GlobalData.settingsStorage.putBoolean("cancel_fast", isChecked)
+            GlobalData.cancelFast = isChecked
         }
 
-        if (Data.cancelFast) {
+        if (GlobalData.cancelFast) {
             binding.switchUsageFastMode.setChecked(true)
         } else {
             binding.switchUsageFastMode.setChecked(false)
@@ -183,11 +183,11 @@ class UsageActivity : Activity() {
             val radioButton = findViewById<RadioButton>(checkedId)
 
             if (radioButton.text == "OpenVpn") {
-                Data.settingsStorage.putInt("default_connection_type", 1)
-                Data.defaultItemDialog = 1
+                GlobalData.settingsStorage.putInt("default_connection_type", 1)
+                GlobalData.defaultItemDialog = 1
             } else if (radioButton.text == "V2ray") {
-                Data.settingsStorage.putInt("default_connection_type", 0)
-                Data.defaultItemDialog = 0
+                GlobalData.settingsStorage.putInt("default_connection_type", 0)
+                GlobalData.defaultItemDialog = 0
             }
             // on below line we are displaying a toast message.
             Toast.makeText(
@@ -255,7 +255,7 @@ class UsageActivity : Activity() {
     }
 
     private fun showUsageCuTitle() {
-        var tvUsageCuTitle = Data.NA
+        var tvUsageCuTitle = GlobalData.NA
         try {
             val deviceCreated = settingsStorage.getString("device_created", "null")
             if (deviceCreated != "null") {
@@ -268,21 +268,21 @@ class UsageActivity : Activity() {
                     val days = TimeUnit.MILLISECONDS.toDays(elapsedTime)
                     val seconds = TimeUnit.MILLISECONDS.toSeconds(elapsedTime)
                     val timeString: String = if (elapsedTime in 120000..3599999) {
-                        convertToFarsiNumber(minutes) + ' ' + Data.minute_ago
+                        convertToFarsiNumber(minutes) + ' ' + GlobalData.minute_ago
                     } else if (elapsedTime in 3600000..7199999) {
-                        convertToFarsiNumber(hours) + ' ' + Data.hour_ago
+                        convertToFarsiNumber(hours) + ' ' + GlobalData.hour_ago
                     } else if (elapsedTime in 7200000..86399999) {
-                        convertToFarsiNumber(hours) + ' ' + Data.hours_ago
+                        convertToFarsiNumber(hours) + ' ' + GlobalData.hours_ago
                     } else if (elapsedTime in 86400000..172799999) {
-                        convertToFarsiNumber(days) + ' ' + Data.day_ago
+                        convertToFarsiNumber(days) + ' ' + GlobalData.day_ago
                     } else if (elapsedTime >= 172800000) {
-                        convertToFarsiNumber(days) + ' ' + Data.days_ago
+                        convertToFarsiNumber(days) + ' ' + GlobalData.days_ago
                     } else if (elapsedTime >= 60000) {
-                        convertToFarsiNumber(minutes) + ' ' + Data.minutes_ago
+                        convertToFarsiNumber(minutes) + ' ' + GlobalData.minutes_ago
                     } else {
-                        convertToFarsiNumber(seconds) + ' ' + Data.seconds_ago
+                        convertToFarsiNumber(seconds) + ' ' + GlobalData.seconds_ago
                     }
-                    tvUsageCuTitle = Data.device_time_txt + ' ' + timeString
+                    tvUsageCuTitle = GlobalData.device_time_txt + ' ' + timeString
                 }
             }
         } catch (e: Exception) {
@@ -297,61 +297,66 @@ class UsageActivity : Activity() {
 
     @SuppressLint("SetTextI18n")
     private fun setupBindingUsage() {
-        binding.tvUsageCuVersion.text = "${Data.Version_txt} ${BuildConfig.VERSION_CODE}"
+        binding.tvUsageCuVersion.text = "${GlobalData.Version_txt} ${BuildConfig.VERSION_CODE}"
 
         if (todayUsage < 1000) {
-            binding.tvUsageDataTodaySize.text = Data.default_byte_txt
+            binding.tvUsageDataTodaySize.text = GlobalData.default_byte_txt
         } else if (todayUsage <= 1000000) {
-            binding.tvUsageDataTodaySize.text = convertToFarsiNumber(todayUsage / 1000) + Data.KB
+            binding.tvUsageDataTodaySize.text =
+                convertToFarsiNumber(todayUsage / 1000) + GlobalData.KB
         } else {
-            binding.tvUsageDataTodaySize.text = convertToFarsiNumber(todayUsage / 1000000) + Data.MB
+            binding.tvUsageDataTodaySize.text =
+                convertToFarsiNumber(todayUsage / 1000000) + GlobalData.MB
         }
 
         if (yesterdayUsage == 0L) {
-            binding.tvUsageDataYesterdaySize.text = Data.NA
+            binding.tvUsageDataYesterdaySize.text = GlobalData.NA
         } else if (yesterdayUsage < 1000) {
-            binding.tvUsageDataYesterdaySize.text = Data.default_byte_txt
+            binding.tvUsageDataYesterdaySize.text = GlobalData.default_byte_txt
         } else if (yesterdayUsage <= 1000000) {
-            binding.tvUsageDataYesterdaySize.text = (yesterdayUsage / 1000).toString() + Data.KB
+            binding.tvUsageDataYesterdaySize.text =
+                (yesterdayUsage / 1000).toString() + GlobalData.KB
         } else {
-            binding.tvUsageDataYesterdaySize.text = (yesterdayUsage / 1000000).toString() + Data.MB
+            binding.tvUsageDataYesterdaySize.text =
+                (yesterdayUsage / 1000000).toString() + GlobalData.MB
         }
 
         binding.tvUsageDataDaythreeTitle.text = threeDays
         if (dayThreeUsage == 0L) {
-            binding.tvUsageDataDaythreeSize.text = Data.NA
+            binding.tvUsageDataDaythreeSize.text = GlobalData.NA
         } else if (dayThreeUsage < 1000) {
-            binding.tvUsageDataDaythreeSize.text = Data.default_byte_txt
+            binding.tvUsageDataDaythreeSize.text = GlobalData.default_byte_txt
         } else if (dayThreeUsage <= 1000000) {
             binding.tvUsageDataDaythreeSize.text =
-                convertToFarsiNumber(dayThreeUsage / 1000) + Data.KB
+                convertToFarsiNumber(dayThreeUsage / 1000) + GlobalData.KB
         } else {
             binding.tvUsageDataDaythreeSize.text =
-                convertToFarsiNumber(dayThreeUsage / 1000000) + Data.MB
+                convertToFarsiNumber(dayThreeUsage / 1000000) + GlobalData.MB
         }
 
         if (weekUsage == 0L) {
-            binding.tvUsageDataThisweekSize.text = Data.NA
+            binding.tvUsageDataThisweekSize.text = GlobalData.NA
         } else if (weekUsage < 1000) {
-            binding.tvUsageDataThisweekSize.text = Data.default_byte_txt
+            binding.tvUsageDataThisweekSize.text = GlobalData.default_byte_txt
         } else if (weekUsage <= 1000000) {
-            binding.tvUsageDataThisweekSize.text = convertToFarsiNumber(weekUsage / 1000) + Data.KB
+            binding.tvUsageDataThisweekSize.text =
+                convertToFarsiNumber(weekUsage / 1000) + GlobalData.KB
         } else {
             binding.tvUsageDataThisweekSize.text =
-                convertToFarsiNumber(weekUsage / 1000000) + Data.MB
+                convertToFarsiNumber(weekUsage / 1000000) + GlobalData.MB
         }
 
 
         if (monthUsage == 0L) {
-            binding.tvUsageDataThismonthSize.text = Data.NA
+            binding.tvUsageDataThismonthSize.text = GlobalData.NA
         } else if (monthUsage < 1000) {
-            binding.tvUsageDataThismonthSize.text = Data.default_byte_txt
+            binding.tvUsageDataThismonthSize.text = GlobalData.default_byte_txt
         } else if (monthUsage <= 1000000) {
             binding.tvUsageDataThismonthSize.text =
-                convertToFarsiNumber(monthUsage / 1000) + Data.KB
+                convertToFarsiNumber(monthUsage / 1000) + GlobalData.KB
         } else {
             binding.tvUsageDataThismonthSize.text =
-                convertToFarsiNumber(monthUsage / 1000000) + Data.MB
+                convertToFarsiNumber(monthUsage / 1000000) + GlobalData.MB
         }
 
 
@@ -390,8 +395,8 @@ class UsageActivity : Activity() {
         try {
             if (isDeviceH) {
                 val builder = AlertDialog.Builder(this@UsageActivity)
-                builder.setTitle(Data.default_usage_permissions_txt)
-                    .setMessage(Data.default_usage_permissions_backg_txt)
+                builder.setTitle(GlobalData.default_usage_permissions_txt)
+                    .setMessage(GlobalData.default_usage_permissions_backg_txt)
                     .setPositiveButton("Allow") { _, _ ->
                         try {
                             val intent = Intent()

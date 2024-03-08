@@ -20,19 +20,6 @@
       "filters": [
         {
           "filterType": "ABI",
-          "value": "x86_64"
-        }
-      ],
-      "attributes": [],
-      "versionCode": 4000033,
-      "versionName": "2.1.2",
-      "outputFile": "iNet2.1.2_x86_64.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
           "value": "armeabi-v7a"
         }
       ],
@@ -40,6 +27,19 @@
       "versionCode": 1000033,
       "versionName": "2.1.2",
       "outputFile": "iNet2.1.2_armeabi-v7a.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "x86_64"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 4000033,
+      "versionName": "2.1.2",
+      "outputFile": "iNet2.1.2_x86_64.apk"
     },
     {
       "type": "ONE_OF_MANY",

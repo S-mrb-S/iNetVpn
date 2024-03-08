@@ -4,21 +4,23 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import sp.inetvpn.R
-import sp.inetvpn.databinding.ActivityContactBinding
+import sp.inetvpn.databinding.ActivityFeedbackBinding
 import sp.inetvpn.handler.SendFeedback
 import sp.inetvpn.util.CheckInternetConnection
 
-class ContactActivity : Activity() {
-    private var binding: ActivityContactBinding? = null
+class FeedbackActivity : Activity() {
+    private var binding: ActivityFeedbackBinding? = null
+
     var feedback: String? = null
     var more: String? = null
     var email: String? = null
     private var connecting: String? = null
     private var crashed: String? = null
     private var servers: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityContactBinding.inflate(layoutInflater)
+        binding = ActivityFeedbackBinding.inflate(layoutInflater)
         val view: View = binding!!.getRoot()
         setContentView(view)
         binding!!.btnAboutContactSubmit.setOnClickListener {
@@ -54,14 +56,15 @@ class ContactActivity : Activity() {
                 SendContactLog().start()
                 binding!!.btnAboutContactSubmit.text = "ارسال شد"
                 binding!!.btnAboutContactSubmit.setEnabled(false)
+                onBackPressed()
             }
         }
-        binding!!.headerLayout.llBack.setOnClickListener { v: View? -> onBackPressed() }
+        binding!!.headerLayout.llBack.setOnClickListener { onBackPressed() }
     }
 
     internal inner class SendContactLog : Thread() {
         override fun run() {
-            SendFeedback.sendFeedBack(this@ContactActivity, feedback, more, email)
+            SendFeedback.sendFeedBack(this@FeedbackActivity, feedback, more, email)
         }
     }
 

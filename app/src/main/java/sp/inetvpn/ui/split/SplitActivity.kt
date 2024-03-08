@@ -29,12 +29,11 @@ class SplitActivity : BaseActivity() {
         super.onResume()
         val thread = Thread {
             runOnUiThread {
+                splitLists.clear()
                 SaveData().loadData(packageManager)
 
                 binding!!.splitRecyclerView.adapter = mAnimationAdapter
-                if (splitLists.isNotEmpty()) {
-                    mAnimationAdapter.setItemAnimation(BaseQuickAdapter.AnimationType.SlideInBottom)
-                }
+                mAnimationAdapter.setItemAnimation(BaseQuickAdapter.AnimationType.SlideInBottom)
                 binding!!.animationLayout.llLayout.visibility = View.GONE
             }
         }
@@ -46,7 +45,7 @@ class SplitActivity : BaseActivity() {
         binding = ActivitySplitBinding.inflate(layoutInflater)
         val view: View = binding!!.getRoot()
         setContentView(view)
-        setSupportActionBar(null)
+
         binding!!.animationLayout.animationView.setAnimation(R.raw.loading_circle)
         binding!!.animationLayout.animationView.playAnimation()
 

@@ -1,4 +1,4 @@
-package sp.inetvpn.handler;
+package sp.inetvpn.ui.main.util.v2ray;
 
 import android.content.Context;
 import android.util.Log;
@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import sp.inetvpn.Data.Data;
+import sp.inetvpn.Data.GlobalData;
 
 /**
  * by MehrabSp
@@ -33,9 +33,9 @@ public class GetAllV2ray {
     public static void setRetV2ray(Context context, V2rayCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context);
         //for POST requests, only the following line should be changed to
-        StringRequest sr = new StringRequest(Request.Method.POST, Data.ApiAdress,
+        StringRequest sr = new StringRequest(Request.Method.POST, GlobalData.ApiAdress,
                 response -> {
-            Log.d("RESSS", response);
+                    Log.d("RESSS", response);
                     resV2ray = response;
                     retV2ray = checkV2ray();
                     callback.onV2rayResult(retV2ray);
@@ -46,14 +46,14 @@ public class GetAllV2ray {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("query", Data.ApiV2rayName);
+                params.put("query", GlobalData.ApiV2rayName);
                 return params;
             }
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("Authorization", Data.ApiKey);
+                params.put("Authorization", GlobalData.ApiKey);
                 return params;
             }
         };
@@ -62,7 +62,6 @@ public class GetAllV2ray {
 
     private static String checkV2ray() {
         String res = "";
-        boolean imageDef = true;
 
         if (resV2ray != null) {
             try {
@@ -75,42 +74,7 @@ public class GetAllV2ray {
                     JSONArray dataArray = jsonResponse.getJSONArray("data");
                     for (int i = 0; i < dataArray.length(); i++) {
                         JSONObject dataObject = dataArray.getJSONObject(i);
-                        int id = dataObject.getInt("id");
-                        String country = dataObject.getString("country");
-                        String tag = dataObject.getString("tag");
                         String connection = dataObject.getString("connection");
-
-                        if (imageDef){
-                            imageDef = false;
-                            switch (tag) {
-                                case "japan":
-                                case "russia":
-                                case "southkorea":
-                                case "thailand":
-                                case "vietnam":
-                                case "unitedstates":
-                                case "unitedkingdom":
-                                case "singapore":
-                                case "france":
-                                case "germany":
-                                case "canada":
-                                case "luxemburg":
-                                case "netherlands":
-                                case "spain":
-                                case "finland":
-                                case "poland":
-                                case "australia":
-                                case "norwegen":
-                                case "turkey":
-                                case "italy":
-                                    Data.connectionStorage.putString("imageV2ray", tag);
-                                    break;
-                                default:
-                                    Data.connectionStorage.putString("imageV2ray", "netherlands");
-                                    break;
-                            }
-                        }
-
 
                         res = connection + "\n" + res;
                     }
@@ -123,4 +87,5 @@ public class GetAllV2ray {
         return res;
     }
 }
+
 

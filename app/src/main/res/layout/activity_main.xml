@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorBackground"
         android:orientation="vertical"
-        tools:context=".ui.MainActivity">
+        tools:context=".ui.main.MainActivity">
 
         <LinearLayout
             android:id="@+id/linearLayoutMainHome"
@@ -210,51 +210,6 @@
                 android:textColor="@color/colorTextStats"
                 android:textSize="14.0sp"
                 android:textStyle="bold" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/ll_main_data"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/layout_round"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/lo_8dpGrid"
-            android:paddingBottom="@dimen/lo_8dpGrid"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <ImageView
-                android:id="@+id/iv_data"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/ic_data"
-                android:contentDescription="@string/todo" />
-
-            <TextView
-                android:id="@+id/tv_data_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/lo_4dpGrid"
-                android:gravity="center"
-                android:text="@string/none"
-                android:textColor="@color/colorTextStats"
-                android:textSize="16sp"
-                android:textStyle="italic" />
-
-            <TextView
-                android:id="@+id/tv_data_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/lo_4dpGrid"
-                android:gravity="center"
-                android:text="@string/default_text_footer_end"
-                android:textColor="@color/colorTextStats"
-                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout

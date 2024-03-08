@@ -1,6 +1,6 @@
 package sp.inetvpn;
 
-import static sp.inetvpn.Data.Data.settingsStorage;
+import static sp.inetvpn.Data.GlobalData.settingsStorage;
 
 import android.content.Context;
 import android.content.SharedPreferences;

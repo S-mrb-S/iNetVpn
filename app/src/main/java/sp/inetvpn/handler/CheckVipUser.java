@@ -3,10 +3,10 @@ package sp.inetvpn.handler;
 import android.content.Intent;
 import android.widget.Toast;
 
-import sp.inetvpn.Data.Data;
+import sp.inetvpn.Data.GlobalData;
 import sp.inetvpn.R;
 import sp.inetvpn.ui.LoginActivity;
-import sp.inetvpn.ui.MainActivity;
+import sp.inetvpn.ui.main.MainActivity;
 import sp.inetvpn.util.CheckInternetConnection;
 
 public class CheckVipUser {
@@ -14,8 +14,8 @@ public class CheckVipUser {
     public static void checkInformationUser(MainActivity context) {
         if (CheckInternetConnection.netCheck(context)) {
 
-            String uL = Data.appValStorage.getString("usernameLogin", null);
-            String uU = Data.appValStorage.getString("usernamePassword", null);
+            String uL = GlobalData.appValStorage.getString("usernameLogin", null);
+            String uU = GlobalData.appValStorage.getString("usernamePassword", null);
 
             CheckLoginFromApi.checkIsLogin(
                     context,

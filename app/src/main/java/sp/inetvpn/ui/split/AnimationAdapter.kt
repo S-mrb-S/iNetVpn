@@ -38,7 +38,6 @@ class AnimationAdapter :
     override fun onBindViewHolder(holder: QuickViewHolder, position: Int, item: List<SplitList>?) {
         val ss = SplitActivity.splitLists[position]
         //in some cases, it will prevent unwanted situations
-        Thread {
             holder.getView<TextView>(R.id.recycler_name).text = ss.appName
             holder.getView<TextView>(R.id.recycler_package_name).text = ss.packageName
             holder.getView<ImageView>(R.id.split_icon_list).setImageDrawable(ss.splitIconList)
@@ -61,7 +60,6 @@ class AnimationAdapter :
                 }
             }
 
-        }.start()
     }
 
     override fun getItemCount(items: List<List<SplitList>>): Int {

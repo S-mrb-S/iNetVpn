@@ -8,7 +8,7 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import sp.inetvpn.Data.Data;
+import sp.inetvpn.Data.GlobalData;
 
 /**
  * by MehrabSp
@@ -21,20 +21,20 @@ public class GetAllOpenVpn {
 
     public static void setRetOpenV(Context context, OpenVCallback callback) {
         VolleySingleton volleySingleton = new VolleySingleton(context);
-        StringRequest sr = new StringRequest(Request.Method.POST, Data.ApiAdress,
+        StringRequest sr = new StringRequest(Request.Method.POST, GlobalData.ApiAdress,
                 callback::onOpenVResult,
                 error -> callback.onOpenVResult(null)) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("query", Data.ApiOpenVpnName);
+                params.put("query", GlobalData.ApiOpenVpnName);
                 return params;
             }
 
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> params = new HashMap<>();
-                params.put("Authorization", Data.ApiKey);
+                params.put("Authorization", GlobalData.ApiKey);
                 return params;
             }
         };

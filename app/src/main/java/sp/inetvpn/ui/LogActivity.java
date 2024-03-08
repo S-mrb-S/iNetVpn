@@ -1,6 +1,6 @@
 package sp.inetvpn.ui;
 
-import static sp.inetvpn.Data.Data.appValStorage;
+import static sp.inetvpn.Data.GlobalData.appValStorage;
 
 import android.os.Bundle;
 import android.view.View;
@@ -20,7 +20,6 @@ public class LogActivity extends AppCompatActivity {
        binding = ActivityLogBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        setSupportActionBar(null);
 
         String LogM = LogManager.getAllLogs();
         String logM = appValStorage.getString("res_then_error", null);

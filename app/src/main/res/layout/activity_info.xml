@@ -4,8 +4,7 @@
     android:id="@+id/constLayoutContactMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_login"
-    tools:context=".ui.ContactActivity">
+    android:background="@drawable/bg_login">
 
     <LinearLayout
         android:id="@+id/linearLayoutContactMain"

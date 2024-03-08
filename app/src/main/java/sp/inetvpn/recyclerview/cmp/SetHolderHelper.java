@@ -2,7 +2,7 @@ package sp.inetvpn.recyclerview.cmp;
 
 //import static sp.inetvpn.ui.ServerActivity.FileArray;
 
-import static sp.inetvpn.Data.Data.connectionStorage;
+import static sp.inetvpn.Data.GlobalData.connectionStorage;
 
 import android.content.Context;
 import android.os.Bundle;
