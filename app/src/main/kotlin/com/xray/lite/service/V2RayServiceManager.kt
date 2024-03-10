@@ -13,7 +13,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import sp.inetvpn.R
+import sp.hamrahvpn.R
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
 import com.xray.lite.AppConfig.ANG_PACKAGE

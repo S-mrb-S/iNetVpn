@@ -25,7 +25,7 @@ import com.xray.lite.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import sp.inetvpn.R
+import sp.hamrahvpn.R
 import java.io.File
 import java.lang.ref.SoftReference
 

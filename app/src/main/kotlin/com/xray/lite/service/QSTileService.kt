@@ -12,7 +12,7 @@ import android.service.quicksettings.TileService
 import com.xray.lite.AppConfig
 import com.xray.lite.util.MessageUtil
 import com.xray.lite.util.Utils
-import sp.inetvpn.R
+import sp.hamrahvpn.R
 import java.lang.ref.SoftReference
 
 @TargetApi(Build.VERSION_CODES.N)

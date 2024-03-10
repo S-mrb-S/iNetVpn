@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
-import sp.inetvpn.R
-import sp.inetvpn.databinding.ActivitySubSettingBinding
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivitySubSettingBinding
 import com.xray.lite.dto.SubscriptionItem
 import com.xray.lite.ui.adapters.SubSettingRecyclerAdapter
 import com.xray.lite.util.MmkvManager

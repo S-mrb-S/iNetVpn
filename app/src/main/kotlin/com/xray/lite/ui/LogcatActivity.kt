@@ -8,8 +8,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.lifecycleScope
-import sp.inetvpn.R
-import sp.inetvpn.databinding.ActivityLogcatBinding
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivityLogcatBinding
 import com.xray.lite.AppConfig.ANG_PACKAGE
 import com.xray.lite.extension.toast
 import com.xray.lite.util.Utils

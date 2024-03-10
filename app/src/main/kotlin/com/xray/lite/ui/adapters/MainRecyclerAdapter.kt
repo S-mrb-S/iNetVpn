@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import sp.inetvpn.R
-import sp.inetvpn.databinding.ItemRecyclerFooterBinding
-import sp.inetvpn.databinding.ItemRecyclerMainBinding
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ItemRecyclerFooterBinding
+import sp.hamrahvpn.databinding.ItemRecyclerMainBinding
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig

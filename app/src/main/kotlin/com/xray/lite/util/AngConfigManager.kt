@@ -25,7 +25,7 @@ import com.xray.lite.dto.VmessQRCode
 import com.xray.lite.extension.idnHost
 import com.xray.lite.extension.removeWhiteSpace
 import com.xray.lite.util.MmkvManager.KEY_SELECTED_SERVER
-import sp.inetvpn.R
+import sp.hamrahvpn.R
 import java.net.URI
 
 object AngConfigManager {

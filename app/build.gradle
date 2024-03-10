@@ -13,11 +13,11 @@ android {
     compileSdk rootProject.ext.compileSdk
     ndkVersion rootProject.ext.ndkVersion
     
-    namespace 'sp.inetvpn'
-    testNamespace 'sp.inetvpnTest'
+    namespace 'sp.hamrahvpn'
+    testNamespace 'sp.hamrahvpnTest'
 
     defaultConfig {
-        applicationId "sp.inetvpn"
+        applicationId "sp.hamrahvpn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode

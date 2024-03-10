@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.SystemClock
 import android.text.TextUtils
 import android.util.Log
-import sp.inetvpn.R
+import sp.hamrahvpn.R
 import com.xray.lite.AppConfig
 import com.xray.lite.extension.responseLength
 import kotlinx.coroutines.isActive

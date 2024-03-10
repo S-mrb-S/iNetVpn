@@ -11,7 +11,7 @@ import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import sp.inetvpn.R
+import sp.hamrahvpn.R
 import com.xray.lite.AppConfig
 import com.xray.lite.util.Utils
 import com.xray.lite.viewmodel.SettingsViewModel

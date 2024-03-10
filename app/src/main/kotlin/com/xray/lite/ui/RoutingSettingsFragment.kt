@@ -22,8 +22,8 @@ import com.xray.lite.extension.v2RayApplication
 import com.xray.lite.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import sp.inetvpn.R
-import sp.inetvpn.databinding.FragmentRoutingSettingsBinding
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.FragmentRoutingSettingsBinding
 
 class RoutingSettingsFragment : Fragment() {
     private lateinit var binding: FragmentRoutingSettingsBinding

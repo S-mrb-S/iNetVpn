@@ -9,7 +9,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
-import sp.inetvpn.R
+import sp.hamrahvpn.R
 import com.tbruyelle.rxpermissions.RxPermissions
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig

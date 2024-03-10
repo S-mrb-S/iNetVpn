@@ -3,8 +3,8 @@ package com.xray.lite.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import sp.inetvpn.R
-import sp.inetvpn.databinding.ActivityLogcatBinding
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivityLogcatBinding
 import com.xray.lite.AppConfig
 import com.xray.lite.extension.toast
 import com.xray.lite.util.AngConfigManager

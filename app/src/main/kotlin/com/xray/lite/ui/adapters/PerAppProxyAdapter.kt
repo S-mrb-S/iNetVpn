@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import sp.inetvpn.R
-import sp.inetvpn.databinding.ItemRecyclerBypassListBinding
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ItemRecyclerBypassListBinding
 import com.xray.lite.dto.AppInfo
 import com.xray.lite.ui.BaseActivity
 

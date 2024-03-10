@@ -12,7 +12,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import sp.inetvpn.R
+import sp.hamrahvpn.R
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
 import com.xray.lite.AppConfig.PREF_ALLOW_INSECURE

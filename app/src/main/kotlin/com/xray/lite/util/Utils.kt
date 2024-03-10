@@ -16,7 +16,7 @@ import android.util.Base64
 import android.util.Log
 import android.util.Patterns
 import android.webkit.URLUtil
-import sp.inetvpn.R
+import sp.hamrahvpn.R
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
 import com.xray.lite.AppConfig.ANG_PACKAGE

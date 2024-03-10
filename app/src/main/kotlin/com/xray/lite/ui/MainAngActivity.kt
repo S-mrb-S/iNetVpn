@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.xray.lite.helper.SimpleItemTouchHelperCallback
 import com.xray.lite.ui.adapters.MainRecyclerAdapter
 import com.xray.lite.viewmodel.MainViewModel
-import sp.inetvpn.R
-import sp.inetvpn.databinding.ActivityAngMainBinding
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivityAngMainBinding
 
 class MainAngActivity : BaseActivity() {
     private lateinit var binding: ActivityAngMainBinding

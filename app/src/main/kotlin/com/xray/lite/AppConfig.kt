@@ -1,6 +1,6 @@
 package com.xray.lite
 
-import sp.inetvpn.BuildConfig
+import sp.hamrahvpn.BuildConfig
 
 /**
  * V2ray

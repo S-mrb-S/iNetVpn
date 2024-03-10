@@ -5,8 +5,8 @@ import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
-import sp.inetvpn.R
-import sp.inetvpn.databinding.ActivitySubEditBinding
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivitySubEditBinding
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.xray.lite.dto.SubscriptionItem

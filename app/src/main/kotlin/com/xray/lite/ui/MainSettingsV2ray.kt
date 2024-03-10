@@ -40,8 +40,8 @@ import kotlinx.coroutines.launch
 import me.drakeet.support.toast.ToastCompat
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
-import sp.inetvpn.R
-import sp.inetvpn.databinding.ActivityMainSettingsV2rayBinding
+import sp.hamrahvpn.R
+import sp.hamrahvpn.databinding.ActivityMainSettingsV2rayBinding
 import java.util.concurrent.TimeUnit
 
 class MainSettingsV2ray : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
