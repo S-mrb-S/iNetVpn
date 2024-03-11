@@ -24,11 +24,11 @@ import sp.inetvpn.util.LogManager;
  * From animators library
  * Edited by MehrabSp
  */
-public class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.ViewHolder> {
+public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHolder> {
     private final List<OpenVpnServerList> dataSet;
     private final Context context;
 
-    public ServerAdapter(Context context, List<OpenVpnServerList> dataSet) {
+    public ServersAdapter(Context context, List<OpenVpnServerList> dataSet) {
         this.context = context;
         this.dataSet = dataSet;
     }
@@ -44,7 +44,7 @@ public class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
             final OpenVpnServerList OpenVpnServerList = dataSet.get(position);
-            ServerAdapterHelper holderHelper = new ServerAdapterHelper(context, OpenVpnServerList, holder, position);
+            ServersAdapterHelper holderHelper = new ServersAdapterHelper(context, OpenVpnServerList, holder, position);
             holderHelper.setAllHolder();
         } catch (Exception e) {
             Bundle params = new Bundle();
@@ -62,7 +62,7 @@ public class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_country;
         public View vitem;
-        public TextView showBool = itemView.findViewById(R.id.boolShowListServer);
+        public TextView showBool = itemView.findViewById(R.id.bool_show_list_server);
         public ImageView iv_flag;
         public ImageView iv_signal_strength;
         public final LinearLayout ll_item = itemView.findViewById(R.id.ll_item);

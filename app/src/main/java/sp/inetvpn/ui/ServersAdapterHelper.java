@@ -18,14 +18,14 @@ import sp.inetvpn.util.LogManager;
 /**
  * by MehrabSp on 2024
  */
-public class ServerAdapterHelper {
+public class ServersAdapterHelper {
     private final sp.inetvpn.model.OpenVpnServerList OpenVpnServerList;
-    private final ServerAdapter.ViewHolder holder;
+    private final ServersAdapter.ViewHolder holder;
     private final int position;
     private final NavItemClickListener navItemClickListener;
     private final Context context;
 
-    public ServerAdapterHelper(Context context, OpenVpnServerList openVpnServerList, ServerAdapter.ViewHolder viewHolder, int itemPosition) {
+    public ServersAdapterHelper(Context context, OpenVpnServerList openVpnServerList, ServersAdapter.ViewHolder viewHolder, int itemPosition) {
         this.OpenVpnServerList = openVpnServerList;
         this.holder = viewHolder;
         this.position = itemPosition;

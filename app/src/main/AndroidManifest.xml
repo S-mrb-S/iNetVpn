@@ -97,7 +97,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="sp.inetvpn.ui.ServerActivity"
+            android:name="sp.inetvpn.ui.ServersActivity"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
         <activity
             android:name="sp.inetvpn.ui.UsageActivity"

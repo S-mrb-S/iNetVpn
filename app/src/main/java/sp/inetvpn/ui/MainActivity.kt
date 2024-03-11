@@ -204,7 +204,7 @@ class MainActivity : BaseActivity(),
             val servers: Intent = if (GlobalData.defaultItemDialog == 0) {
                 Intent(this@MainActivity, MainAngActivity::class.java)
             } else {
-                Intent(this@MainActivity, ServerActivity::class.java)
+                Intent(this@MainActivity, ServersActivity::class.java)
             }
             startActivity(servers)
             overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
@@ -716,7 +716,7 @@ class MainActivity : BaseActivity(),
                 Toast.makeText(this, "در حال اتصال ...", Toast.LENGTH_SHORT).show()
 
             } else {
-                val servers = Intent(this@MainActivity, ServerActivity::class.java)
+                val servers = Intent(this@MainActivity, ServersActivity::class.java)
                 startActivity(servers)
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
                 Toast.makeText(this, "ابتدا یک سرور را انتخاب کنید", Toast.LENGTH_SHORT).show()

@@ -6,52 +6,27 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
     android:orientation="vertical"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.ServersActivity">
 
     <include
         android:id="@+id/header_layout"
         layout="@layout/header_layout_left" />
 
-    <!--BODY-->
-    <LinearLayout
-        android:id="@+id/ll_server_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="10"
-        android:orientation="vertical">
-        <!--light-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ls_servers_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/colorBackground"
-            android:dividerHeight="1dp"
-            android:footerDividersEnabled="true"
-            android:headerDividersEnabled="true"
-            android:scrollbars="vertical" />
-    </LinearLayout>
-    <!--FOOTER-->
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_weight="1"-->
-<!--        android:background="@drawable/layout_round"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/textViewCenter"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:gravity="center"-->
-<!--            android:text="@string/none" />-->
-<!--    </LinearLayout>-->
-
     <TextView
-        android:id="@+id/boolShowListServer"
+        android:id="@+id/bool_show_list_server"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/no_itemlist_found"
         android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ls_servers_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/colorBackground"
+        android:dividerHeight="1dp"
+        android:scrollbars="vertical" />
+
 </LinearLayout>
