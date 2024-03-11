@@ -8,78 +8,10 @@
     android:orientation="vertical"
     tools:context=".ui.MainActivity">
 
-    <!--HEADER-->
-    <LinearLayout
-        android:id="@+id/linearLayoutTitleBar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+    <include
+        android:id="@+id/header_layout"
+        layout="@layout/header_layout_left" />
 
-        <LinearLayout
-            android:id="@+id/ll_server_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="horizontal"
-            android:paddingStart="@dimen/lo_16dpGrid"
-            android:paddingTop="@dimen/lo_16dpGrid"
-            android:paddingEnd="@dimen/lo_16dpGrid"
-            android:paddingBottom="@dimen/lo_16dpGrid">
-
-            <ImageView
-                android:id="@+id/iv_servers_go_back"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:background="@drawable/ic_go_back"
-                android:contentDescription="@string/todo" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            tools:ignore="NestedWeights" />
-
-        <TextView
-            android:id="@+id/tv_servers_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="@dimen/lo_16dpGrid"
-            android:gravity="center"
-            android:textColor="@color/colorText"
-            android:text="@string/title_server_activity"
-            android:textSize="18sp" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <LinearLayout
-            android:id="@+id/ll_server_refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="horizontal"
-            android:paddingStart="@dimen/lo_16dpGrid"
-            android:paddingTop="@dimen/lo_16dpGrid"
-            android:paddingEnd="@dimen/lo_16dpGrid"
-            android:paddingBottom="@dimen/lo_16dpGrid">
-
-            <ImageView
-                android:id="@+id/iv_server_refresh"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:background="@drawable/ic_servers_cloud"
-                android:backgroundTint="@color/colorStatsBlue"
-                android:contentDescription="@string/todo" />
-        </LinearLayout>
-    </LinearLayout>
     <!--BODY-->
     <LinearLayout
         android:id="@+id/ll_server_list"

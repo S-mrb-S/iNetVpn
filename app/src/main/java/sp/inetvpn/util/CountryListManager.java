@@ -42,8 +42,6 @@ public class CountryListManager {
                 holderIv.setImageResource(R.drawable.ic_flag_canada);
                 break;
             case "luxemburg":
-                holderIv.setImageResource(R.drawable.ic_flag_luxemburg);
-                break;
             case "netherlands":
                 holderIv.setImageResource(R.drawable.ic_flag_netherlands);
                 break;
@@ -72,7 +70,7 @@ public class CountryListManager {
                 holderIv.setImageResource(R.drawable.ic_qu_switch_24dp);
                 break;
             default:
-                holderIv.setImageResource(R.drawable.ic_flag_unknown_mali);
+                holderIv.setImageResource(R.drawable.ic_flag_unk);
                 break;
         }
     }

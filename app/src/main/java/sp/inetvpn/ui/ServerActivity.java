@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.OvershootInterpolator;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -46,19 +45,13 @@ import sp.inetvpn.util.MmkvManager;
 public class ServerActivity extends Activity implements NavItemClickListener {
     RecyclerView recyclerView; // list
     private ServerAdapter adapter;
-//    private ChangeServer changeServerLocal;
-    //    ProfileManager pm;
-    ImageView iv_server_refresh;
+
+    private ActivityServer binding;
+
     String FileDetails = "NULL";
     String[][] ServerArray = new String[40][8];
         public static String[][] FileArray = new String[40][2];
     MMKV appValStorage = MmkvManager.getAppValStorage();
-
-    // 100
-    @Override
-    public void onBackPressed() {
-        finishActivity();
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,7 +74,7 @@ public class ServerActivity extends Activity implements NavItemClickListener {
 //        }
 
         LinearLayout ll_server_back = findViewById(R.id.ll_server_back);
-        ll_server_back.setOnClickListener(v -> finishActivity());
+        ll_server_back.setOnClickListener(v -> this.onBackPressed());
 
         LinearLayout ll_server_retry = findViewById(R.id.ll_server_refresh);
 //        ll_server_retry.setOnClickListener(v -> {
@@ -281,11 +274,6 @@ public class ServerActivity extends Activity implements NavItemClickListener {
                 : new LinearLayoutManager(this);
     }
 
-    private void finishActivity() {
-        finish();
-        overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
-    }
-
     /**
      * On navigation item click, close activity and change server
      *
@@ -293,8 +281,8 @@ public class ServerActivity extends Activity implements NavItemClickListener {
      */
     @Override
     public void clickedItem(int index) {
-//        resetList();
-        finishActivity();
+        resetList();
+        this.onBackPressed();
 //        Log.d("POS", String.valueOf(index));
 //        changeServerLocal.newServer();
 //        changeServerLocal.newServer(serverLists.get(index));
@@ -303,6 +291,12 @@ public class ServerActivity extends Activity implements NavItemClickListener {
     @SuppressLint("NotifyDataSetChanged")
     private void resetList() {
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
     }
 
 }
