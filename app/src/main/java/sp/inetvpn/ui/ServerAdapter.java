@@ -1,4 +1,4 @@
-package sp.inetvpn.recyclerview;
+package sp.inetvpn.ui;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,24 +12,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import sp.inetvpn.MainApplication;
 import sp.inetvpn.R;
 import sp.inetvpn.model.OpenVpnServerList;
-import sp.inetvpn.recyclerview.cmp.SetHolderHelper;
 import sp.inetvpn.util.LogManager;
-
-import java.util.List;
 
 /**
  * Created by Daichi Furiya / Wasabeef on 2020/08/26.
  * From animators library
  * Edited by MehrabSp
  */
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
+public class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.ViewHolder> {
     private final List<OpenVpnServerList> dataSet;
     private final Context context;
 
-    public MainAdapter(Context context, List<OpenVpnServerList> dataSet) {
+    public ServerAdapter(Context context, List<OpenVpnServerList> dataSet) {
         this.context = context;
         this.dataSet = dataSet;
     }
@@ -45,7 +44,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
             final OpenVpnServerList OpenVpnServerList = dataSet.get(position);
-            SetHolderHelper holderHelper = new SetHolderHelper(context, OpenVpnServerList, holder, position);
+            ServerAdapterHelper holderHelper = new ServerAdapterHelper(context, OpenVpnServerList, holder, position);
             holderHelper.setAllHolder();
         } catch (Exception e) {
             Bundle params = new Bundle();

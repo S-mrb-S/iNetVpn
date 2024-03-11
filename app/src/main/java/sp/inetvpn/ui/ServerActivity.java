@@ -37,7 +37,6 @@ import sp.inetvpn.MainApplication;
 import sp.inetvpn.R;
 import sp.inetvpn.interfaces.NavItemClickListener;
 import sp.inetvpn.model.OpenVpnServerList;
-import sp.inetvpn.recyclerview.MainAdapter;
 import sp.inetvpn.util.LogManager;
 import sp.inetvpn.util.MmkvManager;
 
@@ -46,7 +45,7 @@ import sp.inetvpn.util.MmkvManager;
 //===========================================================*/
 public class ServerActivity extends Activity implements NavItemClickListener {
     RecyclerView recyclerView; // list
-    private MainAdapter adapter;
+    private ServerAdapter adapter;
 //    private ChangeServer changeServerLocal;
     //    ProfileManager pm;
     ImageView iv_server_refresh;
@@ -240,7 +239,7 @@ public class ServerActivity extends Activity implements NavItemClickListener {
                     Toast.makeText(ServerActivity.this, "null", Toast.LENGTH_SHORT).show();
                 }
 
-                adapter = new MainAdapter(ServerActivity.this, openVpnServerListItemList);
+            adapter = new ServerAdapter(ServerActivity.this, openVpnServerListItemList);
 
                 recyclerView = findViewById(R.id.ls_servers_list);
                 // new adapter

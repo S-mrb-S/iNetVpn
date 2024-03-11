@@ -7,7 +7,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import sp.inetvpn.R;
 import sp.inetvpn.databinding.ActivityMainBinding;
-import sp.inetvpn.ui.main.MainActivity;
+import sp.inetvpn.ui.MainActivity;
 
 /**
  * Setup for MainActivity

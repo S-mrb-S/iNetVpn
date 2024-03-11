@@ -14,7 +14,6 @@ import sp.inetvpn.MainApplication
 import sp.inetvpn.R
 import sp.inetvpn.databinding.ActivityLauncherBinding
 import sp.inetvpn.handler.GetAllOpenVpn
-import sp.inetvpn.ui.main.MainActivity
 import sp.inetvpn.util.Animations
 import sp.inetvpn.util.CheckInternetConnection
 import sp.inetvpn.util.LogManager

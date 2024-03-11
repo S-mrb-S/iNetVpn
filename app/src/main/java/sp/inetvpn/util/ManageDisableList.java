@@ -7,7 +7,10 @@ import java.util.Arrays;
 
 import sp.inetvpn.Data.GlobalData;
 
-public class manageDisableList {
+/**
+ * for SplitAdapter
+ */
+public class ManageDisableList {
 
     public static void saveList() {
         String appsListStr = "";

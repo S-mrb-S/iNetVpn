@@ -1,4 +1,4 @@
-package sp.inetvpn.ui.main
+package sp.inetvpn.ui
 
 import android.Manifest
 import android.app.Activity
@@ -56,19 +56,13 @@ import sp.inetvpn.Data.GlobalData.appValStorage
 import sp.inetvpn.R
 import sp.inetvpn.databinding.ActivityMainBinding
 import sp.inetvpn.handler.CheckVipUser.checkInformationUser
+import sp.inetvpn.handler.GetAllV2ray
 import sp.inetvpn.handler.GetVersionApi
 import sp.inetvpn.handler.SetupMain
-import sp.inetvpn.ui.FeedbackActivity
-import sp.inetvpn.ui.InfoActivity
-import sp.inetvpn.ui.LoginActivity
-import sp.inetvpn.ui.ServerActivity
-import sp.inetvpn.ui.UsageActivity
-import sp.inetvpn.ui.main.util.v2ray.GetAllV2ray
-import sp.inetvpn.ui.split.SplitActivity
 import sp.inetvpn.util.Animations
 import sp.inetvpn.util.CheckInternetConnection
 import sp.inetvpn.util.CountryListManager
-import sp.inetvpn.util.manageDisableList
+import sp.inetvpn.util.ManageDisableList
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -160,7 +154,7 @@ class MainActivity : BaseActivity(),
         handlerSetupFirst()
 
         SetupMain.setupDrawer(this, binding)
-        manageDisableList.restoreList() // disable list
+        ManageDisableList.restoreList() // disable list
         initializeAll() // openvpn
         // save default config for v2ray
         initializeApp()

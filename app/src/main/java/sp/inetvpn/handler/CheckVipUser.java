@@ -6,7 +6,7 @@ import android.widget.Toast;
 import sp.inetvpn.Data.GlobalData;
 import sp.inetvpn.R;
 import sp.inetvpn.ui.LoginActivity;
-import sp.inetvpn.ui.main.MainActivity;
+import sp.inetvpn.ui.MainActivity;
 import sp.inetvpn.util.CheckInternetConnection;
 
 public class CheckVipUser {

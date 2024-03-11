@@ -1,4 +1,4 @@
-package sp.inetvpn.recyclerview.cmp;
+package sp.inetvpn.ui;
 
 //import static sp.inetvpn.ui.ServerActivity.FileArray;
 
@@ -12,21 +12,20 @@ import sp.inetvpn.MainApplication;
 import sp.inetvpn.R;
 import sp.inetvpn.interfaces.NavItemClickListener;
 import sp.inetvpn.model.OpenVpnServerList;
-import sp.inetvpn.recyclerview.MainAdapter;
 import sp.inetvpn.util.CountryListManager;
 import sp.inetvpn.util.LogManager;
 
 /**
  * by MehrabSp on 2024
  */
-public class SetHolderHelper {
+public class ServerAdapterHelper {
     private final sp.inetvpn.model.OpenVpnServerList OpenVpnServerList;
-    private final MainAdapter.ViewHolder holder;
+    private final ServerAdapter.ViewHolder holder;
     private final int position;
     private final NavItemClickListener navItemClickListener;
     private final Context context;
 
-    public SetHolderHelper(Context context, OpenVpnServerList openVpnServerList, MainAdapter.ViewHolder viewHolder, int itemPosition) {
+    public ServerAdapterHelper(Context context, OpenVpnServerList openVpnServerList, ServerAdapter.ViewHolder viewHolder, int itemPosition) {
         this.OpenVpnServerList = openVpnServerList;
         this.holder = viewHolder;
         this.position = itemPosition;

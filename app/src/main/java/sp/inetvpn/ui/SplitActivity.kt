@@ -1,10 +1,11 @@
-package sp.inetvpn.ui.split
+package sp.inetvpn.ui
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.xray.lite.ui.BaseActivity
+import sp.inetvpn.Data.PackageData
 import sp.inetvpn.R
 import sp.inetvpn.databinding.ActivitySplitBinding
 import sp.inetvpn.model.SplitList
@@ -18,7 +19,7 @@ class SplitActivity : BaseActivity() {
     private var binding: ActivitySplitBinding? = null
     private val returnIntent = Intent()
 
-    private val mAnimationAdapter: AnimationAdapter = AnimationAdapter().apply {
+    private val mSplitAdapter: SplitAdapter = SplitAdapter().apply {
         // 打开 Adapter 的动画
         animationEnable = true
         // 是否是首次显示时候加载动画
@@ -29,11 +30,12 @@ class SplitActivity : BaseActivity() {
         super.onResume()
         val thread = Thread {
             runOnUiThread {
-                splitLists.clear()
-                SaveData().loadData(packageManager)
+                if (splitLists.isEmpty()) {
+                    splitLists = PackageData().loadData(packageManager)
+                }
 
-                binding!!.splitRecyclerView.adapter = mAnimationAdapter
-                mAnimationAdapter.setItemAnimation(BaseQuickAdapter.AnimationType.SlideInBottom)
+                binding!!.splitRecyclerView.adapter = mSplitAdapter
+                mSplitAdapter.setItemAnimation(BaseQuickAdapter.AnimationType.SlideInBottom)
                 binding!!.animationLayout.llLayout.visibility = View.GONE
             }
         }
@@ -65,6 +67,6 @@ class SplitActivity : BaseActivity() {
     }
 
     companion object {
-        val splitLists: MutableList<SplitList> = ArrayList()
+        var splitLists: MutableList<SplitList> = ArrayList()
     }
 }

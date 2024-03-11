@@ -1,4 +1,4 @@
-package sp.inetvpn.ui.split
+package sp.inetvpn.ui
 
 import android.content.Context
 import android.view.View
@@ -10,7 +10,7 @@ import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
 import sp.inetvpn.R
 import sp.inetvpn.model.SplitList
-import sp.inetvpn.util.manageDisableList
+import sp.inetvpn.util.ManageDisableList
 
 /**
  * 文 件 名: AnimationAdapter
@@ -23,9 +23,8 @@ import sp.inetvpn.util.manageDisableList
 /**
  * Created by Jay on 24-02-2018.
  * Edited by Mehrab on 04-2024
- * Merge++
  */
-class AnimationAdapter :
+class SplitAdapter :
     BaseQuickAdapter<List<SplitList>, QuickViewHolder>(listOf(SplitActivity.splitLists)) {
     override fun onCreateViewHolder(
         context: Context,
@@ -49,17 +48,16 @@ class AnimationAdapter :
                 val isChecked = cb.isChecked
                 if (isChecked) {
                     ss.isSelected = true //Checked
-                    manageDisableList.removePackage(
+                    ManageDisableList.removePackage(
                         ss.packageName
                     )
                 } else {
                     ss.isSelected = false //Unchecked
-                    manageDisableList.addPackage(
+                    ManageDisableList.addPackage(
                         ss.packageName
                     )
                 }
             }
-
     }
 
     override fun getItemCount(items: List<List<SplitList>>): Int {
