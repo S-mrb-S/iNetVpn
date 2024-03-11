@@ -38,7 +38,7 @@ public class MainApplication extends MultiDexApplication implements Configuratio
         super.onCreate();
 
         // openvpn-client
-        App.setOpenVpn(this, "sp.hamrahvpn", "sphamrahvpn", "iNet");
+        App.setOpenVpn(this, "sp.hamrahvpn", "sphamrahvpn", "Hamrah");
 
         if (BuildConfig.DEBUG)
             StrictMode.enableDefaults();

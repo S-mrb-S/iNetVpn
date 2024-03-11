@@ -13,7 +13,7 @@ public class GlobalData {
 
     // default text
     public static final String default_usage_permissions_txt = "اجازه دهید برنامه همیشه در پس‌زمینه اجرا شود؟";
-    public static final String default_usage_permissions_backg_txt = "اجازه دادن به iNet VPN برای اجرای همیشه در برنامه پس‌زمینه ممکن است مصرف حافظه را کاهش دهد";
+    public static final String default_usage_permissions_backg_txt = "اجازه دادن به Hamrah VPN برای اجرای همیشه در برنامه پس‌زمینه ممکن است مصرف حافظه را کاهش دهد";
     public static final String NA = "خالی";
     // dialog
     public static final String[] item_options = {"V2ray", "OpenVpn"};

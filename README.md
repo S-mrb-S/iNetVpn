@@ -1,4 +1,4 @@
-New version of iNetVpn
+New version of HamrahVpn
 
 + OpenVpn client
 + V2ray (Xray core)

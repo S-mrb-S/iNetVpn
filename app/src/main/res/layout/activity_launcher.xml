@@ -8,7 +8,7 @@
         android:id="@+id/animation_layout"
         layout="@layout/animation_loading_layout" />
 
-    <!--iNet text-->
+    <!--Hamrah text-->
     <LinearLayout
         android:id="@+id/ll_welcome_details"
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/lo_4dpGrid"
-            android:text="@string/iNet"
+            android:text="@string/Hamrah"
             android:textColor="@color/colorText"
             android:textSize="16sp"
             android:textStyle="bold" />
