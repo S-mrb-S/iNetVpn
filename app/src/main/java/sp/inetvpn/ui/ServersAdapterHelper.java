@@ -41,32 +41,18 @@ public class ServersAdapterHelper {
 
     private void setItemHolder() {
         if (OpenVpnServerList != null) {
-            holder.tv_country.setText(OpenVpnServerList.GetCity());
+            holder.tv_country.setText(OpenVpnServerList.GetImage());
+            holder.tv_name.setText(OpenVpnServerList.GetCountry());
             CountryListManager.OpenVpnSetServerList(OpenVpnServerList.GetImage(), holder.iv_flag);
-            switch (OpenVpnServerList.GetSignal()) {
-                case "a":
-                    holder.iv_signal_strength.setBackgroundResource(R.drawable.ic_signal_full);
-                    break;
-                case "b":
-                    holder.iv_signal_strength.setBackgroundResource(R.drawable.ic_signal_normal);
-                    break;
-                case "c":
-                    holder.iv_signal_strength.setBackgroundResource(R.drawable.ic_signal_medium);
-                    break;
-                default:
-                    holder.iv_signal_strength.setBackgroundResource(R.drawable.ic_signal_low);
-                    break;
-            }
         } else {
             holder.showBool.setVisibility(View.VISIBLE);
         }
-
     }
 
     // select item background
     private void setBackgroundHolder() {
         try {
-            int ID = Integer.parseInt(connectionStorage.getString("id", "1"));
+            int ID = Integer.parseInt(connectionStorage.getString("id", "0"));
             if (position == ID) {
                 holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.colorStatsBlue));
             }
@@ -83,25 +69,13 @@ public class ServersAdapterHelper {
         try {
             holder.ll_item.setOnClickListener(v -> {
                 navItemClickListener.clickedItem(position);
-
                 holder.ll_item.setBackgroundColor(context.getResources().getColor(R.color.colorStatsBlue));
                 holder.tv_country.setTextColor(context.getResources().getColor(R.color.colorTextHint));
-//            EncryptData En = new EncryptData();
                 try {
                     connectionStorage.putString("id", OpenVpnServerList.GetID());
-//                    connectionStorage.putString("file_id", OpenVpnServerList.GetFileID());
-
-//                    connectionStorage.putString("fileLocal", "client-114-udp.ovpn");
-//                    connectionStorage.putString("file", File);
-                    connectionStorage.putString("file", OpenVpnServerList.GetFileID()); // ovpn file
-//                    Log.d("NEW FILE", OpenVpnServerList.GetFileID());
-
-                    connectionStorage.putString("city", OpenVpnServerList.GetCity());
+                    connectionStorage.putString("file", OpenVpnServerList.GetFileContent());
                     connectionStorage.putString("country", OpenVpnServerList.GetCountry());
                     connectionStorage.putString("image", OpenVpnServerList.GetImage());
-                    connectionStorage.putString("ip", OpenVpnServerList.GetIP());
-                    connectionStorage.putString("active", OpenVpnServerList.GetActive());
-                    connectionStorage.putString("signal", OpenVpnServerList.GetSignal());
                 } catch (Exception e) {
                     Bundle params = new Bundle();
                     params.putString("device_id", MainApplication.device_id);
@@ -109,13 +83,11 @@ public class ServersAdapterHelper {
                     LogManager.logEvent(params);
                 }
             });
-
         } catch (Exception e) {
             Bundle params = new Bundle();
             params.putString("device_id", MainApplication.device_id);
             params.putString("exception", "SAS6" + e);
             LogManager.logEvent(params);
         }
-
     }
 }

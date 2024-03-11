@@ -1,7 +1,6 @@
 package sp.inetvpn.handler;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -35,7 +34,6 @@ public class GetAllV2ray {
         //for POST requests, only the following line should be changed to
         StringRequest sr = new StringRequest(Request.Method.POST, GlobalData.ApiAdress,
                 response -> {
-                    Log.d("RESSS", response);
                     resV2ray = response;
                     retV2ray = checkV2ray();
                     callback.onV2rayResult(retV2ray);

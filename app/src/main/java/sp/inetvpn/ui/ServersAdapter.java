@@ -44,6 +44,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try {
             final OpenVpnServerList OpenVpnServerList = dataSet.get(position);
+            // static ?
             ServersAdapterHelper holderHelper = new ServersAdapterHelper(context, OpenVpnServerList, holder, position);
             holderHelper.setAllHolder();
         } catch (Exception e) {
@@ -60,19 +61,16 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_country;
-        public View vitem;
+        public TextView tv_country, tv_name;
         public TextView showBool = itemView.findViewById(R.id.bool_show_list_server);
         public ImageView iv_flag;
-        public ImageView iv_signal_strength;
         public final LinearLayout ll_item = itemView.findViewById(R.id.ll_item);
 
         public ViewHolder(View itemView) {
             super(itemView);
-            vitem = itemView;
             tv_country = itemView.findViewById(R.id.tv_country);
+            tv_name = itemView.findViewById(R.id.tv_name);
             iv_flag = itemView.findViewById(R.id.iv_flag);
-            iv_signal_strength = itemView.findViewById(R.id.iv_signal_strength);
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.xray.lite.ui.BaseActivity
@@ -109,6 +110,7 @@ class LauncherActivity : BaseActivity() {
                         val jsonResponse = JSONObject(content)
                         val result = jsonResponse.getBoolean("result")
                         if (result) {
+                            Log.d("res of retopenv", content)
                             handleValidResult(content)
                         } else {
                             handleInvalidResult()

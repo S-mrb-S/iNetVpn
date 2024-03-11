@@ -5,6 +5,7 @@ import static sp.inetvpn.Data.GlobalData.KEY_GRID;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
@@ -72,11 +73,13 @@ public class ServersActivity extends Activity implements NavItemClickListener {
                     if (result) {
                         // دسترسی به مقادیر داخل data
                         JSONArray dataArray = jsonResponse.getJSONArray("data");
+                        Log.d("ContentS", String.valueOf(dataArray));
 
                         for (int x = 0; x < dataArray.length(); x++) {
 
                             JSONObject dataObject = dataArray.getJSONObject(x);
                             String id = dataObject.getString("id");
+                            Log.d("IDs", id);
 
                             String tag = dataObject.getString("tag");
                             String name = dataObject.getString("name");
@@ -84,12 +87,8 @@ public class ServersActivity extends Activity implements NavItemClickListener {
 
                             ServerArray[x][0] = id;
                             ServerArray[x][1] = connection;
-                            ServerArray[x][2] = name; //
-                            ServerArray[x][3] = "Germany";
-                            ServerArray[x][4] = tag;
-                            ServerArray[x][5] = "51.68.191.75";
-                            ServerArray[x][6] = "true";
-                            ServerArray[x][7] = "a";
+                            ServerArray[x][2] = name;
+                            ServerArray[x][3] = tag;
 
                             OpenVpnServerList OpenVpnServerList = getOpenVpnServerList(x);
                             openVpnServerListItemList.add(OpenVpnServerList);
@@ -125,13 +124,9 @@ public class ServersActivity extends Activity implements NavItemClickListener {
     private OpenVpnServerList getOpenVpnServerList(int x) {
         OpenVpnServerList OpenVpnServerList = new OpenVpnServerList();
         OpenVpnServerList.SetID(ServerArray[x][0]);
-        OpenVpnServerList.SetFileID(ServerArray[x][1]);
-        OpenVpnServerList.SetCity(ServerArray[x][2]);
-        OpenVpnServerList.SetCountry(ServerArray[x][3]);
-        OpenVpnServerList.SetImage(ServerArray[x][4]);
-        OpenVpnServerList.SetIP(ServerArray[x][5]);
-        OpenVpnServerList.SetActive(ServerArray[x][6]);
-        OpenVpnServerList.SetSignal(ServerArray[x][7]);
+        OpenVpnServerList.SetFileContent(ServerArray[x][1]);
+        OpenVpnServerList.SetCountry(ServerArray[x][2]);
+        OpenVpnServerList.SetImage(ServerArray[x][3]);
         return OpenVpnServerList;
     }
 
@@ -151,9 +146,8 @@ public class ServersActivity extends Activity implements NavItemClickListener {
     public void clickedItem(int index) {
         resetList();
         this.onBackPressed();
-//        Log.d("POS", String.valueOf(index));
-//        changeServerLocal.newServer();
-//        changeServerLocal.newServer(serverLists.get(index));
+        //        changeServerLocal.newServer();
+        //        changeServerLocal.newServer(serverLists.get(index));
     }
 
     @SuppressLint("NotifyDataSetChanged")
