@@ -201,25 +201,26 @@ class MainActivity : BaseActivity(),
 
         binding.linearLayoutMainServers.setOnClickListener {
 
-            val servers: Intent = if (GlobalData.defaultItemDialog == 0) {
-                Intent(this@MainActivity, MainAngActivity::class.java)
+            if (GlobalData.defaultItemDialog == 0) {
+                startActivity(Intent(this@MainActivity, MainAngActivity::class.java))
             } else {
-                Intent(this@MainActivity, ServersActivity::class.java)
+                startActivityForResult(Intent(this@MainActivity, ServersActivity::class.java), 33)
             }
-            startActivity(servers)
             overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
         }
 
         binding.btnConnection.setOnClickListener {
-            if (vpnState != 1) {
-                when (GlobalData.defaultItemDialog) {
-                    1 -> connectToOpenVpn()
-                    0 -> connectToV2ray()
-                }
-            } else {
-                when (GlobalData.defaultItemDialog) {
-                    1 -> stopVpn()
-                    0 -> connectToV2ray()
+            runOnUiThread {
+                if (vpnState != 1) {
+                    when (GlobalData.defaultItemDialog) {
+                        1 -> connectToOpenVpn()
+                        0 -> connectToV2ray()
+                    }
+                } else {
+                    when (GlobalData.defaultItemDialog) {
+                        1 -> stopVpn()
+                        0 -> connectToV2ray()
+                    }
                 }
             }
         }
@@ -717,7 +718,7 @@ class MainActivity : BaseActivity(),
 
             } else {
                 val servers = Intent(this@MainActivity, ServersActivity::class.java)
-                startActivity(servers)
+                startActivityForResult(servers, 33)
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
                 Toast.makeText(this, "ابتدا یک سرور را انتخاب کنید", Toast.LENGTH_SHORT).show()
             }
@@ -841,8 +842,8 @@ class MainActivity : BaseActivity(),
         // Stop previous connection
         if (GlobalData.isStart) {
             stopVpn()
+            prepareVpn()
         }
-        prepareVpn()
     }
 
     /**
@@ -1094,6 +1095,7 @@ class MainActivity : BaseActivity(),
 //    }
     override fun onResume() {
         super.onResume()
+
         imageCountry = GlobalData.connectionStorage.getString("image", GlobalData.NA)
         city = GlobalData.connectionStorage.getString("city", GlobalData.NA)
 
@@ -1114,11 +1116,11 @@ class MainActivity : BaseActivity(),
 //        showToast("RESTART")
 //    }
 
-    override fun onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
-
-        super.onPause()
-    }
+//    override fun onPause() {
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
+//
+//        super.onPause()
+//    }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {

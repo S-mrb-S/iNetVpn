@@ -2,10 +2,9 @@ package sp.inetvpn.ui;
 
 import static sp.inetvpn.Data.GlobalData.KEY_GRID;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
@@ -35,10 +34,10 @@ import sp.inetvpn.model.OpenVpnServerList;
   by MehrabSp
 //===========================================================*/
 public class ServersActivity extends Activity implements NavItemClickListener {
-    private ServersAdapter adapter;
 
     private ActivityServersBinding binding;
     String[][] ServerArray = new String[40][8];
+    private final Intent returnIntent = new Intent();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,19 +72,16 @@ public class ServersActivity extends Activity implements NavItemClickListener {
                     if (result) {
                         // دسترسی به مقادیر داخل data
                         JSONArray dataArray = jsonResponse.getJSONArray("data");
-                        Log.d("ContentS", String.valueOf(dataArray));
 
                         for (int x = 0; x < dataArray.length(); x++) {
 
                             JSONObject dataObject = dataArray.getJSONObject(x);
-                            String id = dataObject.getString("id");
-                            Log.d("IDs", id);
 
                             String tag = dataObject.getString("tag");
                             String name = dataObject.getString("name");
                             String connection = dataObject.getString("connection");
 
-                            ServerArray[x][0] = id;
+                            ServerArray[x][0] = String.valueOf(x);
                             ServerArray[x][1] = connection;
                             ServerArray[x][2] = name;
                             ServerArray[x][3] = tag;
@@ -105,7 +101,7 @@ public class ServersActivity extends Activity implements NavItemClickListener {
                 ShowNoServerLayout();
             }
 
-            adapter = new ServersAdapter(ServersActivity.this, openVpnServerListItemList);
+            ServersAdapter adapter = new ServersAdapter(ServersActivity.this, openVpnServerListItemList);
 
             // new adapter
             binding.lsServersList.setLayoutManager(getLayoutManager());
@@ -139,24 +135,17 @@ public class ServersActivity extends Activity implements NavItemClickListener {
 
     /**
      * On navigation item click, close activity and change server
-     *
-     * @param index: server index
      */
     @Override
-    public void clickedItem(int index) {
-        resetList();
+    public void clickedItem() {
+        returnIntent.putExtra("restart", true);
         this.onBackPressed();
-        //        changeServerLocal.newServer();
-        //        changeServerLocal.newServer(serverLists.get(index));
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void resetList() {
-        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_OK, returnIntent);
         finish();
         overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
     }

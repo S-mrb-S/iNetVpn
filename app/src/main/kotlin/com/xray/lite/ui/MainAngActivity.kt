@@ -4,11 +4,18 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.tencent.mmkv.MMKV
 import com.xray.lite.helper.SimpleItemTouchHelperCallback
+import com.xray.lite.service.V2RayServiceManager
 import com.xray.lite.ui.adapters.MainRecyclerAdapter
+import com.xray.lite.util.MmkvManager
+import com.xray.lite.util.Utils
 import com.xray.lite.viewmodel.MainViewModel
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
 import sp.inetvpn.R
 import sp.inetvpn.databinding.ActivityAngMainBinding
+import java.util.concurrent.TimeUnit
 
 class MainAngActivity : BaseActivity() {
     private lateinit var binding: ActivityAngMainBinding
@@ -17,6 +24,13 @@ class MainAngActivity : BaseActivity() {
 
     private var mItemTouchHelper: ItemTouchHelper? = null
     val mainViewModel: MainViewModel by viewModels()
+
+    private val mainStorage by lazy {
+        MMKV.mmkvWithID(
+            MmkvManager.ID_MAIN,
+            MMKV.MULTI_PROCESS_MODE
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +57,24 @@ class MainAngActivity : BaseActivity() {
 
     }
 
+    fun startV2Ray() {
+        if (mainStorage?.decodeString(MmkvManager.KEY_SELECTED_SERVER).isNullOrEmpty()) {
+            return
+        }
+        V2RayServiceManager.startV2Ray(this)
+    }
+
+    fun restartV2Ray() {
+        if (mainViewModel.isRunning.value == true) {
+            Utils.stopVService(this)
+            Observable.timer(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    startV2Ray()
+                }
+        }
+    }
+
     private fun setupViewModel() {
         mainViewModel.startListenBroadcast()
     }
@@ -58,6 +90,7 @@ class MainAngActivity : BaseActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        restartV2Ray()
         super.onBackPressed()
         finish()
         overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)

@@ -1,7 +1,8 @@
 package sp.inetvpn.ui;
 
+import static sp.inetvpn.Data.GlobalData.connectionStorage;
+
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import sp.inetvpn.MainApplication;
 import sp.inetvpn.R;
+import sp.inetvpn.interfaces.NavItemClickListener;
 import sp.inetvpn.model.OpenVpnServerList;
-import sp.inetvpn.util.LogManager;
+import sp.inetvpn.util.CountryListManager;
 
 /**
  * Created by Daichi Furiya / Wasabeef on 2020/08/26.
@@ -27,10 +28,13 @@ import sp.inetvpn.util.LogManager;
 public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHolder> {
     private final List<OpenVpnServerList> dataSet;
     private final Context context;
+    private int mSelectedPosition = RecyclerView.NO_POSITION;
+    private final NavItemClickListener navItemClickListener;
 
     public ServersAdapter(Context context, List<OpenVpnServerList> dataSet) {
         this.context = context;
         this.dataSet = dataSet;
+        this.navItemClickListener = (NavItemClickListener) context;
     }
 
     @NonNull
@@ -42,17 +46,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        try {
-            final OpenVpnServerList OpenVpnServerList = dataSet.get(position);
-            // static ?
-            ServersAdapterHelper holderHelper = new ServersAdapterHelper(context, OpenVpnServerList, holder, position);
-            holderHelper.setAllHolder();
-        } catch (Exception e) {
-            Bundle params = new Bundle();
-            params.putString("device_id", MainApplication.device_id);
-            params.putString("exception", "BV0" + e);
-            LogManager.logEvent(params);
-        }
+        holder.bind(position);
     }
 
     @Override
@@ -60,18 +54,58 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
         return dataSet.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView tv_country, tv_name;
-        public TextView showBool = itemView.findViewById(R.id.bool_show_list_server);
         public ImageView iv_flag;
-        public final LinearLayout ll_item = itemView.findViewById(R.id.ll_item);
+        public LinearLayout ll_item;
+        OpenVpnServerList openVpnServerList;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tv_country = itemView.findViewById(R.id.tv_country);
             tv_name = itemView.findViewById(R.id.tv_name);
             iv_flag = itemView.findViewById(R.id.iv_flag);
-        }
-    }
-}
+            ll_item = itemView.findViewById(R.id.ll_item);
 
+            itemView.setOnClickListener(this);
+        }
+
+        public void bind(int position) {
+            this.openVpnServerList = dataSet.get(position);
+
+            // bind view
+            tv_country.setText(openVpnServerList.GetImage());
+            tv_name.setText(openVpnServerList.GetCountry());
+            CountryListManager.OpenVpnSetServerList(openVpnServerList.GetImage(), iv_flag);
+
+            // set item background
+            mSelectedPosition = Integer.parseInt(connectionStorage.getString("id", "999"));
+
+            if (position == mSelectedPosition) {
+                ll_item.setBackgroundColor(context.getResources().getColor(R.color.colorStatsBlue));
+                tv_country.setTextColor(context.getResources().getColor(R.color.colorTextHint));
+                tv_name.setTextColor(context.getResources().getColor(R.color.colorTextHint));
+            } else {
+                ll_item.setBackgroundColor(context.getResources().getColor(R.color.colorAccentWhite));
+                tv_country.setTextColor(context.getResources().getColor(R.color.colorText));
+                tv_name.setTextColor(context.getResources().getColor(R.color.colorText));
+            }
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            connectionStorage.putString("id", openVpnServerList.GetID());
+            connectionStorage.putString("file", openVpnServerList.GetFileContent());
+            connectionStorage.putString("country", openVpnServerList.GetCountry());
+            connectionStorage.putString("image", openVpnServerList.GetImage());
+            int previousSelectedPosition = mSelectedPosition;
+            mSelectedPosition = getAdapterPosition();
+            notifyItemChanged(previousSelectedPosition);
+            notifyItemChanged(mSelectedPosition);
+            navItemClickListener.clickedItem();
+        }
+
+    }
+
+}

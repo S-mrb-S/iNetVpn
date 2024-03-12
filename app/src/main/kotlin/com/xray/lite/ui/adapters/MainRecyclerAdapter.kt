@@ -7,9 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import sp.inetvpn.R
-import sp.inetvpn.databinding.ItemRecyclerFooterBinding
-import sp.inetvpn.databinding.ItemRecyclerMainBinding
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
@@ -25,6 +22,9 @@ import com.xray.lite.util.MmkvManager
 import com.xray.lite.util.Utils
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
+import sp.inetvpn.R
+import sp.inetvpn.databinding.ItemRecyclerFooterBinding
+import sp.inetvpn.databinding.ItemRecyclerMainBinding
 import java.util.concurrent.TimeUnit
 
 class MainRecyclerAdapter(val activity: MainAngActivity) :
@@ -193,6 +193,8 @@ class MainRecyclerAdapter(val activity: MainAngActivity) :
                             }
                     }
                 }
+
+                mActivity.onBackPressed()
             }
         }
         if (holder is FooterViewHolder) {

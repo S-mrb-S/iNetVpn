@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:paddingStart="12dp">
+                android:paddingStart="17dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -47,11 +47,6 @@
                         android:minLines="1"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                         android:textSize="20sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
 
                     <TextView
                         android:id="@+id/tv_statistics"
@@ -101,40 +96,6 @@
                         tools:text="214ms" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <!-- layout_remove -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/server_height"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="@dimen/layout_margin_spacing">
-
-                        <!--                        <ImageView-->
-                        <!--                            android:layout_width="@dimen/png_height"-->
-                        <!--                            android:layout_height="@dimen/png_height"-->
-                        <!--                            android:src="@drawable/ic_delete_24dp"-->
-                        <!--                            app:tint="?attr/colorMainText" />-->
-                        <ImageView
-                            android:layout_width="21dp"
-                            android:layout_height="21dp"
-                            android:layout_gravity="center"
-                            android:layout_marginStart="@dimen/lo_16dpGrid"
-                            android:layout_marginLeft="@dimen/lo_16dpGrid"
-                            android:layout_marginEnd="@dimen/lo_16dpGrid"
-                            android:layout_marginRight="@dimen/lo_16dpGrid"
-                            android:background="@drawable/ic_signal_full"
-                            android:contentDescription="@string/todo" />
-
-                    </LinearLayout>
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -151,7 +112,7 @@
                         android:lines="1"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="@color/colorPingRed"
-                        android:textSize="12sp" />
+                        android:textSize="8sp" />
                 </LinearLayout>
 
             </LinearLayout>
