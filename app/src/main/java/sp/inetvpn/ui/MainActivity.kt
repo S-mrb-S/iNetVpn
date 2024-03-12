@@ -96,7 +96,7 @@ class MainActivity : BaseActivity(),
     private var city: String? = GlobalData.connectionStorage.getString("city", GlobalData.NA)
 
     private var vpnState: Int =
-        0 // 0 --> ninja (no connect) \\ 1 --> loading (ninja (load again)) (connecting) \\ 2 --> connected (wifi (green logo))
+        0 // 0 --> ninja (no connect) \\ 1 --> loading (circle loading) (connecting) \\ 2 --> connected (wifi (green logo))
 
     private var footerState: Int =
         1 // 0 --> v2ray test layout \\ 1 --> main_today
