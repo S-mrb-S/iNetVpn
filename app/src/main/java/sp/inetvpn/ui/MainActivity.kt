@@ -842,8 +842,10 @@ class MainActivity : BaseActivity(),
         // Stop previous connection
         if (GlobalData.isStart) {
             stopVpn()
-            prepareVpn()
         }
+
+        Handler().postDelayed({ prepareVpn() }, 500)
+        
     }
 
     /**
