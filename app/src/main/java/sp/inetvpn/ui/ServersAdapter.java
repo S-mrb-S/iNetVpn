@@ -83,10 +83,10 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
 
             if (position == mSelectedPosition) {
                 ll_item.setBackgroundColor(context.getResources().getColor(R.color.colorStatsBlue));
-                tv_country.setTextColor(context.getResources().getColor(R.color.colorTextHint));
-                tv_name.setTextColor(context.getResources().getColor(R.color.colorTextHint));
+                tv_country.setTextColor(context.getResources().getColor(R.color.colorTextStats));
+                tv_name.setTextColor(context.getResources().getColor(R.color.colorTextStats));
             } else {
-                ll_item.setBackgroundColor(context.getResources().getColor(R.color.colorAccentWhite));
+                ll_item.setBackgroundColor(context.getResources().getColor(R.color.colorBackground));
                 tv_country.setTextColor(context.getResources().getColor(R.color.colorText));
                 tv_name.setTextColor(context.getResources().getColor(R.color.colorText));
             }
