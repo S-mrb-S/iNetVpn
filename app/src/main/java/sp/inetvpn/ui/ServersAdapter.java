@@ -79,7 +79,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
             CountryListManager.OpenVpnSetServerList(openVpnServerList.GetImage(), iv_flag);
 
             // set item background
-            mSelectedPosition = Integer.parseInt(connectionStorage.getString("id", "999"));
+            mSelectedPosition = Integer.parseInt(connectionStorage.getString("id", "-1"));
 
             if (position == mSelectedPosition) {
                 ll_item.setBackgroundColor(context.getResources().getColor(R.color.colorStatsBlue));

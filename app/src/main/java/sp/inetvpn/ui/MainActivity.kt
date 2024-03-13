@@ -1,6 +1,7 @@
 package sp.inetvpn.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
@@ -72,10 +73,8 @@ import java.util.concurrent.TimeUnit
 /**
  * MehrabSp
  */
-class MainActivity : BaseActivity(),
-    NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    //====== Variable =======
     lateinit var binding: ActivityMainBinding
 
     /**
@@ -88,12 +87,14 @@ class MainActivity : BaseActivity(),
         get() {
             setStatus(OpenVPNService.getStatus())
         }
+
     /**
      * handler
      */
     private var imageCountry: String? =
         GlobalData.connectionStorage.getString("image", GlobalData.NA)
-    private var city: String? = GlobalData.connectionStorage.getString("city", GlobalData.NA)
+    private var city: String? =
+        GlobalData.connectionStorage.getString("city", GlobalData.NA)
 
     private var vpnState: Int =
         0 // 0 --> ninja (no connect) \\ 1 --> loading (circle loading) (connecting) \\ 2 --> connected (wifi (green logo))
@@ -104,7 +105,7 @@ class MainActivity : BaseActivity(),
     private var isSetupFirst: Boolean = true
 
     private var fadeIn1000: Animation? = null
-    private var fade_out_1000: Animation? = null
+    private var fadeOut1000: Animation? = null
 
     /**
      *
@@ -134,7 +135,7 @@ class MainActivity : BaseActivity(),
         }
 
     // ViewModel (V2ray)
-    val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
 
     // Usage
     private val df: SimpleDateFormat
@@ -148,9 +149,6 @@ class MainActivity : BaseActivity(),
         setContentView(view)
 
         checkInformationUser(this)
-//        Data.isStart = Data.connectionStorage.getBoolean("isStart", false)
-//        vpnState = Data.connectionStorage.getInt("stateVpn", 0)
-
         handlerSetupFirst()
 
         SetupMain.setupDrawer(this, binding)
@@ -200,13 +198,11 @@ class MainActivity : BaseActivity(),
         }
 
         binding.linearLayoutMainServers.setOnClickListener {
-
             if (GlobalData.defaultItemDialog == 0) {
-                startActivity(Intent(this@MainActivity, MainAngActivity::class.java))
+                startAngActivity()
             } else {
-                startActivityForResult(Intent(this@MainActivity, ServersActivity::class.java), 33)
+                startServersActivity()
             }
-            overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
         }
 
         binding.btnConnection.setOnClickListener {
@@ -248,15 +244,16 @@ class MainActivity : BaseActivity(),
         dialog.show()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun restoreTodayTextTv() {
-        val long_usage_today = GlobalData.prefUsageStorage.getLong(today, 0)
-        if (long_usage_today < 1000) {
+        val longUsageToday = GlobalData.prefUsageStorage.getLong(today, 0)
+        if (longUsageToday < 1000) {
             binding.tvDataTodayText.text =
                 "${GlobalData.default_ziro_txt} ${GlobalData.KB}"
-        } else if (long_usage_today <= 1000000) {
-            binding.tvDataTodayText.text = (long_usage_today / 1000).toString() + GlobalData.KB
+        } else if (longUsageToday <= 1000000) {
+            binding.tvDataTodayText.text = (longUsageToday / 1000).toString() + GlobalData.KB
         } else {
-            binding.tvDataTodayText.text = (long_usage_today / 1000000).toString() + GlobalData.MB
+            binding.tvDataTodayText.text = (longUsageToday / 1000000).toString() + GlobalData.MB
         }
     }
 
@@ -328,7 +325,7 @@ class MainActivity : BaseActivity(),
 
         when (vpnState) {
             0 -> {
-                saveIsStart(false, 0)
+                saveIsStart(false)
 //                Data.isStart = false
                 // disconnected
                 binding.btnConnection.text = GlobalData.disconnected_btn
@@ -380,7 +377,7 @@ class MainActivity : BaseActivity(),
             }
 
             2 -> {
-                saveIsStart(true, 2)
+                saveIsStart(true)
 //                Data.isStart = true
                 // connected
                 binding.btnConnection.text = GlobalData.connected_btn
@@ -419,9 +416,7 @@ class MainActivity : BaseActivity(),
 
     }
 
-    private fun saveIsStart(isStart: Boolean, stateVpn: Int) {
-//        Data.connectionStorage.putBoolean("isStart", isStart)
-//        Data.connectionStorage.putInt("stateVpn", stateVpn)
+    private fun saveIsStart(isStart: Boolean) {
         GlobalData.isStart = isStart
     }
 
@@ -466,7 +461,7 @@ class MainActivity : BaseActivity(),
             isSetupFirst = false
 
             fadeIn1000 = AnimationUtils.loadAnimation(this@MainActivity, R.anim.fade_in_1000)
-            fade_out_1000 = AnimationUtils.loadAnimation(this@MainActivity, R.anim.fade_out_1000)
+            fadeOut1000 = AnimationUtils.loadAnimation(this@MainActivity, R.anim.fade_out_1000)
             binding.llTextBubble.animation = fadeIn1000
 
             val handlerToday = Handler()
@@ -488,7 +483,7 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    fun setNewVpnState(newState: Int) {
+    private fun setNewVpnState(newState: Int) {
         vpnState = newState
 
         handleNewVpnState()
@@ -502,13 +497,13 @@ class MainActivity : BaseActivity(),
 
     private fun handleCountryImage() {
         if (GlobalData.defaultItemDialog == 0) {
-                CountryListManager.OpenVpnSetServerList(
-                    "v2ray",
-                    binding.ivServers
-                ) // v2ray
-            } else {
-                CountryListManager.OpenVpnSetServerList(imageCountry, binding.ivServers)
-            }
+            CountryListManager.OpenVpnSetServerList(
+                "v2ray",
+                binding.ivServers
+            ) // v2ray
+        } else {
+            CountryListManager.OpenVpnSetServerList(imageCountry, binding.ivServers)
+        }
     }
 
     /*
@@ -658,53 +653,11 @@ class MainActivity : BaseActivity(),
 
         try {
             val file = GlobalData.connectionStorage.getString("file", null)
-//            val filePass = MainActivity.ENCRYPT_DATA.decrypt(
-//                Data.connectionStorage.getString(
-//                    "filePass",
-//                    null
-//                )
-//            )
-//            val fileUser = MainActivity.ENCRYPT_DATA.decrypt(
-//                Data.connectionStorage.getString(
-//                    "fileUser",
-//                    null
-//                )
-//            )
-//            val country = Data.connectionStorage.getString("country", "NULL")
-//            if (file == null) {
-//                Toast.makeText(this, "Null!", Toast.LENGTH_SHORT).show()
-//            }
-//            Toast.makeText(this, "Start!", Toast.LENGTH_SHORT).show()
-//            Log.d("T", fileUser)
-//            Log.d("T", filePass)
-//            Log.d("T", (file)!!)
-//            Log.d("G", (country)!!)
-
-            // .ovpn file
-//            val outPlocal = Data.connectionStorage.getString("fileLocal", "null");
-
-//            val conf: InputStream? = outPlocal?.let { this.assets?.open(it) }
-//            val isr = InputStreamReader(conf)
-//            val br = BufferedReader(isr)
-//            var config = ""
-//            var line: String?
-//
-//            while (true) {
-//                line = br.readLine()
-//                if (line == null) break
-//                config += "$line\n"
-//            }
-//
-//            br.readLine()
-
-//            Log.d("THIS is file", config)
-
             val uL = appValStorage.getString("usernameLogin", null)
             val uU = appValStorage.getString("usernamePassword", null)
 
             if (file != null) {
                 city = GlobalData.connectionStorage.getString("city", GlobalData.NA)
-                city?.let { Log.d("TAG NAME", it) }
                 setNewVpnState(1)
 
                 App.clearDisallowedPackageApplication()
@@ -713,13 +666,10 @@ class MainActivity : BaseActivity(),
                 OpenVpnApi.startVpn(this, file, "Japan", uL, uU)
 
                 // Update log
-//            binding.tvMessageTopText.setText("Connecting...");
                 Toast.makeText(this, "در حال اتصال ...", Toast.LENGTH_SHORT).show()
 
             } else {
-                val servers = Intent(this@MainActivity, ServersActivity::class.java)
-                startActivityForResult(servers, 33)
-                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
+                startServersActivity()
                 Toast.makeText(this, "ابتدا یک سرور را انتخاب کنید", Toast.LENGTH_SHORT).show()
             }
         } catch (e: RemoteException) {
@@ -745,16 +695,9 @@ class MainActivity : BaseActivity(),
                     checkInformationUser(this)
                 }
 
-                "WAIT" -> {
-                    setNewVpnState(1)
-                }
-
+                "WAIT" -> setNewVpnState(1)
                 "AUTH" -> handleAUTH()
-
-                "RECONNECTING" -> {
-                    setNewVpnState(1)
-                }
-
+                "RECONNECTING" -> setNewVpnState(1)
                 "NONETWORK" -> handleErrorWhenConnect()
             }
         }
@@ -781,25 +724,6 @@ class MainActivity : BaseActivity(),
                 if (byteOut == null) byteOut = " "
                 updateConnectionStatus(duration, lastPacketReceive, byteIn, byteOut)
 
-//                final long Total = ins + outs;
-
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                // size
-//                if (Total < 1000) {
-//                    tv_data_text.setText("1KB");
-//                    tv_data_name.setText("USED");
-//                } else if ((Total >= 1000) && (Total <= 1000_000)) {
-//                    tv_data_text.setText((Total / 1000) + "KB");
-//                    tv_data_name.setText("USED");
-//                } else {
-//                    tv_data_text.setText((Total / 1000_000) + "MB");
-//                    tv_data_name.setText("USED");
-//                }
-//            }
-//        });
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -842,6 +766,7 @@ class MainActivity : BaseActivity(),
         // Stop previous connection
         if (GlobalData.isStart) {
             stopVpn()
+            // Delay for start
             Handler().postDelayed({ prepareVpn() }, 500)
         }
     }
@@ -855,32 +780,26 @@ class MainActivity : BaseActivity(),
             setNewVpnState(0)
             return
         }
+        // Set loader for V2ray
         setNewVpnState(1)
         showCircle()
+        // Start
         V2RayServiceManager.startV2Ray(this)
+        // Hide loader
         hideCircle()
-
         setNewVpnState(2)
-
     }
 
-//    fun restartV2Ray() {
-//        if (mainViewModel.isRunning.value == true) {
-//            Utils.stopVService(this)
-//        }
-//        Observable.timer(500, TimeUnit.MILLISECONDS)
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe {
-//                startV2Ray()
-//            }
-//    }
-
+    /**
+     * Loading circle for V2ray
+     */
     private fun showCircle() {
         // connection
         binding.fabProgressCircle.show()
     }
 
-    fun hideCircle() {
+    //
+    private fun hideCircle() {
         try {
             Observable.timer(300, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -912,6 +831,9 @@ class MainActivity : BaseActivity(),
         }
     }
 
+    /**
+     * import config for v2ray
+     */
     private fun importBatchConfig(server: String?, subid: String = "") {
         val subid2 = subid.ifEmpty {
             mainViewModel.subscriptionId
@@ -932,40 +854,31 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    fun setTestState(content: String?) {
+    private fun setTestState(content: String?) {
         binding.tvTestState.text = content
     }
 
-    //    toggleIsLayoutTest
+    // LayoutTest for V2ray
     private fun layoutTest() {
         if (mainViewModel.isRunning.value == true) {
             setTestState(getString(R.string.connection_test_testing))
             mainViewModel.testCurrentServerRealPing()
         } else {
             // handle error here
-//                tv_test_state.text = getString(R.string.connection_test_fail)
+            setTestState(getString(R.string.connection_test_fail))
         }
     }
 
-    //    setup first
+    // ViewModel for V2ray
     private fun setupViewModel() {
         mainViewModel.updateTestResultAction.observe(this) { setTestState(it) }
         mainViewModel.isRunning.observe(this) { isRunning ->
             adapter.isRunning = isRunning
             if (isRunning) {
-                if (!Utils.getDarkModeStatus(this)) {
-//                    fab.setImageResource(R.drawable.ic_stat_name)
-                }
-//                fab.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_orange))
                 setNewVpnState(2)
                 setTestState(getString(R.string.connection_connected))
                 binding.layoutTest.isFocusable = true
             } else {
-                if (!Utils.getDarkModeStatus(this)) {
-//                    fab.setImageResource(R.drawable.ic_stat_name)
-                }
-//                fab.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_fab_grey))
-
                 /**
                  * این مدل در پس زمینه و کمی دیر تر از بقیه اجرا میشوند و باعث میشود که همه چیز را ریست کند
                  * از مقدار ذخیره شده از قبل استفاده میکنم تا به مشکل نخورد
@@ -975,7 +888,6 @@ class MainActivity : BaseActivity(),
                     setTestState(getString(R.string.connection_not_connected))
                     binding.layoutTest.isFocusable = false
                 }
-
             }
             hideCircle()
         }
@@ -1025,7 +937,6 @@ class MainActivity : BaseActivity(),
                         this
                     ) { retVersion ->
                         try {
-//                            Log.d("SSSSSS", retVersion.toString());
                             if (retVersion != BuildConfig.VERSION_CODE) {
                                 val intent = Intent(Intent.ACTION_VIEW)
                                 intent.data = Uri.parse("https://panel.se2ven.sbs/api/update")
@@ -1077,22 +988,13 @@ class MainActivity : BaseActivity(),
             }
         }
 //        binding.drawerLayout.closeDrawer(GravityCompat.START)
-        /**
-         * OpenVpn
-         */
-//        newServer()
-//        changeServer.newServer(serverLists.get(index));
+
         return true
     }
 
-
-    //     /**
-//     * On navigation item click, close drawer and change server
-//     *
-//     * @param index: server index
-//     */
-//    override fun clickedItem(int index) {
-//    }
+    /**
+     * Resume main activity, Set new icon server..
+     */
     override fun onResume() {
         super.onResume()
 
@@ -1101,26 +1003,29 @@ class MainActivity : BaseActivity(),
 
         handleCountryImage()
 
+        // Set broadcast for OpenVpn
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(broadcastReceiver, IntentFilter("connectionState"))
+
         restoreTodayTextTv()
     }
 
-//    /**
-//     * On navigation item click, close activity and change server
-//     *
-//     * @param index: server index
-//     */
-//    override fun onRestartServer() {
-////        changeServer.newServer(serverLists.get(index));
-//        showToast("RESTART")
-//    }
+    // Bug
+    //    override fun onPause() {
+    //        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
+    //        super.onPause()
+    //    }
 
-//    override fun onPause() {
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
-//
-//        super.onPause()
-//    }
+    private fun startServersActivity() {
+        val servers = Intent(this@MainActivity, ServersActivity::class.java)
+        startActivityForResult(servers, 33)
+        overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
+    }
+
+    private fun startAngActivity() {
+        startActivity(Intent(this@MainActivity, MainAngActivity::class.java))
+        overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
