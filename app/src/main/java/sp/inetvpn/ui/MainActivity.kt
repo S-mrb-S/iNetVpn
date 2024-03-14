@@ -14,13 +14,10 @@ import android.os.Handler
 import android.os.RemoteException
 import android.util.Log
 import android.view.MenuItem
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -43,21 +40,18 @@ import de.blinkt.openvpn.core.OpenVPNThread
 import de.blinkt.openvpn.core.VpnStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
 import sp.inetvpn.BuildConfig
 import sp.inetvpn.R
 import sp.inetvpn.data.GlobalData
 import sp.inetvpn.data.GlobalData.appValStorage
 import sp.inetvpn.databinding.ActivityMainBinding
 import sp.inetvpn.handler.GetVersionApi
-import sp.inetvpn.util.Animations
+import sp.inetvpn.state.MainActivity.vpnState
 import sp.inetvpn.util.CheckInternetConnection
 import sp.inetvpn.util.ManageDisableList
 import sp.inetvpn.util.UsageConnectionManager
 import java.io.File
 import java.io.FileOutputStream
-import java.util.concurrent.TimeUnit
 
 /**
  * MehrabSp
@@ -80,30 +74,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         get() {
             setStatus(OpenVPNService.getStatus())
         }
-
-    /**
-     * handler
-     */
-    private var imageCountry: String? =
-        GlobalData.connectionStorage.getString("image", GlobalData.NA)
-    private var city: String? =
-        GlobalData.connectionStorage.getString("city", GlobalData.NA)
-
-    private var vpnState: Int =
-        0 // 0 --> ninja (no connect) \\ 1 --> loading (circle loading) (connecting) \\ 2 --> connected (wifi (green logo))
-
-    private var footerState: Int =
-        1 // 0 --> v2ray test layout \\ 1 --> main_today
-    private var enableButtonC = true
-
-    private var isSetupFirst: Boolean = true
-
-    private var fadeIn1000: Animation? = null
-    private var fadeOut1000: Animation? = null
-
-    /**
-     *
-     */
 
     // MMKV
     private val mainStorage by lazy {
@@ -128,6 +98,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
         }
 
+    private var enableButtonC: Boolean = true
+
     // ViewModel (V2ray)
     private val mainViewModel: MainViewModel by viewModels()
 
@@ -138,9 +110,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setContentView(view)
 
         setup = sp.inetvpn.setup.MainActivity(this, binding, mainViewModel)
-        state = sp.inetvpn.state.MainActivity(this, binding)
+        state = sp.inetvpn.state.MainActivity(this, binding, setup)
 
-        handlerSetupFirst()
+        state?.handlerSetupFirst()
 
         setup?.setupAll()
 
@@ -156,7 +128,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         GlobalData.cancelFast = GlobalData.settingsStorage.getBoolean("cancel_fast", false)
 
         setupClickListener()
-
     }
 
     private fun setupClickListener() {
@@ -181,7 +152,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
 
         binding.layoutTest.setOnClickListener {
-            layoutTest()
+            setup?.layoutTest()
         }
     }
 
@@ -218,7 +189,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 Handler().postDelayed({ dialog.dismiss() }, 300)
                 GlobalData.defaultItemDialog = which
 
-                setNewFooterState(which)
+                state?.setNewFooterState(which)
             }
             val dialog = builder.create()
             dialog.show()
@@ -227,222 +198,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
-    /**
-     * handler
-     */
-
-    private fun handlerSetupFirst() {
-        // set default
-        setup?.handleCountryImage()
-        handleNewVpnState()
-        handleNewFooterState()
-        showBubbleHomeAnimation()
-    }
-
-    private fun handleNewVpnState() {
-
-        // cancel animation first (fade in)
-        if (!isSetupFirst) {
-
-            Animations.startAnimation(
-                this@MainActivity,
-                R.id.la_animation,
-                R.anim.fade_in_1000,
-                true
-            )
-            // stop animation
-            binding.laAnimation.cancelAnimation()
-
-        }
-
-        // set new animation
-        val animationResource = when (vpnState) {
-            0 -> R.raw.ninjainsecure // disconnected
-            1 -> R.raw.loading_circle // connecting
-            2 -> R.raw.connected_wifi // connected
-            else -> R.raw.ninjainsecure // ??
-        }
-        binding.laAnimation.setAnimation(animationResource)
-
-        when (vpnState) {
-            0 -> {
-                saveIsStart(false)
-//                Data.isStart = false
-                // disconnected
-                binding.btnConnection.text = GlobalData.disconnected_btn
-                binding.btnConnection.background = this@MainActivity.let {
-                    ContextCompat.getDrawable(
-                        it,
-                        R.drawable.button_connect
-                    )
-                }
-
-                // scale main animation
-                binding.laAnimation.scaleX = 1f
-                binding.laAnimation.scaleY = 1f
-
-                // bubble
-
-                binding.tvMessageTopText.text = GlobalData.disconnected_txt
-                binding.tvMessageBottomText.text = GlobalData.disconnected_txt2
-            }
-
-            1 -> {
-                // connecting
-                binding.btnConnection.text = GlobalData.connecting_btn
-                binding.btnConnection.background =
-                    this@MainActivity.let {
-                        ContextCompat.getDrawable(
-                            it,
-                            R.drawable.button_retry
-                        )
-                    }
-
-                // scale
-                binding.laAnimation.scaleX = 0.5f
-                binding.laAnimation.scaleY = 0.5f
-
-                // bubble
-
-                when (GlobalData.defaultItemDialog) {
-                    1 -> {
-                        binding.tvMessageTopText.text = GlobalData.connecting_txt + ' ' + city
-                    }
-
-                    0 -> {
-                        binding.tvMessageTopText.text = GlobalData.connecting_txt
-                    }
-                }
-
-                binding.tvMessageBottomText.text = ""
-            }
-
-            2 -> {
-                saveIsStart(true)
-//                Data.isStart = true
-                // connected
-                binding.btnConnection.text = GlobalData.connected_btn
-                binding.btnConnection.background = this@MainActivity.let {
-                    ContextCompat.getDrawable(
-                        it,
-                        R.drawable.button_disconnect
-                    )
-                }
-
-                // scale
-                binding.laAnimation.scaleX = 1.5f
-                binding.laAnimation.scaleY = 1.5f
-
-                // bubble
-                when (GlobalData.defaultItemDialog) {
-                    1 -> {
-                        binding.tvMessageTopText.text = GlobalData.connected_txt + ' ' + city
-                    }
-
-                    0 -> {
-                        binding.tvMessageTopText.text = GlobalData.connected_txt
-                    }
-                }
-
-                binding.tvMessageBottomText.text = "اتصال شما امن است"
-            }
-
-            else -> {
-                // ??
-            }
-        }
-
-        // play again
-        binding.laAnimation.playAnimation()
-
-    }
-
-    private fun saveIsStart(isStart: Boolean) {
-        GlobalData.isStart = isStart
-    }
-
-    private fun handleNewFooterState() {
-        if (!isSetupFirst) {
-            // cancel all footer data here
-            // ??
-        }
-
-        when (footerState) {
-            0 -> {
-                // layout test (v2ray)
-                val handlerData = Handler()
-                handlerData.postDelayed({
-                    Animations.startAnimation(
-                        this@MainActivity,
-                        R.id.ll_main_layout_test,
-                        R.anim.slide_up_800,
-                        true
-                    )
-                }, 1000)
-            }
-
-            1 -> {
-                val handlerData = Handler()
-                handlerData.postDelayed({
-                    Animations.startAnimation(
-                        this@MainActivity,
-                        R.id.ll_main_today,
-                        R.anim.slide_up_800,
-                        true
-                    )
-                }, 1000)
-            }
-        }
-
-        setup?.handleCountryImage()
-    }
-
-    private fun showBubbleHomeAnimation() {
-        if (isSetupFirst) {
-            isSetupFirst = false
-
-            fadeIn1000 = AnimationUtils.loadAnimation(this@MainActivity, R.anim.fade_in_1000)
-            fadeOut1000 = AnimationUtils.loadAnimation(this@MainActivity, R.anim.fade_out_1000)
-            binding.llTextBubble.animation = fadeIn1000
-
-            val handlerToday = Handler()
-            handlerToday.postDelayed({
-                Animations.startAnimation(
-                    this@MainActivity,
-                    R.id.linearLayoutMainHome,
-                    R.anim.anim_slide_down,
-                    true
-                )
-                Animations.startAnimation(
-                    this@MainActivity,
-                    R.id.linearLayoutMainServers,
-                    R.anim.anim_slide_down,
-                    true
-                )
-            }, 1000)
-
-        }
-    }
-
-    private fun setNewVpnState(newState: Int) {
-        vpnState = newState
-
-        handleNewVpnState()
-    }
-
-    private fun setNewFooterState(newState: Int) {
-        footerState = newState
-
-        handleNewFooterState()
-    }
-
     /*
      */
 
     private fun connectToV2ray() {
         if (mainViewModel.isRunning.value == true) {
             Utils.stopVService(this)
-            setNewVpnState(0)
+            state?.setNewVpnState(0)
         } else if ((settingsStorage?.decodeString(AppConfig.PREF_MODE) ?: "VPN") == "VPN") {
             val intent = VpnService.prepare(this)
             if (intent == null) {
@@ -480,7 +242,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private fun stopVpn(): Boolean {
         try {
             OpenVPNThread.stop()
-            setNewVpnState(0)
+            state?.setNewVpnState(0)
             return true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -581,8 +343,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             val uU = appValStorage.getString("usernamePassword", null)
 
             if (file != null) {
-                city = GlobalData.connectionStorage.getString("city", GlobalData.NA)
-                setNewVpnState(1)
+                setup?.setNewImage()
+                state?.setNewVpnState(1)
 
                 App.clearDisallowedPackageApplication()
                 App.addArrayDisallowedPackageApplication(GlobalData.disableAppsList)
@@ -615,13 +377,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 }
 
                 "CONNECTED" -> {
-                    setNewVpnState(2)
+                    state?.setNewVpnState(2)
 //                    checkInformationUser(this)
                 }
 
-                "WAIT" -> setNewVpnState(1)
+                "WAIT" -> state?.setNewVpnState(1)
                 "AUTH" -> state?.handleAUTH()
-                "RECONNECTING" -> setNewVpnState(1)
+                "RECONNECTING" -> state?.setNewVpnState(1)
                 "NONETWORK" -> state?.handleErrorWhenConnect()
             }
         }
@@ -701,70 +463,28 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // v2ray
     private fun startV2Ray() {
         if (mainStorage?.decodeString(MmkvManager.KEY_SELECTED_SERVER).isNullOrEmpty()) {
-            setNewVpnState(0)
+            state?.setNewVpnState(0)
             return
         }
         // Set loader for V2ray
-        setNewVpnState(1)
-        showCircle()
+        state?.setNewVpnState(1)
+        setup?.showCircle()
         // Start
         V2RayServiceManager.startV2Ray(this)
         usageConnectionManager.establishConnection()
         // Hide loader
-        hideCircle()
-        setNewVpnState(2)
-    }
-
-    /**
-     * Loading circle for V2ray
-     */
-    private fun showCircle() {
-        // connection
-        binding.fabProgressCircle.show()
-    }
-
-    //
-    private fun hideCircle() {
-        try {
-            Observable.timer(300, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    try {
-                        if (binding.fabProgressCircle.isShown) {
-                            binding.fabProgressCircle.hide()
-                        }
-                    } catch (e: Exception) {
-                        Log.w(ANG_PACKAGE, e)
-                    }
-                }
-        } catch (e: Exception) {
-            Log.d(ANG_PACKAGE, e.toString())
-        }
-    }
-
-    private fun setTestState(content: String?) {
-        binding.tvTestState.text = content
-    }
-
-    // LayoutTest for V2ray
-    private fun layoutTest() {
-        if (mainViewModel.isRunning.value == true) {
-            setTestState(getString(R.string.connection_test_testing))
-            mainViewModel.testCurrentServerRealPing()
-        } else {
-            // handle error here
-            setTestState(getString(R.string.connection_test_fail))
-        }
+        setup?.hideCircle()
+        state?.setNewVpnState(2)
     }
 
     // ViewModel for V2ray
     private fun setupViewModel() {
-        mainViewModel.updateTestResultAction.observe(this) { setTestState(it) }
+        mainViewModel.updateTestResultAction.observe(this) { setup?.setTestState(it) }
         mainViewModel.isRunning.observe(this) { isRunning ->
             adapter.isRunning = isRunning
             if (isRunning) {
-                setNewVpnState(2)
-                setTestState(getString(R.string.connection_connected))
+                state?.setNewVpnState(2)
+                setup?.setTestState(getString(R.string.connection_connected))
                 binding.layoutTest.isFocusable = true
             } else {
                 /**
@@ -772,12 +492,12 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                  * از مقدار ذخیره شده از قبل استفاده میکنم تا به مشکل نخورد
                  */
                 if (GlobalData.defaultItemDialog == 0) {
-                    setNewVpnState(0)
-                    setTestState(getString(R.string.connection_not_connected))
+                    state?.setNewVpnState(0)
+                    setup?.setTestState(getString(R.string.connection_not_connected))
                     binding.layoutTest.isFocusable = false
                 }
             }
-            hideCircle()
+            setup?.hideCircle()
         }
         mainViewModel.startListenBroadcast()
     }
@@ -886,7 +606,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onResume() {
         super.onResume()
 
-        city = GlobalData.connectionStorage.getString("city", GlobalData.NA)
         setup?.setNewImage()
         setup?.handleCountryImage()
 

@@ -1,10 +1,9 @@
 package sp.inetvpn.setup;
 
-import static sp.inetvpn.handler.CheckVipUser.checkInformationUser;
-
 import android.Manifest;
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -12,18 +11,23 @@ import androidx.core.view.GravityCompat;
 
 import com.google.android.material.navigation.NavigationView;
 import com.tbruyelle.rxpermissions.RxPermissions;
+import com.xray.lite.AppConfig;
 import com.xray.lite.util.AngConfigManager;
 import com.xray.lite.util.MmkvManager;
 import com.xray.lite.util.Utils;
 import com.xray.lite.viewmodel.MainViewModel;
 
+import java.util.concurrent.TimeUnit;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import sp.inetvpn.R;
 import sp.inetvpn.data.GlobalData;
 import sp.inetvpn.databinding.ActivityMainBinding;
+import sp.inetvpn.handler.CheckVipUser;
 import sp.inetvpn.handler.GetAllV2ray;
 import sp.inetvpn.util.CountryListManager;
-
 /**
  * Setup for MainActivity
  * by MehrabSp
@@ -40,7 +44,7 @@ public class MainActivity {
     }
 
     public void setupAll() {
-        checkInformationUser(context);
+        CheckVipUser.checkInformationUser(context);
 
         setupDrawer();
 
@@ -99,8 +103,10 @@ public class MainActivity {
     /**
      * public
      */
-    private String imageCountry =
+    public String imageCountry =
             GlobalData.connectionStorage.getString("image", GlobalData.NA);
+    public String imageCity =
+            GlobalData.connectionStorage.getString("city", GlobalData.NA);
 
     public void handleCountryImage() {
         if (GlobalData.defaultItemDialog == 0) {
@@ -115,6 +121,7 @@ public class MainActivity {
 
     public void setNewImage() {
         imageCountry = GlobalData.connectionStorage.getString("image", GlobalData.NA);
+        imageCity = GlobalData.connectionStorage.getString("city", GlobalData.NA);
     }
 
     /**
@@ -154,6 +161,48 @@ public class MainActivity {
             mainViewModel.reloadServerList();
         } else {
             Toast.makeText(context, "داده های سرور v2ray ذخیره نشد!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Loading circle for V2ray
+     */
+    public void showCircle() {
+        // connection
+        binding.fabProgressCircle.show();
+    }
+
+    //
+    public void hideCircle() {
+        try {
+            Observable.timer(300, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe((v) -> {
+                        try {
+                            if (binding.fabProgressCircle.isShown()) {
+                                binding.fabProgressCircle.hide();
+                            }
+                        } catch (Exception e) {
+                            Log.w(AppConfig.ANG_PACKAGE, e);
+                        }
+                    });
+        } catch (Exception e) {
+            Log.d(AppConfig.ANG_PACKAGE, e.toString());
+        }
+    }
+
+    public void setTestState(String content) {
+        binding.tvTestState.setText(content);
+    }
+
+    // LayoutTest for V2ray
+    public void layoutTest() {
+        if (Boolean.TRUE.equals(mainViewModel.isRunning().getValue())) {
+            setTestState(context.getString(R.string.connection_test_testing));
+            mainViewModel.testCurrentServerRealPing();
+        } else {
+            // handle error here
+            setTestState(context.getString(R.string.connection_test_fail));
         }
     }
 
