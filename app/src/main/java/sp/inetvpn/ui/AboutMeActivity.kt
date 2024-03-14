@@ -4,17 +4,17 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import sp.inetvpn.R
-import sp.inetvpn.databinding.ActivityFaqBinding
+import sp.inetvpn.databinding.ActivityAboutmeBinding
 
 /**
  * MehrabSp
  */
-class FAQActivity : Activity() {
-    private var binding: ActivityFaqBinding? = null
+class AboutMeActivity : Activity() {
+    private var binding: ActivityAboutmeBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityFaqBinding.inflate(layoutInflater)
+        binding = ActivityAboutmeBinding.inflate(layoutInflater)
         val view: View = binding!!.getRoot()
         setContentView(view)
 
