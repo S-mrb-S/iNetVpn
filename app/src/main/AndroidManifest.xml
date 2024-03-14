@@ -103,7 +103,7 @@
             android:name="sp.inetvpn.ui.UsageActivity"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
         <activity android:name="sp.inetvpn.ui.FeedbackActivity" />
-        <activity android:name="sp.inetvpn.ui.FAQActivity" />
+        <activity android:name="sp.inetvpn.ui.AboutMeActivity" />
         <!-- OpenVpn -->
         <service
             android:name="de.blinkt.openvpn.core.OpenVPNService"
