@@ -113,13 +113,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setup?.setupAll()
 
         initializeAll() // setup openvpn service
-
-        setupClickListener()
     }
 
-
-
-    private fun handleButtonConnect() {
+    fun handleButtonConnect() {
         if (enableButtonC) {
             enableButtonC = false
             if (vpnState != 1) {
@@ -380,7 +376,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      *
      * @param message: toast message
      */
-    private fun showToast(message: String?) {
+    fun showToast(message: String?) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
@@ -418,6 +414,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     fun setStateFromOtherClass(newState: Int) {
         state?.setNewVpnState(newState)
+    }
+
+    fun setFooterFromOtherClass(newState: Int) {
+        state?.setNewFooterState(newState)
     }
 
     // drawer options
@@ -514,13 +514,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     //        super.onPause()
     //    }
 
-    private fun startServersActivity() {
+    fun startServersActivity() {
         val servers = Intent(this@MainActivity, ServersActivity::class.java)
         startActivityForResult(servers, 33)
         overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
     }
 
-    private fun startAngActivity() {
+    fun startAngActivity() {
         startActivity(Intent(this@MainActivity, MainAngActivity::class.java))
         overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
     }

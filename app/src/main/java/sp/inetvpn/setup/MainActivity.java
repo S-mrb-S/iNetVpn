@@ -1,8 +1,10 @@
 package sp.inetvpn.setup;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -55,14 +57,10 @@ public class MainActivity {
 
     public void setupAll() {
         CheckVipUser.checkInformationUser(context);
-
         setupDrawer();
-
         setupViewModel();
         copyAssets();
-
         sendNotifPermission();
-
         initializeApp();
 
         // Load default config type and save.
@@ -72,56 +70,51 @@ public class MainActivity {
                 GlobalData.settingsStorage.getBoolean("cancel_fast", false);
 
         ManageDisableList.restoreList(); // disable list
-
+        setupClickListener();
     }
 
     private void setupClickListener() {
-        binding.llProtocolMain.setOnClickListener((v) -> {
-            setupMainDialog();
+        binding.llProtocolMain.setOnClickListener((v) -> setupMainDialog());
+        binding.linearLayoutMainHome.setOnClickListener((v) -> binding.drawerLayout.openDrawer(GravityCompat.START));
+
+        binding.linearLayoutMainServers.setOnClickListener((v) -> {
+            if (GlobalData.defaultItemDialog == 0) {
+                context.startAngActivity();
+            } else {
+                context.startServersActivity();
+            }
         });
 
-        binding.linearLayoutMainHome.setOnClickListener {
-            binding.drawerLayout.openDrawer(GravityCompat.START);
-        }
+        binding.btnConnection.setOnClickListener((v) -> context.handleButtonConnect());
 
-        binding.linearLayoutMainServers.setOnClickListener {
-            if (GlobalData.defaultItemDialog == 0) {
-                startAngActivity();
-            } else {
-                startServersActivity();
-            }
-        }
-
-        binding.btnConnection.setOnClickListener {
-            handleButtonConnect();
-        }
-
-        binding.layoutTest.setOnClickListener {
-            layoutTest();
-        }
+        binding.layoutTest.setOnClickListener((v) -> layoutTest());
     }
 
     /**
-     * set config dialog
+     * Set config dialog
      */
-    private fun setupMainDialog() {
+    private void setupMainDialog() {
         if (!GlobalData.isStart) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(GlobalData.item_txt)
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(GlobalData.item_txt);
             builder.setSingleChoiceItems(
                     GlobalData.item_options,
-                    GlobalData.defaultItemDialog
-            ) { dialog: DialogInterface, which: Int ->  // which --> 0, 1
-                    GlobalData.settingsStorage.putInt("default_connection_type", which)
-                Handler().postDelayed({ dialog.dismiss() }, 300)
-                GlobalData.defaultItemDialog = which
-
-                state?.setNewFooterState(which)
-            }
-            val dialog = builder.create()
-            dialog.show()
+                    GlobalData.defaultItemDialog,
+                    (dialog, which) -> {
+                        GlobalData.settingsStorage.putInt("default_connection_type", which);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.dismiss();
+                            }
+                        }, 300);
+                        GlobalData.defaultItemDialog = which;
+                        context.setFooterFromOtherClass(which);
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         } else {
-            showToast("لطفا اول اتصال را قطع کنید")
+            context.showToast("لطفا اول اتصال را قطع کنید");
         }
     }
 
