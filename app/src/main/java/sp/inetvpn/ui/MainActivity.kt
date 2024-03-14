@@ -12,23 +12,19 @@ import android.net.VpnService
 import android.os.Bundle
 import android.os.Handler
 import android.os.RemoteException
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.navigation.NavigationView
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
-import com.xray.lite.AppConfig.ANG_PACKAGE
 import com.xray.lite.service.V2RayServiceManager
 import com.xray.lite.ui.BaseActivity
 import com.xray.lite.ui.MainAngActivity
-import com.xray.lite.ui.adapters.MainRecyclerAdapter
 import com.xray.lite.util.MmkvManager
 import com.xray.lite.util.Utils
 import com.xray.lite.viewmodel.MainViewModel
@@ -38,8 +34,6 @@ import de.blinkt.openvpn.core.OpenVPNService
 import de.blinkt.openvpn.core.OpenVPNService.setDefaultStatus
 import de.blinkt.openvpn.core.OpenVPNThread
 import de.blinkt.openvpn.core.VpnStatus
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import sp.inetvpn.BuildConfig
 import sp.inetvpn.R
 import sp.inetvpn.data.GlobalData
@@ -50,8 +44,6 @@ import sp.inetvpn.state.MainActivity.vpnState
 import sp.inetvpn.util.CheckInternetConnection
 import sp.inetvpn.util.ManageDisableList
 import sp.inetvpn.util.UsageConnectionManager
-import java.io.File
-import java.io.FileOutputStream
 
 /**
  * MehrabSp
@@ -93,8 +85,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         )
     }
 
-    // v2ray
-    val adapter by lazy { MainRecyclerAdapter(MainAngActivity()) }
+    /**
+     * v2ray register
+     */
     private val requestVpnPermission =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
@@ -123,9 +116,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         ManageDisableList.restoreList() // disable list
         initializeAll() // openvpn
-
-        setupViewModel()
-        copyAssets()
 
         // Load default config type and save.
         GlobalData.defaultItemDialog =
@@ -482,60 +472,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         state?.setNewVpnState(2)
     }
 
-    // ViewModel for V2ray
-    private fun setupViewModel() {
-        mainViewModel.updateTestResultAction.observe(this) { setup?.setTestState(it) }
-        mainViewModel.isRunning.observe(this) { isRunning ->
-            adapter.isRunning = isRunning
-            if (isRunning) {
-                state?.setNewVpnState(2)
-                setup?.setTestState(getString(R.string.connection_connected))
-                binding.layoutTest.isFocusable = true
-            } else {
-                /**
-                 * این مدل در پس زمینه و کمی دیر تر از بقیه اجرا میشوند و باعث میشود که همه چیز را ریست کند
-                 * از مقدار ذخیره شده از قبل استفاده میکنم تا به مشکل نخورد
-                 */
-                if (GlobalData.defaultItemDialog == 0) {
-                    state?.setNewVpnState(0)
-                    setup?.setTestState(getString(R.string.connection_not_connected))
-                    binding.layoutTest.isFocusable = false
-                }
-            }
-            setup?.hideCircle()
-        }
-        mainViewModel.startListenBroadcast()
-    }
-
-    private fun copyAssets() {
-        val extFolder = Utils.userAssetPath(this)
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val geo = arrayOf("geosite.dat", "geoip.dat")
-                assets.list("")
-                    ?.filter { geo.contains(it) }
-                    ?.filter { !File(extFolder, it).exists() }
-                    ?.forEach {
-                        val target = File(extFolder, it)
-                        assets.open(it).use { input ->
-                            FileOutputStream(target).use { output ->
-                                input.copyTo(output)
-                            }
-                        }
-                        Log.i(
-                            ANG_PACKAGE,
-                            "Copied from apk assets folder to ${target.absolutePath}"
-                        )
-                    }
-            } catch (e: Exception) {
-                Log.e(ANG_PACKAGE, "asset copy failed", e)
-            }
-        }
-    }
-
     fun setStateFromOtherClass(newState: Int) {
         state?.setNewVpnState(newState)
     }
+
     // drawer options
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.

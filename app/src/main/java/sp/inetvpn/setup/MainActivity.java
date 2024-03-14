@@ -56,8 +56,8 @@ public class MainActivity {
 
         setupDrawer();
 
-//        setupViewModel();
-//        copyAssets();
+        setupViewModel();
+        copyAssets();
 
         sendNotifPermission();
 
