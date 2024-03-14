@@ -31,7 +31,7 @@ class SplitAdapter :
         parent: ViewGroup,
         viewType: Int
     ): QuickViewHolder {
-        return QuickViewHolder(R.layout.split_list_view, parent)
+        return QuickViewHolder(R.layout.item_recycler_split, parent)
     }
 
     override fun onBindViewHolder(holder: QuickViewHolder, position: Int, item: List<SplitList>?) {
