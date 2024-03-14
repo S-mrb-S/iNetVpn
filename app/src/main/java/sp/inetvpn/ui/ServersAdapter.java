@@ -40,7 +40,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.server_list_item, parent, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.item_recycler_servers, parent, false);
         return new ViewHolder(v);
     }
 
