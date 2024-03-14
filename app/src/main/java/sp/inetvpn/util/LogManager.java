@@ -1,17 +1,11 @@
 package sp.inetvpn.util;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.tencent.mmkv.MMKV;
-
-import java.util.Arrays;
-import java.util.Objects;
-
 public class LogManager {
-    static MMKV logStorage = MmkvManager.getLogStorage();
     private static Context appContext;
 
     public static void setAppContext(Context context) {
@@ -21,11 +15,32 @@ public class LogManager {
     public static void logEvent(Bundle params) {
         String logKey = String.valueOf(System.currentTimeMillis());
         Toast.makeText(appContext, "error found!", Toast.LENGTH_SHORT).show();
-        Log.d("ERR Event", params.toString());
-        logStorage.encode(logKey, params);
-    }
 
-    public static String getAllLogs() {
-        return Arrays.toString(Objects.requireNonNull(logStorage.allKeys()));
+
+//        SharedPreferences sp_settings;
+//        sp_settings = getSharedPreferences("daily_usage", 0);
+//        long connection_today = sp_settings.getLong(TODAY + "_connections", 0);
+//        long connection_total = sp_settings.getLong("total_connections", 0);
+//        SharedPreferences.Editor editor = sp_settings.edit();
+//        editor.putLong(TODAY + "_connections", connection_today + 1);
+//        editor.putLong("total_connections", connection_total + 1);
+//        editor.apply();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
+        builder.setMessage(" \n یک مشکلی در برنامه به وجود اومد: \n" +
+                logKey + "\n" +
+                params.getString("device_id") + "\n" +
+                params.getString("exception"));
+
+        builder.setNegativeButton(
+                "OK",
+                (dialogInterface, i) -> {
+                }
+        );
+
+        // ایجاد AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 }
