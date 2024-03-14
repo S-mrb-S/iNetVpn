@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import sp.inetvpn.R;
 import sp.inetvpn.databinding.ActivityLogBinding;
-import sp.inetvpn.util.LogManager;
 
 public class LogActivity extends AppCompatActivity {
 
@@ -21,16 +20,16 @@ public class LogActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        String LogM = LogManager.getAllLogs();
+//        String LogM = LogManager.getAllLogs();
         String logM = appValStorage.getString("res_then_error", null);
 
         if (logM != null){
             binding.ipProblemBool.setText("True");
         }
 
-        if (!LogM.equals("[]")){
-            binding.logOne.setText(LogM);
-        }
+//        if (!LogM.equals("[]")){
+//            binding.logOne.setText(LogM);
+//        }
 
 //        Log.d("LOG MANG KEYS", LogM);
 
