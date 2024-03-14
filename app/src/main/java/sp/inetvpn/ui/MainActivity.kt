@@ -1,7 +1,5 @@
 package sp.inetvpn.ui
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
@@ -11,7 +9,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.net.VpnService
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.RemoteException
@@ -28,7 +25,6 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.navigation.NavigationView
-import com.tbruyelle.rxpermissions.RxPermissions
 import com.tencent.mmkv.MMKV
 import com.xray.lite.AppConfig
 import com.xray.lite.AppConfig.ANG_PACKAGE
@@ -36,7 +32,6 @@ import com.xray.lite.service.V2RayServiceManager
 import com.xray.lite.ui.BaseActivity
 import com.xray.lite.ui.MainAngActivity
 import com.xray.lite.ui.adapters.MainRecyclerAdapter
-import com.xray.lite.util.AngConfigManager
 import com.xray.lite.util.MmkvManager
 import com.xray.lite.util.Utils
 import com.xray.lite.viewmodel.MainViewModel
@@ -55,19 +50,13 @@ import sp.inetvpn.R
 import sp.inetvpn.data.GlobalData
 import sp.inetvpn.data.GlobalData.appValStorage
 import sp.inetvpn.databinding.ActivityMainBinding
-import sp.inetvpn.handler.CheckVipUser.checkInformationUser
-import sp.inetvpn.handler.GetAllV2ray
 import sp.inetvpn.handler.GetVersionApi
-import sp.inetvpn.setup.MainActivity
 import sp.inetvpn.util.Animations
 import sp.inetvpn.util.CheckInternetConnection
-import sp.inetvpn.util.CountryListManager
 import sp.inetvpn.util.ManageDisableList
 import sp.inetvpn.util.UsageConnectionManager
 import java.io.File
 import java.io.FileOutputStream
-import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 /**
@@ -77,7 +66,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     lateinit var binding: ActivityMainBinding
 
-    private var setup: MainActivity? = null
+    private var setup: sp.inetvpn.setup.MainActivity? = null
+    private var state: sp.inetvpn.state.MainActivity? = null
 
     val usageConnectionManager = UsageConnectionManager()
     /**
@@ -141,28 +131,21 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // ViewModel (V2ray)
     private val mainViewModel: MainViewModel by viewModels()
 
-    // Usage
-    private val df: SimpleDateFormat
-        get() = SimpleDateFormat("dd-MMM-yyyy")
-    private var today: String = df.format(Calendar.getInstance().time)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        setup = MainActivity(this, binding)
+        setup = sp.inetvpn.setup.MainActivity(this, binding, mainViewModel)
+        state = sp.inetvpn.state.MainActivity(this, binding)
 
-        checkInformationUser(this)
         handlerSetupFirst()
 
-        setup?.setupDrawer()
+        setup?.setupAll()
 
         ManageDisableList.restoreList() // disable list
         initializeAll() // openvpn
-        // save default config for v2ray
-        initializeApp()
 
         setupViewModel()
         copyAssets()
@@ -174,21 +157,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         setupClickListener()
 
-        sendNotifPermission()
-    }
-
-    private fun sendNotifPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            RxPermissions(this)
-                .request(Manifest.permission.POST_NOTIFICATIONS)
-                .subscribe { v: Boolean? ->
-                    if (!v!!) Toast.makeText(
-                        this,
-                        "Denied",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-        }
     }
 
     private fun setupClickListener() {
@@ -259,58 +227,16 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun restoreTodayTextTv() {
-        val longUsageToday = GlobalData.prefUsageStorage.getLong(today, 0)
-        if (longUsageToday < 1000) {
-            binding.tvDataTodayText.text =
-                "${GlobalData.default_ziro_txt} ${GlobalData.KB}"
-        } else if (longUsageToday <= 1000000) {
-            binding.tvDataTodayText.text = (longUsageToday / 1000).toString() + GlobalData.KB
-        } else {
-            binding.tvDataTodayText.text = (longUsageToday / 1000000).toString() + GlobalData.MB
-        }
-    }
-
     /**
      * handler
      */
 
     private fun handlerSetupFirst() {
         // set default
-        handleCountryImage()
+        setup?.handleCountryImage()
         handleNewVpnState()
         handleNewFooterState()
         showBubbleHomeAnimation()
-    }
-
-    private fun handleErrorWhenConnect() {
-        binding.tvMessageTopText.text = GlobalData.connected_catch_txt
-        binding.tvMessageBottomText.text =
-            GlobalData.connected_catch_check_internet_txt
-
-//        binding.btnConnection.text = Data.connecting_btn
-        binding.btnConnection.background =
-            this@MainActivity.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.button_retry
-                )
-            }
-    }
-
-    private fun handleAUTH() {
-        binding.tvMessageTopText.text = "درحال ورود به سرور"
-        binding.tvMessageBottomText.text = "لطفا منتظر بمانید"
-
-        binding.btnConnection.text = "لغو"
-        binding.btnConnection.background =
-            this@MainActivity.let {
-                ContextCompat.getDrawable(
-                    it,
-                    R.drawable.button_retry
-                )
-            }
     }
 
     private fun handleNewVpnState() {
@@ -468,7 +394,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
         }
 
-        handleCountryImage()
+        setup?.handleCountryImage()
     }
 
     private fun showBubbleHomeAnimation() {
@@ -508,17 +434,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         footerState = newState
 
         handleNewFooterState()
-    }
-
-    private fun handleCountryImage() {
-        if (GlobalData.defaultItemDialog == 0) {
-            CountryListManager.OpenVpnSetServerList(
-                "v2ray",
-                binding.ivServers
-            ) // v2ray
-        } else {
-            CountryListManager.OpenVpnSetServerList(imageCountry, binding.ivServers)
-        }
     }
 
     /*
@@ -614,7 +529,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
                 // No internet connection available
                 showToast("شما به اینترنت متصل نیستید !!")
-                handleErrorWhenConnect()
+                state?.handleErrorWhenConnect()
             }
         } else if (stopVpn()) {
 
@@ -701,13 +616,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
                 "CONNECTED" -> {
                     setNewVpnState(2)
-                    checkInformationUser(this)
+//                    checkInformationUser(this)
                 }
 
                 "WAIT" -> setNewVpnState(1)
-                "AUTH" -> handleAUTH()
+                "AUTH" -> state?.handleAUTH()
                 "RECONNECTING" -> setNewVpnState(1)
-                "NONETWORK" -> handleErrorWhenConnect()
+                "NONETWORK" -> state?.handleErrorWhenConnect()
             }
         }
     }
@@ -824,43 +739,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 }
         } catch (e: Exception) {
             Log.d(ANG_PACKAGE, e.toString())
-        }
-    }
-
-    // save default v2ray config from api
-    private fun initializeApp() {
-        MmkvManager.removeAllServer()
-        GetAllV2ray.setRetV2ray(
-            this
-        ) { retV2ray ->
-            try {
-                importBatchConfig(retV2ray)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    /**
-     * import config for v2ray
-     */
-    private fun importBatchConfig(server: String?, subid: String = "") {
-        val subid2 = subid.ifEmpty {
-            mainViewModel.subscriptionId
-        }
-        val append = subid.isEmpty()
-
-        var count = AngConfigManager.importBatchConfig(server, subid2, append)
-        if (count <= 0) {
-            count = AngConfigManager.importBatchConfig(Utils.decode(server!!), subid2, append)
-        }
-        if (count <= 0) {
-            count = AngConfigManager.appendCustomConfigServer(server, subid2)
-        }
-        if (count > 0) {
-            mainViewModel.reloadServerList()
-        } else {
-            showToast("داده های سرور v2ray ذخیره نشد!")
         }
     }
 
@@ -1008,16 +886,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onResume() {
         super.onResume()
 
-        imageCountry = GlobalData.connectionStorage.getString("image", GlobalData.NA)
         city = GlobalData.connectionStorage.getString("city", GlobalData.NA)
-
-        handleCountryImage()
+        setup?.setNewImage()
+        setup?.handleCountryImage()
 
         // Set broadcast for OpenVpn
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(broadcastReceiver, IntentFilter("connectionState"))
 
-        restoreTodayTextTv()
+        state?.restoreTodayTextTv()
     }
 
     // Bug
