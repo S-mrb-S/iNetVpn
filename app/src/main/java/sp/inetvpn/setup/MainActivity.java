@@ -12,11 +12,19 @@ import androidx.core.view.GravityCompat;
 import com.google.android.material.navigation.NavigationView;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.xray.lite.AppConfig;
+import com.xray.lite.ui.MainAngActivity;
+import com.xray.lite.ui.adapters.MainRecyclerAdapter;
 import com.xray.lite.util.AngConfigManager;
 import com.xray.lite.util.MmkvManager;
 import com.xray.lite.util.Utils;
 import com.xray.lite.viewmodel.MainViewModel;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -48,9 +56,13 @@ public class MainActivity {
 
         setupDrawer();
 
+//        setupViewModel();
+//        copyAssets();
+
         sendNotifPermission();
 
         initializeApp();
+
     }
     /**
      * Main Drawer
@@ -205,5 +217,63 @@ public class MainActivity {
             setTestState(context.getString(R.string.connection_test_fail));
         }
     }
+
+    private MainRecyclerAdapter adapter = null;
+
+    private MainRecyclerAdapter getAdapter() {
+        if (adapter == null) {
+            adapter = new MainRecyclerAdapter(new MainAngActivity());
+        }
+        return adapter;
+    }
+
+    private void setupViewModel() {
+        mainViewModel.getUpdateTestResultAction().observe(context, this::setTestState);
+        mainViewModel.isRunning().observe(context, isRunning -> {
+            getAdapter().setRunning(isRunning);
+            if (isRunning) {
+                context.setStateFromOtherClass(2);
+                setTestState(context.getString(R.string.connection_connected));
+                binding.layoutTest.setFocusable(true);
+            } else {
+                if (GlobalData.defaultItemDialog == 0) {
+                    context.setStateFromOtherClass(0);
+                    setTestState(context.getString(R.string.connection_not_connected));
+                    binding.layoutTest.setFocusable(false);
+                }
+            }
+            hideCircle();
+        });
+        mainViewModel.startListenBroadcast();
+    }
+
+    private void copyAssets() {
+        String extFolder = Utils.INSTANCE.userAssetPath(context);
+        try {
+            String[] geo = {"geosite.dat", "geoip.dat"};
+            String[] assetFiles = context.getAssets().list("");
+            for (String file : geo) {
+                if (Arrays.asList(Objects.requireNonNull(assetFiles)).contains(file)) {
+                    File target = new File(extFolder, file);
+                    if (!target.exists()) {
+                        InputStream input = context.getAssets().open(file);
+                        OutputStream output = new FileOutputStream(target);
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = input.read(buffer)) > 0) {
+                            output.write(buffer, 0, length);
+                        }
+                        output.flush();
+                        output.close();
+                        input.close();
+                        Log.i(AppConfig.ANG_PACKAGE, "Copied from apk assets folder to " + target.getAbsolutePath());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(AppConfig.ANG_PACKAGE, "asset copy failed", e);
+        }
+    }
+
 
 }

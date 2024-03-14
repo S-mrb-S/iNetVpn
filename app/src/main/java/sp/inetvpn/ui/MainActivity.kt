@@ -63,9 +63,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     private var setup: sp.inetvpn.setup.MainActivity? = null
     private var state: sp.inetvpn.state.MainActivity? = null
 
-    val usageConnectionManager = UsageConnectionManager()
+    private val usageConnectionManager = UsageConnectionManager()
+
     /**
-     * openvpn state
+     * openvpn service
      */
     private val isServiceRunning: Unit
         /**
@@ -75,6 +76,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             setStatus(OpenVPNService.getStatus())
         }
 
+    /**
+     * v2ray storage
+     */
     // MMKV
     private val mainStorage by lazy {
         MMKV.mmkvWithID(
@@ -98,8 +102,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
         }
 
+    /**
+     * enable connection button
+     */
     private var enableButtonC: Boolean = true
-
     // ViewModel (V2ray)
     private val mainViewModel: MainViewModel by viewModels()
 
@@ -113,7 +119,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         state = sp.inetvpn.state.MainActivity(this, binding, setup)
 
         state?.handlerSetupFirst()
-
         setup?.setupAll()
 
         ManageDisableList.restoreList() // disable list
@@ -528,6 +533,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
+    fun setStateFromOtherClass(newState: Int) {
+        state?.setNewVpnState(newState)
+    }
     // drawer options
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
