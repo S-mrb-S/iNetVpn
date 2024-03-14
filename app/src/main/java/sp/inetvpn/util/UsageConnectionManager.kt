@@ -1,7 +1,7 @@
 package sp.inetvpn.util
 
 import android.annotation.SuppressLint
-import sp.inetvpn.Data.GlobalData
+import sp.inetvpn.data.GlobalData
 import java.time.LocalDate
 
 // by MRB
@@ -9,7 +9,7 @@ import java.time.LocalDate
     Connection count
  */
 @SuppressLint("NewApi")
-class ConnectionManager {
+class UsageConnectionManager {
 
     private fun saveConnectionInfo(date: LocalDate, count: Int) {
         GlobalData.prefUsageStorage.putLong("connection_${date.toEpochDay()}", count.toLong())

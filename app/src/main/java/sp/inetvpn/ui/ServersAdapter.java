@@ -1,6 +1,6 @@
 package sp.inetvpn.ui;
 
-import static sp.inetvpn.Data.GlobalData.connectionStorage;
+import static sp.inetvpn.data.GlobalData.connectionStorage;
 
 import android.content.Context;
 import android.view.LayoutInflater;

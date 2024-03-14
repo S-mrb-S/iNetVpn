@@ -13,12 +13,12 @@ import android.widget.Toast
 import com.xray.lite.ui.MainSettingsV2ray
 import com.xray.lite.ui.SettingsActivity
 import sp.inetvpn.BuildConfig
-import sp.inetvpn.Data.GlobalData
 import sp.inetvpn.MainApplication
 import sp.inetvpn.R
+import sp.inetvpn.data.GlobalData
 import sp.inetvpn.databinding.ActivityUsageBinding
-import sp.inetvpn.util.ConnectionManager
 import sp.inetvpn.util.LogManager
+import sp.inetvpn.util.UsageConnectionManager
 import java.text.NumberFormat
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit
 class UsageActivity : Activity() {
     private lateinit var binding: ActivityUsageBinding
 
-    private val connectionManager = ConnectionManager()
+    private val usageConnectionManager = UsageConnectionManager()
 
     private var isDeviceH: Boolean = "huawei".equals(Build.MANUFACTURER, ignoreCase = true)
 
@@ -158,81 +158,15 @@ class UsageActivity : Activity() {
     private fun setupBindingUsage() {
         binding.tvUsageCuVersion.text = "${GlobalData.Version_txt} ${BuildConfig.VERSION_NAME}"
 
-        if (todayUsage!! < 1000) {
-            binding.dataUsage.tvUsageDataTodaySize.text = GlobalData.default_byte_txt
-        } else if (todayUsage!! <= 1000000) {
-            binding.dataUsage.tvUsageDataTodaySize.text =
-                convertToFarsiNumber(todayUsage!! / 1000) + GlobalData.KB
-        } else {
-            binding.dataUsage.tvUsageDataTodaySize.text =
-                convertToFarsiNumber(todayUsage!! / 1000000) + GlobalData.MB
-        }
-
-        if (yesterdayUsage!! == 0L) {
-            binding.dataUsage.tvUsageDataYesterdaySize.text = GlobalData.NA
-        } else if (yesterdayUsage!! < 1000) {
-            binding.dataUsage.tvUsageDataYesterdaySize.text = GlobalData.default_byte_txt
-        } else if (yesterdayUsage!! <= 1000000) {
-            binding.dataUsage.tvUsageDataYesterdaySize.text =
-                (yesterdayUsage!! / 1000).toString() + GlobalData.KB
-        } else {
-            binding.dataUsage.tvUsageDataYesterdaySize.text =
-                (yesterdayUsage!! / 1000000).toString() + GlobalData.MB
-        }
-
-        binding.dataUsage.tvUsageDataDaythreeTitle.text = threeDays
-        if (dayThreeUsage!! == 0L) {
-            binding.dataUsage.tvUsageDataDaythreeSize.text = GlobalData.NA
-        } else if (dayThreeUsage!! < 1000) {
-            binding.dataUsage.tvUsageDataDaythreeSize.text = GlobalData.default_byte_txt
-        } else if (dayThreeUsage!! <= 1000000) {
-            binding.dataUsage.tvUsageDataDaythreeSize.text =
-                convertToFarsiNumber(dayThreeUsage!! / 1000) + GlobalData.KB
-        } else {
-            binding.dataUsage.tvUsageDataDaythreeSize.text =
-                convertToFarsiNumber(dayThreeUsage!! / 1000000) + GlobalData.MB
-        }
-
-        if (weekUsage!! == 0L) {
-            binding.dataUsage.tvUsageDataThisweekSize.text = GlobalData.NA
-        } else if (weekUsage!! < 1000) {
-            binding.dataUsage.tvUsageDataThisweekSize.text = GlobalData.default_byte_txt
-        } else if (weekUsage!! <= 1000000) {
-            binding.dataUsage.tvUsageDataThisweekSize.text =
-                convertToFarsiNumber(weekUsage!! / 1000) + GlobalData.KB
-        } else {
-            binding.dataUsage.tvUsageDataThisweekSize.text =
-                convertToFarsiNumber(weekUsage!! / 1000000) + GlobalData.MB
-        }
-
-
-        if (monthUsage!! == 0L) {
-            binding.dataUsage.tvUsageDataThismonthSize.text = GlobalData.NA
-        } else if (monthUsage!! < 1000) {
-            binding.dataUsage.tvUsageDataThismonthSize.text = GlobalData.default_byte_txt
-        } else if (monthUsage!! <= 1000000) {
-            binding.dataUsage.tvUsageDataThismonthSize.text =
-                convertToFarsiNumber(monthUsage!! / 1000) + GlobalData.KB
-        } else {
-            binding.dataUsage.tvUsageDataThismonthSize.text =
-                convertToFarsiNumber(monthUsage!! / 1000000) + GlobalData.MB
-        }
-
-        binding.timeUsage.tvUsageTimeTodayTime.text = todayTime
-
-        binding.timeUsage.tvUsageTimeYesterdayTime.text = yesterdayTime
-
-        binding.timeUsage.tvUsageTimeTotalTime.text = totalTime
-
         // connections
         binding.connectionsUsage.tvUsageConnectionTodaySize.text =
-            connectionManager.getConnectionCountForToday().toString()
+            usageConnectionManager.getConnectionCountForToday().toString()
 
         binding.connectionsUsage.tvUsageConnectionYesterdaySize.text =
-            connectionManager.getConnectionCountForYesterday().toString()
+            usageConnectionManager.getConnectionCountForYesterday().toString()
 
         binding.connectionsUsage.tvUsageConnectionTotalSize.text =
-            connectionManager.getTotalConnections().toString()
+            usageConnectionManager.getTotalConnections().toString()
     }
 
     private fun openAboutMeActivity() {

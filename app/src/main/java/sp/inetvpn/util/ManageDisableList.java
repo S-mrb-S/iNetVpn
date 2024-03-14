@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import sp.inetvpn.Data.GlobalData;
+import sp.inetvpn.data.GlobalData;
 
 /**
  * for SplitAdapter

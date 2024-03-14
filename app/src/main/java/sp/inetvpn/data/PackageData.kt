@@ -1,4 +1,4 @@
-package sp.inetvpn.Data
+package sp.inetvpn.data
 
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -8,6 +8,9 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
+/**
+ * for SplitActivity
+ */
 class PackageData {
     private val splitLists: MutableList<SplitList> = ArrayList()
 

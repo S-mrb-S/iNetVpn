@@ -51,9 +51,9 @@ import kotlinx.coroutines.launch
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import sp.inetvpn.BuildConfig
-import sp.inetvpn.Data.GlobalData
-import sp.inetvpn.Data.GlobalData.appValStorage
 import sp.inetvpn.R
+import sp.inetvpn.data.GlobalData
+import sp.inetvpn.data.GlobalData.appValStorage
 import sp.inetvpn.databinding.ActivityMainBinding
 import sp.inetvpn.handler.CheckVipUser.checkInformationUser
 import sp.inetvpn.handler.GetAllV2ray
@@ -61,9 +61,9 @@ import sp.inetvpn.handler.GetVersionApi
 import sp.inetvpn.handler.SetupMain
 import sp.inetvpn.util.Animations
 import sp.inetvpn.util.CheckInternetConnection
-import sp.inetvpn.util.ConnectionManager
 import sp.inetvpn.util.CountryListManager
 import sp.inetvpn.util.ManageDisableList
+import sp.inetvpn.util.UsageConnectionManager
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -77,7 +77,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     lateinit var binding: ActivityMainBinding
 
-    val connectionManager = ConnectionManager()
+    val usageConnectionManager = UsageConnectionManager()
     /**
      * openvpn state
      */
@@ -653,7 +653,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * Start the VPN
      */
     private fun startVpn() {
-        connectionManager.establishConnection()
+        usageConnectionManager.establishConnection()
 
         try {
             val file = GlobalData.connectionStorage.getString("file", null)
@@ -752,18 +752,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //        binding.lastPacketReceiveTv.setText("Packet Received: " + lastPacketReceive + " second ago");
 //        binding.byteInTv.setText("Bytes In: " + byteIn);
 //        binding.byteOutTv.setText("Bytes Out: " + byteOut);
-        if (duration != null) {
-            Log.d("DUR", duration)
-        }
-        if (lastPacketReceive != null) {
-            Log.d("Packet rec", lastPacketReceive)
-        }
-        if (byteIn != null) {
-            Log.d("DUR", byteIn)
-        }
-        if (byteOut != null) {
-            Log.d("DUR", byteOut)
-        }
     }
 
     /**
@@ -801,7 +789,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         showCircle()
         // Start
         V2RayServiceManager.startV2Ray(this)
-        connectionManager.establishConnection()
+        usageConnectionManager.establishConnection()
         // Hide loader
         hideCircle()
         setNewVpnState(2)

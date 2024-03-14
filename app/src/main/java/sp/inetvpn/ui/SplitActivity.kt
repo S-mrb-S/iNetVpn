@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.View
 import com.chad.library.adapter4.BaseQuickAdapter
 import com.xray.lite.ui.BaseActivity
-import sp.inetvpn.Data.PackageData
 import sp.inetvpn.R
+import sp.inetvpn.data.PackageData
 import sp.inetvpn.databinding.ActivitySplitBinding
 import sp.inetvpn.model.SplitList
 

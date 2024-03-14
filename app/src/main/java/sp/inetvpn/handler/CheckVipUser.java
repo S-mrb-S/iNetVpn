@@ -3,8 +3,8 @@ package sp.inetvpn.handler;
 import android.content.Intent;
 import android.widget.Toast;
 
-import sp.inetvpn.Data.GlobalData;
 import sp.inetvpn.R;
+import sp.inetvpn.data.GlobalData;
 import sp.inetvpn.ui.LoginActivity;
 import sp.inetvpn.ui.MainActivity;
 import sp.inetvpn.util.CheckInternetConnection;

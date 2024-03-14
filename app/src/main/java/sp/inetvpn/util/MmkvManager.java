@@ -1,9 +1,9 @@
 package sp.inetvpn.util;
 
-import static sp.inetvpn.Data.GlobalData.ID_PREF_USAGE;
-import static sp.inetvpn.Data.GlobalData.ID_app_values;
-import static sp.inetvpn.Data.GlobalData.ID_connection_data;
-import static sp.inetvpn.Data.GlobalData.ID_settings_data;
+import static sp.inetvpn.data.GlobalData.ID_PREF_USAGE;
+import static sp.inetvpn.data.GlobalData.ID_app_values;
+import static sp.inetvpn.data.GlobalData.ID_connection_data;
+import static sp.inetvpn.data.GlobalData.ID_settings_data;
 
 import com.tencent.mmkv.MMKV;
 

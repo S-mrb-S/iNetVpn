@@ -1,4 +1,4 @@
-package sp.inetvpn.Data;
+package sp.inetvpn.data;
 
 import com.tencent.mmkv.MMKV;
 

@@ -94,8 +94,7 @@
         <activity
             android:name="sp.inetvpn.ui.LoginActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:screenOrientation="portrait" />
         <activity
             android:name="sp.inetvpn.ui.ServersActivity"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
@@ -228,7 +227,7 @@
             android:excludeFromRecents="true"
             android:exported="false"
             android:process=":RunSoLibV2RayDaemon"
-            android:theme="@style/AppTheme.NoActionBar.Translucent" />
+            android:theme="@style/AppThemeDayNight.NoActionBar.Translucent" />
         <activity
             android:name="com.xray.lite.ui.UrlSchemeActivity"
             android:exported="true">

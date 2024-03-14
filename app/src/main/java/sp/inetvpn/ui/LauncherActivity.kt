@@ -10,9 +10,9 @@ import android.widget.Toast
 import com.xray.lite.ui.BaseActivity
 import org.json.JSONException
 import org.json.JSONObject
-import sp.inetvpn.Data.GlobalData
 import sp.inetvpn.MainApplication
 import sp.inetvpn.R
+import sp.inetvpn.data.GlobalData
 import sp.inetvpn.databinding.ActivityLauncherBinding
 import sp.inetvpn.handler.GetAllOpenVpn
 import sp.inetvpn.util.Animations
