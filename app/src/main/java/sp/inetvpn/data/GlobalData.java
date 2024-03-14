@@ -24,9 +24,7 @@ public class GlobalData {
     // (main) set connection button
     public static final String disconnected_btn = "روشن شدن";
     public static final String connecting_btn = "درحال اتصال";
-    public static final String connecting_cancel_btn = "لغو";
     public static final String connected_btn = "قطع اتصال";
-    public static final String connected_error_btn = "برنامه های VPN را حذف کنید";
     // (main) set message text
     public static final String disconnected = "اتصال قطع شد";
     public static final String disconnected_txt = "اتصال اماده است";
@@ -53,11 +51,8 @@ public class GlobalData {
     // mmkv id
     public static final String ID_settings_data = "settings_data";
     public static final String ID_connection_data = "connection_data";
-    public static final String ID_log_data = "log_data";
     public static final String ID_app_values = "app_values";
     public static final String ID_PREF_USAGE = "daily_usage";
-    public static String TODAY, WEEK, MONTH, YEAR;
-    public static final String ID_app_details = "app_details";
     // recyclerview
     public static final String KEY_GRID = "GRID";
 

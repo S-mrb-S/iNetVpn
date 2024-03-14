@@ -58,7 +58,7 @@ import sp.inetvpn.databinding.ActivityMainBinding
 import sp.inetvpn.handler.CheckVipUser.checkInformationUser
 import sp.inetvpn.handler.GetAllV2ray
 import sp.inetvpn.handler.GetVersionApi
-import sp.inetvpn.handler.SetupMain
+import sp.inetvpn.setup.MainActivity
 import sp.inetvpn.util.Animations
 import sp.inetvpn.util.CheckInternetConnection
 import sp.inetvpn.util.CountryListManager
@@ -76,6 +76,8 @@ import java.util.concurrent.TimeUnit
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var binding: ActivityMainBinding
+
+    private var setup: MainActivity? = null
 
     val usageConnectionManager = UsageConnectionManager()
     /**
@@ -150,10 +152,13 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val view = binding.root
         setContentView(view)
 
+        setup = MainActivity(this, binding)
+
         checkInformationUser(this)
         handlerSetupFirst()
 
-        SetupMain.setupDrawer(this, binding)
+        setup?.setupDrawer()
+
         ManageDisableList.restoreList() // disable list
         initializeAll() // openvpn
         // save default config for v2ray

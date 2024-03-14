@@ -94,6 +94,7 @@
         <activity
             android:name="sp.inetvpn.ui.LoginActivity"
             android:exported="false"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name="sp.inetvpn.ui.ServersActivity"

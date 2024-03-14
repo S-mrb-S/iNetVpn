@@ -1,4 +1,6 @@
-package sp.inetvpn.handler;
+package sp.inetvpn.setup;
+
+import android.content.Context;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
@@ -7,18 +9,24 @@ import com.google.android.material.navigation.NavigationView;
 
 import sp.inetvpn.R;
 import sp.inetvpn.databinding.ActivityMainBinding;
-import sp.inetvpn.ui.MainActivity;
 
 /**
  * Setup for MainActivity
  * by MehrabSp
  */
-public class SetupMain {
+public class MainActivity {
 
+    private final sp.inetvpn.ui.MainActivity context;
+    private final ActivityMainBinding binding;
+
+    public MainActivity(Context context, ActivityMainBinding binding) {
+        this.context = (sp.inetvpn.ui.MainActivity) context;
+        this.binding = binding;
+    }
     /**
      * Main Drawer
      */
-    public static void setupDrawer(MainActivity context, ActivityMainBinding binding) {
+    public void setupDrawer() {
         // drawer layout instance to toggle the menu icon to open
         // drawer and back button to close drawer
         ActionBarDrawerToggle actionBarDrawerToggle =
