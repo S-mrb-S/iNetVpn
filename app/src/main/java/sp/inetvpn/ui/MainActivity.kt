@@ -52,7 +52,6 @@ import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import sp.inetvpn.BuildConfig
 import sp.inetvpn.Data.GlobalData
-import sp.inetvpn.Data.GlobalData.TODAY
 import sp.inetvpn.Data.GlobalData.appValStorage
 import sp.inetvpn.R
 import sp.inetvpn.databinding.ActivityMainBinding
@@ -62,6 +61,7 @@ import sp.inetvpn.handler.GetVersionApi
 import sp.inetvpn.handler.SetupMain
 import sp.inetvpn.util.Animations
 import sp.inetvpn.util.CheckInternetConnection
+import sp.inetvpn.util.ConnectionManager
 import sp.inetvpn.util.CountryListManager
 import sp.inetvpn.util.ManageDisableList
 import java.io.File
@@ -77,6 +77,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     lateinit var binding: ActivityMainBinding
 
+    val connectionManager = ConnectionManager()
     /**
      * openvpn state
      */
@@ -101,6 +102,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private var footerState: Int =
         1 // 0 --> v2ray test layout \\ 1 --> main_today
+    private var enableButtonC = true
 
     private var isSetupFirst: Boolean = true
 
@@ -186,11 +188,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private fun setupClickListener() {
         binding.llProtocolMain.setOnClickListener {
-            if (!GlobalData.isStart) {
                 setupMainDialog()
-            } else {
-                showToast("لطفا اول اتصال را قطع کنید")
-            }
         }
 
         binding.linearLayoutMainHome.setOnClickListener {
@@ -206,19 +204,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
 
         binding.btnConnection.setOnClickListener {
-            runOnUiThread {
-                if (vpnState != 1) {
-                    when (GlobalData.defaultItemDialog) {
-                        1 -> connectToOpenVpn()
-                        0 -> connectToV2ray()
-                    }
-                } else {
-                    when (GlobalData.defaultItemDialog) {
-                        1 -> stopVpn()
-                        0 -> connectToV2ray()
-                    }
-                }
-            }
+            handleButtonConnect()
         }
 
         binding.layoutTest.setOnClickListener {
@@ -226,22 +212,46 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
+    private fun handleButtonConnect() {
+        if (enableButtonC) {
+            enableButtonC = false
+            if (vpnState != 1) {
+                when (GlobalData.defaultItemDialog) {
+                    1 -> connectToOpenVpn()
+                    0 -> connectToV2ray()
+                }
+            } else {
+                when (GlobalData.defaultItemDialog) {
+                    1 -> stopVpn()
+                    0 -> connectToV2ray()
+                }
+            }
+            enableButtonC = true
+        } else showToast("لطفا کمی صبر کنید..")
+    }
+
+    /**
+     * set config dialog
+     */
     private fun setupMainDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(GlobalData.item_txt)
-        builder.setSingleChoiceItems(
-            GlobalData.item_options,
-            GlobalData.defaultItemDialog
-        ) { dialog: DialogInterface, which: Int ->  // which --> 0, 1
-            GlobalData.settingsStorage.putInt("default_connection_type", which)
-            Handler().postDelayed({ dialog.dismiss() }, 300)
-            GlobalData.defaultItemDialog = which
+        if (!GlobalData.isStart) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(GlobalData.item_txt)
+            builder.setSingleChoiceItems(
+                GlobalData.item_options,
+                GlobalData.defaultItemDialog
+            ) { dialog: DialogInterface, which: Int ->  // which --> 0, 1
+                GlobalData.settingsStorage.putInt("default_connection_type", which)
+                Handler().postDelayed({ dialog.dismiss() }, 300)
+                GlobalData.defaultItemDialog = which
 
-            setNewFooterState(which)
-
+                setNewFooterState(which)
+            }
+            val dialog = builder.create()
+            dialog.show()
+        } else {
+            showToast("لطفا اول اتصال را قطع کنید")
         }
-        val dialog = builder.create()
-        dialog.show()
     }
 
     @SuppressLint("SetTextI18n")
@@ -643,13 +653,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * Start the VPN
      */
     private fun startVpn() {
-        GlobalData.prefUsageStorage
-
-        val connectionToday = GlobalData.prefUsageStorage.getLong(TODAY + "_connections", 0)
-        val connectionTotal = GlobalData.prefUsageStorage.getLong("total_connections", 0)
-
-        GlobalData.prefUsageStorage.putLong(TODAY + "_connections", connectionToday + 1)
-        GlobalData.prefUsageStorage.putLong("total_connections", connectionTotal + 1)
+        connectionManager.establishConnection()
 
         try {
             val file = GlobalData.connectionStorage.getString("file", null)
@@ -748,6 +752,18 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //        binding.lastPacketReceiveTv.setText("Packet Received: " + lastPacketReceive + " second ago");
 //        binding.byteInTv.setText("Bytes In: " + byteIn);
 //        binding.byteOutTv.setText("Bytes Out: " + byteOut);
+        if (duration != null) {
+            Log.d("DUR", duration)
+        }
+        if (lastPacketReceive != null) {
+            Log.d("Packet rec", lastPacketReceive)
+        }
+        if (byteIn != null) {
+            Log.d("DUR", byteIn)
+        }
+        if (byteOut != null) {
+            Log.d("DUR", byteOut)
+        }
     }
 
     /**
@@ -785,6 +801,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         showCircle()
         // Start
         V2RayServiceManager.startV2Ray(this)
+        connectionManager.establishConnection()
         // Hide loader
         hideCircle()
         setNewVpnState(2)
