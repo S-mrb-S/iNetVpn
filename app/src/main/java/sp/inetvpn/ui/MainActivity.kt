@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
@@ -42,7 +41,6 @@ import sp.inetvpn.databinding.ActivityMainBinding
 import sp.inetvpn.handler.GetVersionApi
 import sp.inetvpn.state.MainActivity.vpnState
 import sp.inetvpn.util.CheckInternetConnection
-import sp.inetvpn.util.ManageDisableList
 import sp.inetvpn.util.UsageConnectionManager
 
 /**
@@ -111,45 +109,15 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setup = sp.inetvpn.setup.MainActivity(this, binding, mainViewModel)
         state = sp.inetvpn.state.MainActivity(this, binding, setup)
 
-        state?.handlerSetupFirst()
+        state?.handlerSetupFirst() // set default state
         setup?.setupAll()
 
-        ManageDisableList.restoreList() // disable list
-        initializeAll() // openvpn
-
-        // Load default config type and save.
-        GlobalData.defaultItemDialog =
-            GlobalData.settingsStorage.getInt("default_connection_type", 0)
-        GlobalData.cancelFast = GlobalData.settingsStorage.getBoolean("cancel_fast", false)
+        initializeAll() // setup openvpn service
 
         setupClickListener()
     }
 
-    private fun setupClickListener() {
-        binding.llProtocolMain.setOnClickListener {
-                setupMainDialog()
-        }
 
-        binding.linearLayoutMainHome.setOnClickListener {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
-        }
-
-        binding.linearLayoutMainServers.setOnClickListener {
-            if (GlobalData.defaultItemDialog == 0) {
-                startAngActivity()
-            } else {
-                startServersActivity()
-            }
-        }
-
-        binding.btnConnection.setOnClickListener {
-            handleButtonConnect()
-        }
-
-        binding.layoutTest.setOnClickListener {
-            setup?.layoutTest()
-        }
-    }
 
     private fun handleButtonConnect() {
         if (enableButtonC) {
@@ -167,30 +135,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             enableButtonC = true
         } else showToast("لطفا کمی صبر کنید..")
-    }
-
-    /**
-     * set config dialog
-     */
-    private fun setupMainDialog() {
-        if (!GlobalData.isStart) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(GlobalData.item_txt)
-            builder.setSingleChoiceItems(
-                GlobalData.item_options,
-                GlobalData.defaultItemDialog
-            ) { dialog: DialogInterface, which: Int ->  // which --> 0, 1
-                GlobalData.settingsStorage.putInt("default_connection_type", which)
-                Handler().postDelayed({ dialog.dismiss() }, 300)
-                GlobalData.defaultItemDialog = which
-
-                state?.setNewFooterState(which)
-            }
-            val dialog = builder.create()
-            dialog.show()
-        } else {
-            showToast("لطفا اول اتصال را قطع کنید")
-        }
     }
 
     /*

@@ -21,8 +21,8 @@ import sp.inetvpn.util.LogManager
 
 class LauncherActivity : BaseActivity() {
     private var binding: ActivityLauncherBinding? = null
-    var FileDetails: String? = null
-    var isLoginBool = false
+    private var FileDetails: String? = null
+    private var isLoginBool = false
     private var backPressedTime: Long = 0
 
     override fun onResume() {
@@ -157,12 +157,12 @@ class LauncherActivity : BaseActivity() {
     private fun endThisActivityWithCheck() {
         try {
             if (isLoginBool) {
-                val Main = Intent(this@LauncherActivity, MainActivity::class.java)
-                startActivity(Main)
+                val main = Intent(this@LauncherActivity, MainActivity::class.java)
+                startActivity(main)
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
             } else {
-                val Welcome = Intent(this@LauncherActivity, LoginActivity::class.java)
-                startActivity(Welcome)
+                val welcome = Intent(this@LauncherActivity, LoginActivity::class.java)
+                startActivity(welcome)
                 overridePendingTransition(R.anim.fade_in_1000, R.anim.fade_out_500)
             }
         } finally {

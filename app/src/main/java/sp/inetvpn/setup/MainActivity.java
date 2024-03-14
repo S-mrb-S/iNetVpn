@@ -36,6 +36,8 @@ import sp.inetvpn.databinding.ActivityMainBinding;
 import sp.inetvpn.handler.CheckVipUser;
 import sp.inetvpn.handler.GetAllV2ray;
 import sp.inetvpn.util.CountryListManager;
+import sp.inetvpn.util.ManageDisableList;
+
 /**
  * Setup for MainActivity
  * by MehrabSp
@@ -63,7 +65,66 @@ public class MainActivity {
 
         initializeApp();
 
+        // Load default config type and save.
+        GlobalData.defaultItemDialog =
+                GlobalData.settingsStorage.getInt("default_connection_type", 0);
+        GlobalData.cancelFast =
+                GlobalData.settingsStorage.getBoolean("cancel_fast", false);
+
+        ManageDisableList.restoreList(); // disable list
+
     }
+
+    private void setupClickListener() {
+        binding.llProtocolMain.setOnClickListener((v) -> {
+            setupMainDialog();
+        });
+
+        binding.linearLayoutMainHome.setOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.START);
+        }
+
+        binding.linearLayoutMainServers.setOnClickListener {
+            if (GlobalData.defaultItemDialog == 0) {
+                startAngActivity();
+            } else {
+                startServersActivity();
+            }
+        }
+
+        binding.btnConnection.setOnClickListener {
+            handleButtonConnect();
+        }
+
+        binding.layoutTest.setOnClickListener {
+            layoutTest();
+        }
+    }
+
+    /**
+     * set config dialog
+     */
+    private fun setupMainDialog() {
+        if (!GlobalData.isStart) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(GlobalData.item_txt)
+            builder.setSingleChoiceItems(
+                    GlobalData.item_options,
+                    GlobalData.defaultItemDialog
+            ) { dialog: DialogInterface, which: Int ->  // which --> 0, 1
+                    GlobalData.settingsStorage.putInt("default_connection_type", which)
+                Handler().postDelayed({ dialog.dismiss() }, 300)
+                GlobalData.defaultItemDialog = which
+
+                state?.setNewFooterState(which)
+            }
+            val dialog = builder.create()
+            dialog.show()
+        } else {
+            showToast("لطفا اول اتصال را قطع کنید")
+        }
+    }
+
     /**
      * Main Drawer
      */
@@ -274,6 +335,5 @@ public class MainActivity {
             Log.e(AppConfig.ANG_PACKAGE, "asset copy failed", e);
         }
     }
-
 
 }

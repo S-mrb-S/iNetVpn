@@ -1,33 +1,51 @@
 package sp.inetvpn.setup;
 
-import android.content.Context;
+import static sp.inetvpn.MainApplication.device_id;
+import static sp.inetvpn.data.GlobalData.settingsStorage;
+
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
 
 import com.tencent.mmkv.MMKV;
 
 import java.util.Calendar;
 
 import de.blinkt.openvpn.core.App;
+import sp.inetvpn.BuildConfig;
 import sp.inetvpn.R;
 import sp.inetvpn.util.LogManager;
 
 public class MainApplication {
-    private final Context context;
+    private final sp.inetvpn.MainApplication context;
+    public static final String PREF_LAST_VERSION = "pref_last_version";
 
-    public MainApplication(Context context) {
+    public MainApplication(sp.inetvpn.MainApplication context) {
         this.context = context;
     }
 
     public void setupClass() {
-        // openvpn-client
         MMKV.initialize(context);
-
+        // openvpn-client
         App.setOpenVpn(context, "sp.inetvpn", "spinetvpn", "iNet");
-
         LogManager.setAppContext(context);
+
+        SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean firstRun = defaultSharedPreferences.getInt(PREF_LAST_VERSION, 0) != BuildConfig.VERSION_CODE;
+        if (firstRun)
+            defaultSharedPreferences.edit().putInt(PREF_LAST_VERSION, BuildConfig.VERSION_CODE).apply();
+
+        // device id
+        device_id = settingsStorage.getString("device_id", "NULL");
+        if (device_id.equals("NULL")) {
+            device_id = getUniqueKey();
+            settingsStorage.putString("device_id", device_id);
+            settingsStorage.putString("device_created", String.valueOf(System.currentTimeMillis()));
+        }
     }
 
     // for UsageActivity, Time for when installed app
