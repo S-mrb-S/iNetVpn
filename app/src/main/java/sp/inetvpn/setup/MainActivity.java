@@ -2,10 +2,14 @@ package sp.inetvpn.setup;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -32,11 +36,18 @@ import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import sp.inetvpn.BuildConfig;
 import sp.inetvpn.R;
 import sp.inetvpn.data.GlobalData;
 import sp.inetvpn.databinding.ActivityMainBinding;
 import sp.inetvpn.handler.CheckVipUser;
 import sp.inetvpn.handler.GetAllV2ray;
+import sp.inetvpn.handler.GetVersionApi;
+import sp.inetvpn.ui.FeedbackActivity;
+import sp.inetvpn.ui.InfoActivity;
+import sp.inetvpn.ui.LoginActivity;
+import sp.inetvpn.ui.SplitActivity;
+import sp.inetvpn.ui.UsageActivity;
 import sp.inetvpn.util.CountryListManager;
 import sp.inetvpn.util.ManageDisableList;
 
@@ -102,12 +113,7 @@ public class MainActivity {
                     GlobalData.defaultItemDialog,
                     (dialog, which) -> {
                         GlobalData.settingsStorage.putInt("default_connection_type", which);
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialog.dismiss();
-                            }
-                        }, 300);
+                        new Handler().postDelayed(dialog::dismiss, 300);
                         GlobalData.defaultItemDialog = which;
                         context.setFooterFromOtherClass(which);
                     });
@@ -327,6 +333,59 @@ public class MainActivity {
         } catch (Exception e) {
             Log.e(AppConfig.ANG_PACKAGE, "asset copy failed", e);
         }
+    }
+
+    /**
+     * navigation main
+     */
+    public void navigationListener(MenuItem item) {
+
+        int itemId = item.getItemId();
+
+        // switch doesn't work
+        if (itemId == R.id.settings) {
+            context.startActivity(new Intent(context, UsageActivity.class));
+            context.overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+        } else if (itemId == R.id.getUpdate) {
+            try {
+                GetVersionApi.setRetVersion(context, retVersion -> {
+                    try {
+                        if (retVersion != BuildConfig.VERSION_CODE) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse("https://panel.se2ven.sbs/api/update"));
+                            context.startActivity(intent);
+                        } else {
+                            context.showToast("برنامه شما به اخرین ورژن اپدیت هست!");
+                        }
+                    } catch (Exception e) {
+                        context.showToast("برنامه شما به اخرین ورژن اپدیت هست!!");
+                    }
+                });
+            } catch (ActivityNotFoundException activityNotFound) {
+                context.showToast("اپدیتی یافت نشد");
+            } catch (Exception ignored) {
+            }
+        } else if (itemId == R.id.splitTun) {
+            if (!GlobalData.isStart) {
+                context.startActivityForResult(new Intent(context, SplitActivity.class), 33);
+                context.overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+            } else {
+                context.showToast("لطفا اول اتصال را قطع کنید");
+            }
+        } else if (itemId == R.id.info) {
+            context.startActivity(new Intent(context, InfoActivity.class));
+            context.overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right);
+        } else if (itemId == R.id.logout) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            GlobalData.appValStorage.encode("isLoginBool", false);
+            context.startActivity(new Intent(context, LoginActivity.class));
+            context.overridePendingTransition(R.anim.fade_in_1000, R.anim.fade_out_500);
+            context.finish();
+        } else if (itemId == R.id.feedback) {
+            context.startActivity(new Intent(context, FeedbackActivity.class));
+            context.overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+        }
+
     }
 
 }

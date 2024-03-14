@@ -1,12 +1,10 @@
 package sp.inetvpn.ui
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.Uri
 import android.net.VpnService
 import android.os.Bundle
 import android.os.Handler
@@ -33,12 +31,10 @@ import de.blinkt.openvpn.core.OpenVPNService
 import de.blinkt.openvpn.core.OpenVPNService.setDefaultStatus
 import de.blinkt.openvpn.core.OpenVPNThread
 import de.blinkt.openvpn.core.VpnStatus
-import sp.inetvpn.BuildConfig
 import sp.inetvpn.R
 import sp.inetvpn.data.GlobalData
 import sp.inetvpn.data.GlobalData.appValStorage
 import sp.inetvpn.databinding.ActivityMainBinding
-import sp.inetvpn.handler.GetVersionApi
 import sp.inetvpn.state.MainActivity.vpnState
 import sp.inetvpn.util.CheckInternetConnection
 import sp.inetvpn.util.UsageConnectionManager
@@ -423,72 +419,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     // drawer options
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
-        when (item.itemId) {
-            R.id.settings -> {
-                // global settings and (usage)
-                startActivity(Intent(this, UsageActivity::class.java))
-                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)
-            }
-
-            R.id.getUpdate -> {
-
-                try {
-                    GetVersionApi.setRetVersion(
-                        this
-                    ) { retVersion ->
-                        try {
-                            if (retVersion != BuildConfig.VERSION_CODE) {
-                                val intent = Intent(Intent.ACTION_VIEW)
-                                intent.data = Uri.parse("https://panel.se2ven.sbs/api/update")
-                                startActivity(intent)
-                            } else {
-                                showToast("برنامه شما به اخرین ورژن اپدیت هست!")
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
-
-                } catch (activityNotFound: ActivityNotFoundException) {
-                    showToast("اپدیتی یافت نشد")
-                } catch (_: Exception) {
-                }
-            }
-
-            R.id.splitTun -> {
-                if (!GlobalData.isStart) {
-                    startActivityForResult(Intent(this, SplitActivity::class.java), 33)
-                    overridePendingTransition(
-                        R.anim.anim_slide_in_left,
-                        R.anim.anim_slide_out_right
-                    )
-                } else {
-                    showToast("لطفا اول اتصال را قطع کنید")
-                }
-            }
-
-            R.id.info -> {
-                startActivity(Intent(this, InfoActivity::class.java))
-                overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)
-            }
-
-            R.id.logout -> {
-                binding.drawerLayout.closeDrawer(GravityCompat.START)
-
-                appValStorage.encode("isLoginBool", false)
-
-                startActivity(Intent(this, LoginActivity::class.java))
-                overridePendingTransition(R.anim.fade_in_1000, R.anim.fade_out_500)
-                finish()
-            }
-
-            R.id.feedback -> {
-                startActivity(Intent(this, FeedbackActivity::class.java))
-                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
-            }
-        }
-//        binding.drawerLayout.closeDrawer(GravityCompat.START)
-
+        setup?.navigationListener(item)
+//        binding.drawerLayout.closeDrawer(GravityCompat.START) // bug
         return true
     }
 
