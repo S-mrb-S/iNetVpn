@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="نوع پروتکل"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="نوع پروتکل مورد نظر خود را انتخاب کنید"
+            android:textSize="@dimen/ts_H6" />
+
+        <RadioGroup
+            android:id="@+id/radio_portocol_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <RadioButton
+                android:id="@+id/v2ray_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:buttonTint="@color/colorBubble"
+                android:checked="true"
+                android:padding="8dp"
+                android:text="V2ray"
+                android:textColor="@color/colorText"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/open_vpn_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:buttonTint="@color/colorBubble"
+                android:checked="false"
+                android:padding="8dp"
+                android:text="OpenVpn"
+                android:textColor="@color/colorText"
+                android:textSize="15sp" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="10dp"
+        android:background="@color/colorLineUsageList" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="نوع پورت و DNS"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="نوع پورت و تنظیمات شخصی سازی اتصال را شخصی سازی کنید"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/open_setting_v2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_protocol"
+            android:text="VPN رفتن به تنظیمات"
+            android:textColor="@color/colorTextStats"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
