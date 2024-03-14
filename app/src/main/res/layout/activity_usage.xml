@@ -20,13 +20,13 @@
                 android:id="@+id/header_layout"
                 layout="@layout/header_layout_right" />
 
-            <include
-                android:id="@+id/data_usage"
-                layout="@layout/usage_data_view" />
+            <!--            <include-->
+            <!--                android:id="@+id/data_usage"-->
+            <!--                layout="@layout/usage_data_view" />-->
 
-            <include
-                android:id="@+id/time_usage"
-                layout="@layout/usage_time_view" />
+            <!--            <include-->
+            <!--                android:id="@+id/time_usage"-->
+            <!--                layout="@layout/usage_time_view" />-->
 
             <include
                 android:id="@+id/connections_usage"
