@@ -50,8 +50,7 @@ public class CheckLoginFromApi {
                     Log.d("RES s", String.valueOf(response));
                     resLogin = response;
                     checkLogin = checkUsernameAndPassword();
-                    checkLogin = saveInformation(context);
-                    callback.onLoginResult(checkLogin, message);
+                    checkInformation(context, callback);
                 },
                 error -> {
                     // Handle error
@@ -94,8 +93,7 @@ public class CheckLoginFromApi {
         return res;
     }
 
-    private static boolean saveInformation(Context context) {
-        boolean res = false;
+    private static void checkInformation(Context context, LoginCallback callback) {
         if (resLogin != null && checkLogin) {
             try {
                 // مقدار Token را دریافت می‌کنیم
@@ -103,24 +101,11 @@ public class CheckLoginFromApi {
                 VolleySingleton volleySingleton = new VolleySingleton(context);
 
                 JSONObject jsonBody = new JSONObject();
-
                 JsonObjectRequest sr = new JsonObjectRequest(Request.Method.POST, ApiData.ApiLoginCheckAdress, jsonBody,
                         response -> {
                             Log.d("RES sr", String.valueOf(response));
-                            try {
-
-                                // مقدار Status را دریافت می‌کنیم
-                                int status = response.getInt("Status");
-                                // مقدار CreationTime را دریافت می‌کنیم
-                                String creationTime = response.getJSONArray("Data").getJSONObject(0).getString("CreationTime");
-                                // مقدار ExternalUser را دریافت می‌کنیم
-                                String externalUser = response.getJSONArray("Data").getJSONObject(0).getString("ExternalUser");
-
-
-                            } catch (JSONException e) {
-                                message = "[Error] from smart check";
-                            }
-
+                            checkLogin = saveInformation(response);
+                            callback.onLoginResult(checkLogin, message);
                         },
                         error -> {
                             // Handle error
@@ -203,6 +188,34 @@ public class CheckLoginFromApi {
 //            message = "داده ای از طرف سرور یافت نشد!";
 //        }
 
+    }
+
+    private static boolean saveInformation(JSONObject resCheck) {
+        boolean res = false;
+        if (resCheck != null && checkLogin) {
+            try {
+                // مقدار Status را دریافت می‌کنیم
+                int status = resCheck.getInt("Status");
+                if (status == 0) {
+                    message = "";
+                    res = true;
+                    Log.d("R", "TRUE");
+                } else {
+                    Log.d("R", "status false");
+                }
+                // مقدار CreationTime را دریافت می‌کنیم
+                String creationTime = resCheck.getJSONArray("Data").getJSONObject(0).getString("CreationTime");
+                // مقدار ExternalUser را دریافت می‌کنیم
+                String externalUser = resCheck.getJSONArray("Data").getJSONObject(0).getString("ExternalUser");
+                Log.d("CT", creationTime);
+                Log.d("EU", externalUser);
+
+            } catch (JSONException e) {
+                message = "[Error] from smart check";
+            }
+        } else {
+            Log.d("R", "false");
+        }
         return res;
     }
 }
