@@ -1,4 +1,4 @@
-package sp.inetvpn.handler;
+package sp.inetvpn.api;
 
 import android.content.Context;
 import android.util.Log;

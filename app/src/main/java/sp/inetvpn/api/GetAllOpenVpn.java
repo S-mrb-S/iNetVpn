@@ -1,4 +1,4 @@
-package sp.inetvpn.handler;
+package sp.inetvpn.api;
 
 import android.content.Context;
 
@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import sp.inetvpn.data.GlobalData;
+import sp.inetvpn.handler.VolleySingleton;
 
 /**
  * by MehrabSp

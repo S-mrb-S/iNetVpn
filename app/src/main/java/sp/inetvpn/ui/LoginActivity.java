@@ -19,7 +19,7 @@ import java.util.Objects;
 
 import sp.inetvpn.MainApplication;
 import sp.inetvpn.R;
-import sp.inetvpn.handler.CheckLoginFromApi;
+import sp.inetvpn.api.CheckLoginFromApi;
 import sp.inetvpn.util.Animations;
 import sp.inetvpn.util.LogManager;
 

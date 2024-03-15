@@ -4,8 +4,8 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import sp.inetvpn.R
+import sp.inetvpn.api.SendFeedback
 import sp.inetvpn.databinding.ActivityFeedbackBinding
-import sp.inetvpn.handler.SendFeedback
 import sp.inetvpn.util.CheckInternetConnection
 
 class FeedbackActivity : Activity() {

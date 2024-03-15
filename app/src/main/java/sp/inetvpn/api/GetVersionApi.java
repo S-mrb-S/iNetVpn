@@ -1,4 +1,4 @@
-package sp.inetvpn.handler;
+package sp.inetvpn.api;
 
 import android.content.Context;
 
@@ -8,7 +8,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,31 +19,31 @@ import sp.inetvpn.data.GlobalData;
 /**
  * by MehrabSp
  */
-public class GetAllV2ray {
+public class GetVersionApi {
 
-    public interface V2rayCallback {
-        void onV2rayResult(String retV2ray);
+    public interface VersionCallback {
+        void onVersionResult(int retVersion);
     }
 
-    private static String resV2ray = null;
-    private static String retV2ray = null;
+    private static String resVersion = null;
+    private static int retVersion = 0;
 
-    public static void setRetV2ray(Context context, V2rayCallback callback) {
+    public static void setRetVersion(Context context, VersionCallback callback) {
         RequestQueue queue = Volley.newRequestQueue(context);
         //for POST requests, only the following line should be changed to
         StringRequest sr = new StringRequest(Request.Method.POST, GlobalData.ApiAdress,
                 response -> {
-                    resV2ray = response;
-                    retV2ray = checkV2ray();
-                    callback.onV2rayResult(retV2ray);
+//                    Log.d("SSS", response);
+                    resVersion = response;
+                    retVersion = checkV2ray();
+                    callback.onVersionResult(retVersion);
                 },
                 error -> {
-                    callback.onV2rayResult(retV2ray);
                 }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("query", GlobalData.ApiV2rayName);
+                params.put("query", GlobalData.ApiGetVersion);
                 return params;
             }
 
@@ -58,24 +57,18 @@ public class GetAllV2ray {
         queue.add(sr);
     }
 
-    private static String checkV2ray() {
-        String res = "";
+    private static int checkV2ray() {
+        int res = 0;
 
-        if (resV2ray != null) {
+        if (resVersion != null) {
             try {
-                JSONObject jsonResponse = new JSONObject(resV2ray);
+                JSONObject jsonResponse = new JSONObject(resVersion);
                 // دسترسی به مقدار result
                 boolean result = jsonResponse.getBoolean("result");
+                int versionCode = jsonResponse.getInt("versionCode");
 
                 if (result) {
-                    // دسترسی به مقادیر داخل data
-                    JSONArray dataArray = jsonResponse.getJSONArray("data");
-                    for (int i = 0; i < dataArray.length(); i++) {
-                        JSONObject dataObject = dataArray.getJSONObject(i);
-                        String connection = dataObject.getString("connection");
-
-                        res = connection + "\n" + res;
-                    }
+                    res = versionCode;
                 }
 
             } catch (JSONException e) {
@@ -84,6 +77,6 @@ public class GetAllV2ray {
         }
         return res;
     }
-}
 
+}
 
