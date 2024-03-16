@@ -1,7 +1,11 @@
 package sp.inetvpn.api;
 
+import static sp.inetvpn.data.GlobalData.appValStorage;
+
 import android.content.Context;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -19,6 +23,9 @@ import sp.inetvpn.handler.VolleySingleton;
 
 /**
  * by MehrabSp
+ * این کلاس در اکتیویتی لاگین و لانچر استفاده میشود
+ *  کار این اکتیویتی گرفتن دو مقدار یوزرنیم و پسورد هست و با ان اطلاعات را به ایپی ارسال و توکن و سایر اطلاعات کاربر را دریافت و ذخیره میکند
+ *  وقتی خروجی این کلاس استفاده شده درست شود یعنی اطلاعات از جمله توکن و اطلاعات کامل کاربر به همراه همان یوزرنیم و پسورد ذخیره میشود
  */
 public class CheckLoginFromApi {
 
@@ -27,12 +34,13 @@ public class CheckLoginFromApi {
     }
 
     private static Boolean checkLogin = false;
-    private static JSONObject resLogin = null;
-    private static String message = null;
+    private static String message = "مقداری دریافت نشد";
+    private static Boolean statusFinall = false;
 
     public static void checkIsLogin(Context context, String username, String password, LoginCallback callback) {
         VolleySingleton volleySingleton = new VolleySingleton(context);
 
+        // ریختن مقادیر و دادن ان به ایپی به صورت جیسون
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("Domain", ApiData.domin);
@@ -45,12 +53,26 @@ public class CheckLoginFromApi {
             return;
         }
 
-        JsonObjectRequest sr = new JsonObjectRequest(Request.Method.POST, ApiData.ApiLoginUserAdress, jsonBody,
+        // ارسال درخواست به ایپی مدنظر
+        JsonObjectRequest sr = new JsonObjectRequest(Request.Method.POST, ApiData.ApiLoginUserAddress, jsonBody,
                 response -> {
-                    Log.d("RES s", String.valueOf(response));
-                    resLogin = response;
-                    checkLogin = checkUsernameAndPassword();
-                    checkInformation(context, callback);
+                    try {
+                        if (response != null) {
+                            if (checkUsernameAndPassword(response)) {
+                                // save information
+                                appValStorage.encode("UserName", username);
+                                appValStorage.encode("Password", password);
+                                // save, check, callback here
+                                checkInformation(context, response, callback);
+                            }
+                        }
+                    } catch (Exception ignore) {
+                    } finally {
+                        // در صورتی که مقدار دریافتی خالی یا پسورد یا یوزرنیم اشتباه بود مقدار ها برگشت داده شود
+                        if (!statusFinall) {
+                            callback.onLoginResult(checkLogin, message);
+                        }
+                    }
                 },
                 error -> {
                     // Handle error
@@ -70,18 +92,19 @@ public class CheckLoginFromApi {
         volleySingleton.addToRequestQueue(sr);
     }
 
-    private static boolean checkUsernameAndPassword() {
+    private static boolean checkUsernameAndPassword(JSONObject response) {
         boolean res = false;
         message = "ورود امکان پذیر نمی باشد";
-        if (resLogin != null) {
             try {
                 // مقدار Status را دریافت می‌کنیم
-                int status = resLogin.getInt("Status");
+                int status = response.getInt("Status");
 
                 if (status == 0) {
-                    message = "";
-                    res = true;
-                    Log.d("res", "true");
+                    message = "وارد شدید";
+                    res = true; // ذخیره مقدار برگشتی
+
+                    // مقدار برگشتی درست نمایش داده میشود و اگر مشکلی در دریافت اطلاعات یا توکن باشد این مقدار در تابع های دیگر نادرست میشود
+                    checkLogin = true; // ذخیره مقدار برای کالبک
                 } else if (status == -1) {
                     message = "پسورد یا یوزرنیم اشتباه است";
                 }
@@ -89,44 +112,29 @@ public class CheckLoginFromApi {
             } catch (JSONException e) {
                 message = "[Error] json response";
             }
-        }
         return res;
     }
 
-    private static void checkInformation(Context context, LoginCallback callback) {
-        if (resLogin != null && checkLogin) {
+    private static void checkInformation(Context context, JSONObject response, LoginCallback callback) {
+        // در اینجا اطلاعات درست بوده و توکن را بررسی میکنیم
             try {
-                // مقدار Token را دریافت می‌کنیم
-                String token = resLogin.getJSONArray("Data").getJSONObject(0).getString("Token");
+                // مقدار Token را استخراج میکنیم
+                String token = response.getJSONArray("Data").getJSONObject(0).getString("Token");
+                // در اینجا توکن را داریم و اطلاعات درست هست. پس اطلاعات خود کاربر را بدست میاریم
+                if (token.isEmpty()) {
+                    message = "توکنی دریافت نشد";
+                    checkLogin = false;
+                }
+                // ذخیره توکن
+                ApiData.UserToken = token;
+                // درخواست را ایجاد میکنیم
                 VolleySingleton volleySingleton = new VolleySingleton(context);
-
-                JSONObject jsonBody = new JSONObject();
-                JsonObjectRequest sr = new JsonObjectRequest(Request.Method.POST, ApiData.ApiLoginCheckAdress, jsonBody,
-                        response -> {
-                            Log.d("RES sr", String.valueOf(response));
-                            checkLogin = saveInformation(response);
-                            callback.onLoginResult(checkLogin, message);
-                        },
-                        error -> {
-                            // Handle error
-                            message = "[Error] from api";
-                        }
-                ) {
-                    @Override
-                    public Map<String, String> getHeaders() {
-                        Map<String, String> headers = new HashMap<>();
-                        headers.put("Content-Type", "application/json");
-                        headers.put("Authorization", "Bearer " + token);
-                        // Add other headers if needed
-                        return headers;
-                    }
-                };
+                JsonObjectRequest sr = getJsonObjectRequest(token, callback);
                 volleySingleton.addToRequestQueue(sr);
 
             } catch (JSONException e) {
                 message = "[Error] json response";
             }
-        }
 
 //        if (resLogin != null) {
 //            try {
@@ -190,32 +198,56 @@ public class CheckLoginFromApi {
 
     }
 
-    private static boolean saveInformation(JSONObject resCheck) {
-        boolean res = false;
-        if (resCheck != null && checkLogin) {
+    @NonNull
+    private static JsonObjectRequest getJsonObjectRequest(String token, LoginCallback callback) {
+        // بدنه خالی را ایجاد میکنیم
+        JSONObject jsonBody = new JSONObject();
+
+        // ایپی مورد نظر برای چک کردن توکن و دریافت اطلاعات کاربر
+        JsonObjectRequest sr = new JsonObjectRequest(Request.Method.POST, ApiData.ApiLoginCheckAddress, jsonBody,
+                response -> saveInformation(response, callback),
+                error -> {
+                    // Handle error
+                    message = "[Error] from api";
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                headers.put("Authorization", "Bearer " + token);
+                // Add other headers if needed
+                return headers;
+            }
+        };
+        return sr;
+    }
+
+    private static void saveInformation(JSONObject response, LoginCallback callback) {
             try {
                 // مقدار Status را دریافت می‌کنیم
-                int status = resCheck.getInt("Status");
-                if (status == 0) {
-                    message = "";
-                    res = true;
-                    Log.d("R", "TRUE");
+                int status = response.getInt("Status");
+
+                if (status != 0) {
+                    checkLogin = false;
+                    message = "اطلاعات دریافتی نادرست است";
                 } else {
-                    Log.d("R", "status false");
+                    // مقدار CreationTime را دریافت می‌کنیم
+                    String creationTime = response.getJSONArray("Data").getJSONObject(0).getString("CreationTime");
+                    // مقدار ExternalUser را دریافت می‌کنیم
+                    String externalUser = response.getJSONArray("Data").getJSONObject(0).getString("ExternalUser");
+                    Log.d("CT", creationTime);
+                    Log.d("EU", externalUser);
+
                 }
-                // مقدار CreationTime را دریافت می‌کنیم
-                String creationTime = resCheck.getJSONArray("Data").getJSONObject(0).getString("CreationTime");
-                // مقدار ExternalUser را دریافت می‌کنیم
-                String externalUser = resCheck.getJSONArray("Data").getJSONObject(0).getString("ExternalUser");
-                Log.d("CT", creationTime);
-                Log.d("EU", externalUser);
 
             } catch (JSONException e) {
                 message = "[Error] from smart check";
             }
-        } else {
-            Log.d("R", "false");
-        }
-        return res;
+
+        // save bool here
+        appValStorage.encode("isLoginBool", checkLogin);
+        statusFinall = true;
+        callback.onLoginResult(checkLogin, message);
     }
 }

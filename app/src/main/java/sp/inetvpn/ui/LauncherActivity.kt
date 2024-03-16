@@ -7,11 +7,10 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import com.xray.lite.ui.BaseActivity
-import org.json.JSONException
-import org.json.JSONObject
+import androidx.appcompat.app.AppCompatActivity
 import sp.inetvpn.MainApplication
 import sp.inetvpn.R
+import sp.inetvpn.api.CheckLoginFromApi
 import sp.inetvpn.api.GetAllOpenVpn
 import sp.inetvpn.data.GlobalData
 import sp.inetvpn.databinding.ActivityLauncherBinding
@@ -19,10 +18,12 @@ import sp.inetvpn.util.Animations
 import sp.inetvpn.util.CheckInternetConnection
 import sp.inetvpn.util.LogManager
 
-class LauncherActivity : BaseActivity() {
+class LauncherActivity : AppCompatActivity() {
     private var binding: ActivityLauncherBinding? = null
     private var FileDetails: String? = null
     private var isLoginBool = false
+    private var username: String? = null
+    private var password: String? = null
     private var backPressedTime: Long = 0
 
     override fun onResume() {
@@ -38,8 +39,14 @@ class LauncherActivity : BaseActivity() {
                 // کد انیمیشن و عملیات مربوطه اینجا قرار می‌گیرد
                 Animations.startAnimation(this, R.id.ll_welcome_details, R.anim.slide_up_800, true)
             }
+
             try {
                 isLoginBool = GlobalData.appValStorage.decodeBool("isLoginBool", false)
+                username = GlobalData.appValStorage.decodeString("UserName", null)
+                password = GlobalData.appValStorage.decodeString("Password", null)
+                if (username == null && password == null) {
+                    isLoginBool = false
+                }
             } catch (e: Exception) {
                 val params = Bundle()
                 params.putString("device_id", MainApplication.device_id)
@@ -48,8 +55,9 @@ class LauncherActivity : BaseActivity() {
             } finally {
                 checkInternetLayer()
             }
+
         } catch (e: Exception) {
-            throw RuntimeException(e)
+            Toast.makeText(this@LauncherActivity, "ERROR::", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -62,10 +70,32 @@ class LauncherActivity : BaseActivity() {
 
     private fun checkInternetLayer() {
         if (CheckInternetConnection.netCheck(this)) {
-            appDetails
+            checkLayer2()
         } else {
             binding!!.animationLayout.tvStatus.text = GlobalData.disconnected
             threadCheckInternet()
+        }
+    }
+
+    private fun checkLayer2() {
+        if (isLoginBool) {
+            Toast.makeText(this, "قبلا لاگین کردین. دریافت توکن و سرور ها", Toast.LENGTH_SHORT)
+                .show()
+            CheckLoginFromApi.checkIsLogin(
+                this@LauncherActivity, username, password
+            ) { isLogin: Boolean, _ ->
+                if (isLogin) {
+                    appDetails
+                    Toast.makeText(this, "توکن جدید دریافت شد!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "توکن جدید دریافت نشد!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            val welcome = Intent(this@LauncherActivity, LoginActivity::class.java)
+            startActivity(welcome)
+            overridePendingTransition(R.anim.fade_in_1000, R.anim.fade_out_500)
+            finish()
         }
     }
 
@@ -104,23 +134,25 @@ class LauncherActivity : BaseActivity() {
     private val appDetails: Unit
         get() {
             binding!!.animationLayout.tvStatus.text = GlobalData.get_info_from_app
-            GetAllOpenVpn.setRetOpenV(this@LauncherActivity) { content: String? ->
-                if (content != null) {
-                    try {
-                        val jsonResponse = JSONObject(content)
-                        val result = jsonResponse.getBoolean("result")
-                        if (result) {
-                            Log.d("res of retopenv", content)
-                            handleValidResult(content)
-                        } else {
-                            handleInvalidResult()
-                        }
-                    } catch (e: JSONException) {
-                        handleException("اطلاعات به درستی تبدیل نشدن!")
-                    }
-                } else {
-                    handleEmptyContent()
-                }
+            GetAllOpenVpn.getAllServers(this@LauncherActivity) { isContent: Boolean?, message: String? ->
+                Log.d("FROM L", "L: " + isContent)
+                Log.d("FROM L", "L: " + message)
+//                if (content != null) {
+//                    try {
+//                        val jsonResponse = JSONObject(content)
+//                        val result = jsonResponse.getBoolean("result")
+//                        if (result) {
+//                            Log.d("res of retopenv", content)
+//                            handleValidResult(content)
+//                        } else {
+//                            handleInvalidResult()
+//                        }
+//                    } catch (e: JSONException) {
+//                        handleException("اطلاعات به درستی تبدیل نشدن!")
+//                    }
+//                } else {
+//                    handleEmptyContent()
+//                }
             }
         }
 
@@ -161,9 +193,6 @@ class LauncherActivity : BaseActivity() {
                 startActivity(main)
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
             } else {
-                val welcome = Intent(this@LauncherActivity, LoginActivity::class.java)
-                startActivity(welcome)
-                overridePendingTransition(R.anim.fade_in_1000, R.anim.fade_out_500)
             }
         } finally {
             finish()

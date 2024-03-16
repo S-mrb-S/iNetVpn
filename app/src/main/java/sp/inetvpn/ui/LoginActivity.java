@@ -1,14 +1,12 @@
 package sp.inetvpn.ui;
 
-import static sp.inetvpn.data.GlobalData.appValStorage;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -30,15 +28,8 @@ public class LoginActivity extends AppCompatActivity {
     Button btn_welcome_later;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        txtUsername = findViewById(R.id.inputUsername);
-        txtPassword = findViewById(R.id.inputPassword);
-        statusIsLogin = findViewById(R.id.statusIsLogin);
-
-        btn_welcome_later = findViewById(R.id.btn_welcome_later);
+    protected void onResume() {
+        super.onResume();
 
         Handler handler = new Handler();
         handler.postDelayed(() -> Animations.startAnimation(LoginActivity.this, R.id.ll_main_layout_login, R.anim.slide_up_800, true), 500);
@@ -83,6 +74,17 @@ public class LoginActivity extends AppCompatActivity {
                 handlerS.postDelayed(this::saveAndFinish, 1000);
             }
         });
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        txtUsername = findViewById(R.id.inputUsername);
+        txtPassword = findViewById(R.id.inputPassword);
+        statusIsLogin = findViewById(R.id.statusIsLogin);
+        btn_welcome_later = findViewById(R.id.btn_welcome_later);
 
     }
 
@@ -104,14 +106,13 @@ public class LoginActivity extends AppCompatActivity {
         String inputPassText = Objects.requireNonNull(txtPassword.getText()).toString();
 
         CheckLoginFromApi.checkIsLogin(LoginActivity.this, inputUserText, inputPassText, (isLogin, message) -> {
-            appValStorage.encode("isLoginBool", isLogin);
-
             if (isLogin){
                 try {
-                    Intent Main = new Intent(LoginActivity.this, MainActivity.class);
-                    Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(Main);
-                    overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+                    Toast.makeText(this, "Login success, get servers", Toast.LENGTH_SHORT).show();
+//                    Intent Main = new Intent(LoginActivity.this, MainActivity.class);
+//                    Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                    startActivity(Main);
+//                    overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
                 } catch (Exception e) {
                     Bundle params = new Bundle();
                     params.putString("device_id", MainApplication.device_id);
