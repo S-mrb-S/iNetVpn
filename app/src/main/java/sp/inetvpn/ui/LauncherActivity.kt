@@ -85,7 +85,7 @@ class LauncherActivity : AppCompatActivity() {
                 this@LauncherActivity, username, password
             ) { isLogin: Boolean, _ ->
                 if (isLogin) {
-                    appDetails
+                    getServers()
                     Toast.makeText(this, "توکن جدید دریافت شد!", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "توکن جدید دریافت نشد!", Toast.LENGTH_SHORT).show()
@@ -131,12 +131,12 @@ class LauncherActivity : AppCompatActivity() {
         }.start()
     }
 
-    private val appDetails: Unit
-        get() {
-            binding!!.animationLayout.tvStatus.text = GlobalData.get_info_from_app
-            GetAllOpenVpn.getAllServers(this@LauncherActivity) { isContent: Boolean?, message: String? ->
-                Log.d("FROM L", "L: " + isContent)
-                Log.d("FROM L", "L: " + message)
+    private fun getServers() {
+        Log.d("CALL", "CALL SERVERS")
+        binding!!.animationLayout.tvStatus.text = GlobalData.get_info_from_app
+        GetAllOpenVpn.getAllServers(this@LauncherActivity) { isContent: Boolean?, message: String? ->
+            Log.d("FROM L", "L: " + isContent)
+            Log.d("FROM L", "L: " + message)
 //                if (content != null) {
 //                    try {
 //                        val jsonResponse = JSONObject(content)
@@ -153,8 +153,8 @@ class LauncherActivity : AppCompatActivity() {
 //                } else {
 //                    handleEmptyContent()
 //                }
-            }
         }
+    }
 
     // Methods for handling different scenarios
     private fun handleValidResult(content: String) {

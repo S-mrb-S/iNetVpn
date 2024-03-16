@@ -35,7 +35,6 @@ public class CheckLoginFromApi {
 
     private static Boolean checkLogin = false;
     private static String message = "مقداری دریافت نشد";
-    private static Boolean statusFinall = false;
 
     public static void checkIsLogin(Context context, String username, String password, LoginCallback callback) {
         VolleySingleton volleySingleton = new VolleySingleton(context);
@@ -56,20 +55,18 @@ public class CheckLoginFromApi {
         // ارسال درخواست به ایپی مدنظر
         JsonObjectRequest sr = new JsonObjectRequest(Request.Method.POST, ApiData.ApiLoginUserAddress, jsonBody,
                 response -> {
-                    try {
-                        if (response != null) {
-                            if (checkUsernameAndPassword(response)) {
-                                // save information
-                                appValStorage.encode("UserName", username);
-                                appValStorage.encode("Password", password);
-                                // save, check, callback here
-                                checkInformation(context, response, callback);
-                            }
-                        }
-                    } catch (Exception ignore) {
-                    } finally {
-                        // در صورتی که مقدار دریافتی خالی یا پسورد یا یوزرنیم اشتباه بود مقدار ها برگشت داده شود
-                        if (!statusFinall) {
+                    if (response == null) {
+                        callback.onLoginResult(checkLogin, message);
+                    } else {
+//                    // مقدار برگشتی درست نمایش داده میشود و اگر مشکلی در دریافت اطلاعات یا توکن باشد این مقدار در تابع های دیگر نادرست میشود
+                        checkLogin = checkUsernameAndPassword(response);
+                        if (checkLogin) {
+                            // save information
+                            appValStorage.encode("UserName", username);
+                            appValStorage.encode("Password", password);
+                            // save, check, callback here
+                            checkInformation(context, response, callback);
+                        } else {
                             callback.onLoginResult(checkLogin, message);
                         }
                     }
@@ -102,9 +99,6 @@ public class CheckLoginFromApi {
                 if (status == 0) {
                     message = "وارد شدید";
                     res = true; // ذخیره مقدار برگشتی
-
-                    // مقدار برگشتی درست نمایش داده میشود و اگر مشکلی در دریافت اطلاعات یا توکن باشد این مقدار در تابع های دیگر نادرست میشود
-                    checkLogin = true; // ذخیره مقدار برای کالبک
                 } else if (status == -1) {
                     message = "پسورد یا یوزرنیم اشتباه است";
                 }
@@ -247,7 +241,6 @@ public class CheckLoginFromApi {
 
         // save bool here
         appValStorage.encode("isLoginBool", checkLogin);
-        statusFinall = true;
         callback.onLoginResult(checkLogin, message);
     }
 }

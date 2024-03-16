@@ -203,7 +203,7 @@ public class MainActivity {
     // save default v2ray config from api
     private void initializeApp() {
         MmkvManager.INSTANCE.removeAllServer();
-        GetAllV2ray.setRetV2ray((Context) context, (GetAllV2ray.V2rayCallback) retV2ray -> {
+        GetAllV2ray.setRetV2ray(context, retV2ray -> {
             try {
                 importBatchConfig(retV2ray, "");
             } catch (Exception e) {

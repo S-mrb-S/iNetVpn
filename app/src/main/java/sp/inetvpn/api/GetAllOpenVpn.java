@@ -141,12 +141,12 @@ public class GetAllOpenVpn {
             JsonObjectRequest sr = new JsonObjectRequest(Request.Method.POST, ApiData.ApiGetServersAddress, jsonBody,
                     response -> {
                         Log.d("RES os sr", String.valueOf(response));
-//                        checkLogin = saveInformation(response, token);
-//                            callback.onLoginResult(checkLogin, message);
+                        checkStatus = checkAndSaveLayer(response);
+                        callback.onOpenVResult(checkStatus, message);
                     },
                     error -> {
                         // Handle error
-                        //message = "[Error] from api";
+                        message = "[Error] from api";
                     }
             ) {
                 @Override
@@ -165,42 +165,44 @@ public class GetAllOpenVpn {
         }
     }
 
-//    private static boolean saveInformation(JSONObject resCheck, String token) {
-//        boolean res = false;
-//        if (resCheck != null && checkLogin) {
-//            try {
-//                // مقدار Status را دریافت می‌کنیم
-//                int status = resCheck.getInt("Status");
-//                if (status == 0) {
-//                    //message = "";
-//                    res = true;
-//
-//                    GlobalData.appValStorage.putString("basic_info", "basic_info");
-//                    GlobalData.appValStorage.putString("first_login", "first_login"); //
-//                    GlobalData.appValStorage.putString("first_connection", "first_connection"); //
-//                    GlobalData.appValStorage.putString("nearest_exp_date", "nearest_exp_date"); //
-//                    GlobalData.appValStorage.putString("user_id", "user_id");
-//                    GlobalData.appValStorage.putString("expiration", "expiration");
-//                    GlobalData.appValStorage.putString("token_user", token);
-//                    GlobalData.appValStorage.putInt("days", 30);
-//                    Log.d("R", "TRUE");
-//                } else {
-//                    Log.d("R", "status false");
-//                }
-//                // مقدار CreationTime را دریافت می‌کنیم
-//                String creationTime = resCheck.getJSONArray("Data").getJSONObject(0).getString("CreationTime");
-//                // مقدار ExternalUser را دریافت می‌کنیم
-//                String externalUser = resCheck.getJSONArray("Data").getJSONObject(0).getString("ExternalUser");
-//                Log.d("CT", creationTime);
-//                Log.d("EU", externalUser);
-//
-//            } catch (JSONException e) {
-//                //message = "[Error] from smart check";
-//            }
-//        } else {
-//            Log.d("R", "false");
-//        }
-//        return res;
-//    }
+    private static boolean checkAndSaveLayer(JSONObject response) {
+        boolean isSave = false;
+        try {
+            // مقدار Status را دریافت می‌کنیم
+            int status = response.getInt("Status");
+            if (status == 0) {
+
+                // آرایه‌ی Data را از JSON بدست می‌آوریم
+                JSONArray dataArray = response.getJSONArray("Data");
+
+                // برای هر آیتم در آرایه Data
+                for (int i = 0; i < dataArray.length(); i++) {
+                    // درآیتم فعلی
+                    JSONObject item = dataArray.getJSONObject(i);
+
+                    // مقادیر دیگر مورد نظر را استخراج می‌کنیم
+                    int rasID = item.getInt("RasID");
+                    String rasTitle = item.getString("RasTitle");
+                    String rasIP = item.getString("RasIP");
+                    // و غیره برای سایر مقادیر
+
+                    // مقادیر استخراج شده را چاپ می‌کنیم
+                    Log.d("RasID: ", String.valueOf(rasID));
+                    Log.d("RasTitle: ", rasTitle);
+                    Log.d("RasIP: ", rasIP);
+                    // و غیره برای سایر مقادیر
+                }
+
+                isSave = true;
+            } else {
+                message = "سرور ها به درستی دریافت نشدن";
+            }
+
+        } catch (JSONException e) {
+            message = "[ERROR] K5P";
+        }
+
+        return isSave;
+    }
 
 }
