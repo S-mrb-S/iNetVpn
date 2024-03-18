@@ -39,7 +39,6 @@ import rx.functions.Action1;
 import sp.inetvpn.BuildConfig;
 import sp.inetvpn.R;
 import sp.inetvpn.api.CheckVipUser;
-import sp.inetvpn.api.GetAllV2ray;
 import sp.inetvpn.api.GetVersionApi;
 import sp.inetvpn.data.GlobalData;
 import sp.inetvpn.databinding.ActivityMainBinding;
@@ -203,13 +202,13 @@ public class MainActivity {
     // save default v2ray config from api
     private void initializeApp() {
         MmkvManager.INSTANCE.removeAllServer();
-        GetAllV2ray.setRetV2ray(context, retV2ray -> {
-            try {
-                importBatchConfig(retV2ray, "");
-            } catch (Exception e) {
-                Toast.makeText(context, "داده های سرور v2ray ذخیره نشد!", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        GetAllV2ray.setRetV2ray(context, retV2ray -> {
+//            try {
+//                importBatchConfig(retV2ray, "");
+//            } catch (Exception e) {
+//                Toast.makeText(context, "داده های سرور v2ray ذخیره نشد!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     /**

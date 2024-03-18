@@ -97,21 +97,22 @@ public class ServersActivity extends Activity implements NavItemClickListener {
                 } catch (JSONException e) {
                     ShowNoServerLayout();
                 }
+
+                ServersAdapter adapter = new ServersAdapter(ServersActivity.this, openVpnServerListItemList);
+
+                // new adapter
+                binding.lsServersList.setLayoutManager(getLayoutManager());
+                binding.lsServersList.setItemAnimator(new FadeInAnimator());
+
+                AnimationAdapter defaultAdapter = new AlphaInAnimationAdapter(adapter);
+                defaultAdapter.setFirstOnly(true);
+                defaultAdapter.setDuration(500);
+                defaultAdapter.setInterpolator(new OvershootInterpolator(0.5f));
+                binding.lsServersList.setAdapter(defaultAdapter);
+
             } else {
                 ShowNoServerLayout();
             }
-
-            ServersAdapter adapter = new ServersAdapter(ServersActivity.this, openVpnServerListItemList);
-
-            // new adapter
-            binding.lsServersList.setLayoutManager(getLayoutManager());
-            binding.lsServersList.setItemAnimator(new FadeInAnimator());
-
-            AnimationAdapter defaultAdapter = new AlphaInAnimationAdapter(adapter);
-            defaultAdapter.setFirstOnly(true);
-            defaultAdapter.setDuration(500);
-            defaultAdapter.setInterpolator(new OvershootInterpolator(0.5f));
-            binding.lsServersList.setAdapter(defaultAdapter);
 
         }
     }
