@@ -3,6 +3,8 @@ package sp.inetvpn.api;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 
@@ -10,16 +12,23 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
 import sp.inetvpn.data.ApiData;
+import sp.inetvpn.data.UserData;
 import sp.inetvpn.handler.VolleySingleton;
-
+import sp.inetvpn.model.OpenVpnServerList;
 /**
  * by MehrabSp
  */
-public class GetAllOpenVpn {
+public class GetAllServers {
 
     public interface OpenVCallback {
         void onOpenVResult(Boolean retOpenV, String message);
@@ -181,16 +190,25 @@ public class GetAllOpenVpn {
                     JSONObject item = dataArray.getJSONObject(i);
 
                     // مقادیر دیگر مورد نظر را استخراج می‌کنیم
-                    int rasID = item.getInt("RasID");
                     String rasTitle = item.getString("RasTitle");
-                    String rasIP = item.getString("RasIP");
-                    // و غیره برای سایر مقادیر
 
-                    // مقادیر استخراج شده را چاپ می‌کنیم
-                    Log.d("RasID: ", String.valueOf(rasID));
-                    Log.d("RasTitle: ", rasTitle);
-                    Log.d("RasIP: ", rasIP);
-                    // و غیره برای سایر مقادیر
+                    if (rasTitle.equals("Open")) {
+                        UserData.OpenVpnCount += 1;
+                        String rasLocation = item.getString("RasLocation");
+                        String rasImage = item.getString("RasImageUrl");
+                        String rasContent = ReadLine(item.getString("ServiceFile1"));
+                        UserData.OpenVpnServerArray[UserData.OpenVpnCount][0] = String.valueOf(UserData.OpenVpnCount);
+                        UserData.OpenVpnServerArray[UserData.OpenVpnCount][1] = rasContent;
+                        UserData.OpenVpnServerArray[UserData.OpenVpnCount][2] = rasLocation;
+                        UserData.OpenVpnServerArray[UserData.OpenVpnCount][3] = rasImage;
+
+                        OpenVpnServerList OpenVpnServerList = getOpenVpnServerList(UserData.OpenVpnCount);
+                        UserData.OpenVpnServerListItemList.add(OpenVpnServerList);
+                    } else if (rasTitle.equals("V2ray")) {
+                        String rasExternalUser = item.getString("RasExternalUser");
+                        UserData.V2rayServers = UserData.V2rayServers + rasExternalUser + "\n";
+                    }
+
                 }
 
                 isSave = true;
@@ -203,6 +221,39 @@ public class GetAllOpenVpn {
         }
 
         return isSave;
+    }
+
+    private static String ReadLine(String urlString) {
+        String contentReturn = null;
+        try {
+            URL url = new URL(urlString);
+            URLConnection connection = url.openConnection();
+            InputStream inputStream = connection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder content = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+            reader.close();
+
+            // Use the content of the file (in 'content' variable) as needed
+            contentReturn = content.toString();
+
+        } catch (IOException ignore) {
+        }
+
+        return contentReturn;
+    }
+
+    @NonNull
+    private static OpenVpnServerList getOpenVpnServerList(int x) {
+        OpenVpnServerList OpenVpnServerList = new OpenVpnServerList();
+        OpenVpnServerList.SetID(UserData.OpenVpnServerArray[x][0]);
+        OpenVpnServerList.SetFileContent(UserData.OpenVpnServerArray[x][1]);
+        OpenVpnServerList.SetCountry(UserData.OpenVpnServerArray[x][2]);
+        OpenVpnServerList.SetImage(UserData.OpenVpnServerArray[x][3]);
+        return OpenVpnServerList;
     }
 
 }

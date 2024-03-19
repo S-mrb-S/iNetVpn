@@ -3,6 +3,7 @@ package sp.inetvpn.ui;
 import static sp.inetvpn.data.GlobalData.connectionStorage;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import sp.inetvpn.R;
 import sp.inetvpn.interfaces.NavItemClickListener;
 import sp.inetvpn.model.OpenVpnServerList;
-import sp.inetvpn.util.CountryListManager;
 
 /**
  * Created by Daichi Furiya / Wasabeef on 2020/08/26.
@@ -55,14 +57,16 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView tv_country, tv_name;
+        public TextView
+//                tv_country,
+                tv_name;
         public ImageView iv_flag;
         public LinearLayout ll_item;
         OpenVpnServerList openVpnServerList;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            tv_country = itemView.findViewById(R.id.tv_country);
+//            tv_country = itemView.findViewById(R.id.tv_country);
             tv_name = itemView.findViewById(R.id.tv_name);
             iv_flag = itemView.findViewById(R.id.iv_flag);
             ll_item = itemView.findViewById(R.id.ll_item);
@@ -74,20 +78,20 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
             this.openVpnServerList = dataSet.get(position);
 
             // bind view
-            tv_country.setText(openVpnServerList.GetImage());
+//            tv_country.setText(openVpnServerList.GetImage());
             tv_name.setText(openVpnServerList.GetCountry());
-            CountryListManager.OpenVpnSetServerList(openVpnServerList.GetImage(), iv_flag);
+            Picasso.get().load(openVpnServerList.GetImage()).into(iv_flag);
 
             // set item background
             mSelectedPosition = Integer.parseInt(connectionStorage.getString("id", "-1"));
 
             if (position == mSelectedPosition) {
                 ll_item.setBackgroundColor(context.getResources().getColor(R.color.colorStatsBlue));
-                tv_country.setTextColor(context.getResources().getColor(R.color.colorTextStats));
+//                tv_country.setTextColor(context.getResources().getColor(R.color.colorTextStats));
                 tv_name.setTextColor(context.getResources().getColor(R.color.colorTextStats));
             } else {
                 ll_item.setBackgroundColor(context.getResources().getColor(R.color.colorBackground));
-                tv_country.setTextColor(context.getResources().getColor(R.color.colorText));
+//                tv_country.setTextColor(context.getResources().getColor(R.color.colorText));
                 tv_name.setTextColor(context.getResources().getColor(R.color.colorText));
             }
 
@@ -97,6 +101,7 @@ public class ServersAdapter extends RecyclerView.Adapter<ServersAdapter.ViewHold
         public void onClick(View v) {
             connectionStorage.putString("id", openVpnServerList.GetID());
             connectionStorage.putString("file", openVpnServerList.GetFileContent());
+            Log.d("FILE C CLICKED", openVpnServerList.GetFileContent());
             connectionStorage.putString("country", openVpnServerList.GetCountry());
             connectionStorage.putString("image", openVpnServerList.GetImage());
             int previousSelectedPosition = mSelectedPosition;

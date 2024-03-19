@@ -19,7 +19,7 @@ class InfoActivity : BaseActivity() {
         val basicInfo = GlobalData.appValStorage.getString("basic_info", null)
         val firstConnection = GlobalData.appValStorage.getString("first_connection", null)
         val expiration = GlobalData.appValStorage.getString("expiration", null)
-        val userId = GlobalData.appValStorage.getString("usernameLogin", null)
+        val userId = GlobalData.appValStorage.decodeString("UserName", null)
         val days = GlobalData.appValStorage.getInt("days", 0)
 
         binding!!.userId.text = userId

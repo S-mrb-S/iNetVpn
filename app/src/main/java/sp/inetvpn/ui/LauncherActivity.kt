@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import sp.inetvpn.MainApplication
 import sp.inetvpn.R
 import sp.inetvpn.api.CheckLoginFromApi
-import sp.inetvpn.api.GetAllOpenVpn
+import sp.inetvpn.api.GetAllServers
 import sp.inetvpn.data.GlobalData
 import sp.inetvpn.databinding.ActivityLauncherBinding
 import sp.inetvpn.util.Animations
@@ -20,7 +20,6 @@ import sp.inetvpn.util.LogManager
 
 class LauncherActivity : AppCompatActivity() {
     private var binding: ActivityLauncherBinding? = null
-    private var FileDetails: String? = null
     private var isLoginBool = false
     private var username: String? = null
     private var password: String? = null
@@ -134,43 +133,17 @@ class LauncherActivity : AppCompatActivity() {
     private fun getServers() {
         Log.d("CALL", "CALL SERVERS")
         binding!!.animationLayout.tvStatus.text = GlobalData.get_info_from_app
-        GetAllOpenVpn.getAllServers(this@LauncherActivity) { isContent: Boolean?, message: String? ->
-            Log.d("FROM L", "L: " + isContent)
-            Log.d("FROM L", "L: " + message)
-//                if (content != null) {
-//                    try {
-//                        val jsonResponse = JSONObject(content)
-//                        val result = jsonResponse.getBoolean("result")
-//                        if (result) {
-//                            Log.d("res of retopenv", content)
-//                            handleValidResult(content)
-//                        } else {
-//                            handleInvalidResult()
-//                        }
-//                    } catch (e: JSONException) {
-//                        handleException("اطلاعات به درستی تبدیل نشدن!")
-//                    }
-//                } else {
-//                    handleEmptyContent()
-//                }
+        GetAllServers.getAllServers(this@LauncherActivity) { isContent: Boolean, message: String? ->
+            if (isContent) {
+                validResult()
+            } else {
+                if (message != null) {
+                    handleException(message)
+                } else {
+                    handleException("اطلاعات به درستی تبدیل نشدن!")
+                }
+            }
         }
-    }
-
-    // Methods for handling different scenarios
-    private fun handleValidResult(content: String) {
-        FileDetails = content
-        GlobalData.GetAllOpenVpnContent = content
-        getFileDetails()
-    }
-
-    private fun handleInvalidResult() {
-        binding!!.animationLayout.tvStatus.text = "اطلاعات صحیح نمی‌باشد.."
-        checkInternetLayer()
-    }
-
-    private fun handleEmptyContent() {
-        binding!!.animationLayout.tvStatus.text = "اطلاعات دریافت خالی می‌باشد!"
-        checkInternetLayer()
     }
 
     private fun handleException(message: String) {
@@ -178,7 +151,7 @@ class LauncherActivity : AppCompatActivity() {
         checkInternetLayer()
     }
 
-    private fun getFileDetails() {
+    private fun validResult() {
         try {
             binding!!.animationLayout.tvStatus.text = GlobalData.get_details_from_file
         } finally {
@@ -188,12 +161,9 @@ class LauncherActivity : AppCompatActivity() {
 
     private fun endThisActivityWithCheck() {
         try {
-            if (isLoginBool) {
                 val main = Intent(this@LauncherActivity, MainActivity::class.java)
                 startActivity(main)
                 overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
-            } else {
-            }
         } finally {
             finish()
         }

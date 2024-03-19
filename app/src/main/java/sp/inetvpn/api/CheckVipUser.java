@@ -9,8 +9,8 @@ public class CheckVipUser {
     public static void checkInformationUser(MainActivity context) {
         if (CheckInternetConnection.netCheck(context)) {
 
-            String uL = GlobalData.appValStorage.getString("usernameLogin", null);
-            String uU = GlobalData.appValStorage.getString("usernamePassword", null);
+            String uL = GlobalData.appValStorage.decodeString("UserName", null);
+            String uU = GlobalData.appValStorage.decodeString("Password", null);
 
 
 //            CheckLoginFromApi.checkIsLogin(

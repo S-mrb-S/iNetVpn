@@ -1,5 +1,6 @@
 package sp.inetvpn.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -18,6 +19,7 @@ import java.util.Objects;
 import sp.inetvpn.MainApplication;
 import sp.inetvpn.R;
 import sp.inetvpn.api.CheckLoginFromApi;
+import sp.inetvpn.api.GetAllServers;
 import sp.inetvpn.util.Animations;
 import sp.inetvpn.util.LogManager;
 
@@ -109,19 +111,32 @@ public class LoginActivity extends AppCompatActivity {
             if (isLogin){
                 try {
                     Toast.makeText(this, "Login success, get servers", Toast.LENGTH_SHORT).show();
-//                    Intent Main = new Intent(LoginActivity.this, MainActivity.class);
-//                    Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    startActivity(Main);
-//                    overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+                    getServers();
                 } catch (Exception e) {
                     Bundle params = new Bundle();
                     params.putString("device_id", MainApplication.device_id);
                     params.putString("exception", "MAA1" + e);
                     LogManager.logEvent(params);
-                } finally {
-                    finish();
                 }
+//                finally {
+//                    finish();
+//                }
             }else{
+                statusIsLogin.setText(message);
+                statusIsLogin.setTextColor(ContextCompat.getColor(this, R.color.colorPingRed));
+                setActionInputText(true);
+            }
+        });
+    }
+
+    private void getServers() {
+        GetAllServers.getAllServers(LoginActivity.this, (isContent, message) -> {
+            if (isContent) {
+                Intent Main = new Intent(LoginActivity.this, MainActivity.class);
+                Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(Main);
+                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+            } else {
                 statusIsLogin.setText(message);
                 statusIsLogin.setTextColor(ContextCompat.getColor(this, R.color.colorPingRed));
                 setActionInputText(true);

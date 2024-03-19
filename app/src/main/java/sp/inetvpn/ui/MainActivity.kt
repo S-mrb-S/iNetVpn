@@ -33,7 +33,6 @@ import de.blinkt.openvpn.core.OpenVPNThread
 import de.blinkt.openvpn.core.VpnStatus
 import sp.inetvpn.R
 import sp.inetvpn.data.GlobalData
-import sp.inetvpn.data.GlobalData.appValStorage
 import sp.inetvpn.databinding.ActivityMainBinding
 import sp.inetvpn.state.MainActivity.vpnState
 import sp.inetvpn.util.CheckInternetConnection
@@ -270,8 +269,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         try {
             val file = GlobalData.connectionStorage.getString("file", null)
-            val uL = appValStorage.getString("usernameLogin", null)
-            val uU = appValStorage.getString("usernamePassword", null)
+//            val uL = appValStorage.decodeString("UserName", null)
+//            val uU = appValStorage.decodeString("Password", null)
 
             if (file != null) {
                 setup?.setNewImage()
@@ -280,7 +279,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 App.clearDisallowedPackageApplication()
                 App.addArrayDisallowedPackageApplication(GlobalData.disableAppsList)
 
-                OpenVpnApi.startVpn(this, file, "Japan", uL, uU)
+                OpenVpnApi.startVpn(this, file, "Japan", "App", "App")
 
                 // Update log
                 Toast.makeText(this, "در حال اتصال ...", Toast.LENGTH_SHORT).show()

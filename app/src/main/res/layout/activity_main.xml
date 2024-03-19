@@ -61,7 +61,6 @@
                 <ImageView
                     android:layout_width="34dp"
                     android:layout_height="34dp"
-                    android:src="@drawable/ic_flag_unk"
                     app:cardCornerRadius="10dp"
                     android:contentDescription="@string/iv_flag"
                     android:padding="5dp"

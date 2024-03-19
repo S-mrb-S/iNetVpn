@@ -219,6 +219,7 @@ public class CheckLoginFromApi {
 
     private static void saveInformation(JSONObject response, LoginCallback callback) {
             try {
+                Log.d("RES USER", String.valueOf(response));
                 // مقدار Status را دریافت می‌کنیم
                 int status = response.getInt("Status");
 
@@ -226,13 +227,26 @@ public class CheckLoginFromApi {
                     checkLogin = false;
                     message = "اطلاعات دریافتی نادرست است";
                 } else {
-                    // مقدار CreationTime را دریافت می‌کنیم
-                    String creationTime = response.getJSONArray("Data").getJSONObject(0).getString("CreationTime");
-                    // مقدار ExternalUser را دریافت می‌کنیم
-                    String externalUser = response.getJSONArray("Data").getJSONObject(0).getString("ExternalUser");
-                    Log.d("CT", creationTime);
-                    Log.d("EU", externalUser);
+                    JSONObject res = response.getJSONArray("Data").getJSONObject(0);
+                    if (res.getBoolean("IsActive")) {
+                        // مقدار CreationTime را دریافت می‌کنیم
+                        String creationTime = res.getString("CreationTime");
+                        // مقدار ExternalUser را دریافت می‌کنیم
+                        String externalUser = res.getString("ExternalUser");
+                        Log.d("CT", creationTime);
+                        Log.d("EU", externalUser);
 
+                        appValStorage.putString("basic_info", "none");
+                        appValStorage.putString("first_login", "none"); //
+                        appValStorage.putString("first_connection", "none"); //
+                        appValStorage.putString("nearest_exp_date", "none"); //
+                        appValStorage.putString("user_id", "none");
+                        appValStorage.putString("expiration", "none");
+                        appValStorage.putInt("days", 10);
+                    } else {
+                        checkLogin = false;
+                        message = "زمان استفاده شما تمام شده است";
+                    }
                 }
 
             } catch (JSONException e) {

@@ -16,6 +16,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.core.view.GravityCompat;
 
 import com.google.android.material.navigation.NavigationView;
+import com.squareup.picasso.Picasso;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.xray.lite.AppConfig;
 import com.xray.lite.ui.MainAngActivity;
@@ -41,13 +42,13 @@ import sp.inetvpn.R;
 import sp.inetvpn.api.CheckVipUser;
 import sp.inetvpn.api.GetVersionApi;
 import sp.inetvpn.data.GlobalData;
+import sp.inetvpn.data.UserData;
 import sp.inetvpn.databinding.ActivityMainBinding;
 import sp.inetvpn.ui.FeedbackActivity;
 import sp.inetvpn.ui.InfoActivity;
 import sp.inetvpn.ui.LoginActivity;
 import sp.inetvpn.ui.SplitActivity;
 import sp.inetvpn.ui.UsageActivity;
-import sp.inetvpn.util.CountryListManager;
 import sp.inetvpn.util.ManageDisableList;
 
 /**
@@ -181,12 +182,9 @@ public class MainActivity {
 
     public void handleCountryImage() {
         if (GlobalData.defaultItemDialog == 0) {
-            CountryListManager.OpenVpnSetServerList(
-                    "v2ray",
-                    binding.ivServers
-            ); // v2ray
+            binding.ivServers.setImageResource(R.drawable.ic_qu_switch_24dp);
         } else {
-            CountryListManager.OpenVpnSetServerList(imageCountry, binding.ivServers);
+            Picasso.get().load(imageCountry).into(binding.ivServers);
         }
     }
 
@@ -202,13 +200,7 @@ public class MainActivity {
     // save default v2ray config from api
     private void initializeApp() {
         MmkvManager.INSTANCE.removeAllServer();
-//        GetAllV2ray.setRetV2ray(context, retV2ray -> {
-//            try {
-//                importBatchConfig(retV2ray, "");
-//            } catch (Exception e) {
-//                Toast.makeText(context, "داده های سرور v2ray ذخیره نشد!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        importBatchConfig(UserData.V2rayServers, "");
     }
 
     /**
