@@ -12,26 +12,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
 import sp.inetvpn.data.ApiData;
 import sp.inetvpn.data.UserData;
+import sp.inetvpn.handler.NetworkTask;
 import sp.inetvpn.handler.VolleySingleton;
 import sp.inetvpn.model.OpenVpnServerList;
+
 /**
  * by MehrabSp
  */
 public class GetAllServers {
 
     public interface OpenVCallback {
-        void onOpenVResult(Boolean retOpenV, String message);
+        void onOpenVResult(Boolean retOpenV, @NonNull String message);
     }
 
     private static Boolean checkStatus = false;
@@ -41,6 +37,7 @@ public class GetAllServers {
 
     public static void getAllServers(Context context, OpenVCallback callback) {
         if (ApiData.UserToken == null) {
+            message = "[ERROR] A89P";
             callback.onOpenVResult(checkStatus, message);
             return;
         }
@@ -149,7 +146,7 @@ public class GetAllServers {
 
             JsonObjectRequest sr = new JsonObjectRequest(Request.Method.POST, ApiData.ApiGetServersAddress, jsonBody,
                     response -> {
-                        Log.d("RES os sr", String.valueOf(response));
+                        Log.d("RES os sr", response + "SAlAM");
                         checkStatus = checkAndSaveLayer(response);
                         callback.onOpenVResult(checkStatus, message);
                     },
@@ -176,14 +173,16 @@ public class GetAllServers {
 
     private static boolean checkAndSaveLayer(JSONObject response) {
         boolean isSave = false;
+        Log.d("SEVE", "GET");
         try {
             // مقدار Status را دریافت می‌کنیم
             int status = response.getInt("Status");
             if (status == 0) {
+                isSave = true;
 
                 // آرایه‌ی Data را از JSON بدست می‌آوریم
                 JSONArray dataArray = response.getJSONArray("Data");
-
+                Log.d("SEVE RES", String.valueOf(dataArray));
                 // برای هر آیتم در آرایه Data
                 for (int i = 0; i < dataArray.length(); i++) {
                     // درآیتم فعلی
@@ -193,17 +192,38 @@ public class GetAllServers {
                     String rasTitle = item.getString("RasTitle");
 
                     if (rasTitle.equals("Open")) {
-                        UserData.OpenVpnCount += 1;
                         String rasLocation = item.getString("RasLocation");
                         String rasImage = item.getString("RasImageUrl");
-                        String rasContent = ReadLine(item.getString("ServiceFile1"));
-                        UserData.OpenVpnServerArray[UserData.OpenVpnCount][0] = String.valueOf(UserData.OpenVpnCount);
-                        UserData.OpenVpnServerArray[UserData.OpenVpnCount][1] = rasContent;
-                        UserData.OpenVpnServerArray[UserData.OpenVpnCount][2] = rasLocation;
-                        UserData.OpenVpnServerArray[UserData.OpenVpnCount][3] = rasImage;
+                        String serviceFile1 = item.getString("ServiceFile1");
+                        if (!serviceFile1.isEmpty()) {
+                            NetworkTask.executeTask(serviceFile1, new NetworkTask.NetworkTaskListener() {
+                                @Override
+                                public void onNetworkTaskCompleted(String result) {
+                                    UserData.OpenVpnCount += 1;
+                                    // پردازش نتیجه
+                                    UserData.OpenVpnServerArray[UserData.OpenVpnCount][0] = String.valueOf(UserData.OpenVpnCount);
+                                    UserData.OpenVpnServerArray[UserData.OpenVpnCount][1] = serviceFile1;
+                                    UserData.OpenVpnServerArray[UserData.OpenVpnCount][2] = rasLocation;
+                                    UserData.OpenVpnServerArray[UserData.OpenVpnCount][3] = rasImage;
 
-                        OpenVpnServerList OpenVpnServerList = getOpenVpnServerList(UserData.OpenVpnCount);
-                        UserData.OpenVpnServerListItemList.add(OpenVpnServerList);
+                                    OpenVpnServerList OpenVpnServerList = getOpenVpnServerList(UserData.OpenVpnCount);
+                                    UserData.OpenVpnServerListItemList.add(OpenVpnServerList);
+                                }
+
+                                @Override
+                                public void onNetworkTaskFailed(Exception e) {
+                                    // پردازش خطا
+                                    message = "مشکلی در پردازش فایل ها وجود دارد";
+                                    Log.d("S", " 2مشکلی در پردازش فایل ها وجود دارد");
+                                }
+                            });
+                        } else {
+                            message = "مشکلی در پردازش فایل ها وجود دارد";
+                            Log.d("S", "مشکلی در پردازش فایل ها وجود دارد");
+                            isSave = false;
+                            break;
+                        }
+                        Log.d("RASCONTENT", item.getString("ServiceFile1"));
                     } else if (rasTitle.equals("V2ray")) {
                         String rasExternalUser = item.getString("RasExternalUser");
                         UserData.V2rayServers = UserData.V2rayServers + rasExternalUser + "\n";
@@ -211,39 +231,19 @@ public class GetAllServers {
 
                 }
 
-                isSave = true;
             } else {
                 message = "سرور ها به درستی دریافت نشدن";
             }
 
         } catch (JSONException e) {
             message = "[ERROR] K5P";
+            Log.d("Ex from Servers", String.valueOf(e));
+        } catch (Exception e) {
+            message = "[ERROR] K6P";
+            Log.d("Ex from Servers", String.valueOf(e));
         }
 
         return isSave;
-    }
-
-    private static String ReadLine(String urlString) {
-        String contentReturn = null;
-        try {
-            URL url = new URL(urlString);
-            URLConnection connection = url.openConnection();
-            InputStream inputStream = connection.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder content = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                content.append(line).append("\n");
-            }
-            reader.close();
-
-            // Use the content of the file (in 'content' variable) as needed
-            contentReturn = content.toString();
-
-        } catch (IOException ignore) {
-        }
-
-        return contentReturn;
     }
 
     @NonNull

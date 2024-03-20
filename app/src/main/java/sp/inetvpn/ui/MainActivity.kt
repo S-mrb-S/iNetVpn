@@ -269,8 +269,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         try {
             val file = GlobalData.connectionStorage.getString("file", null)
-//            val uL = appValStorage.decodeString("UserName", null)
-//            val uU = appValStorage.decodeString("Password", null)
+            val uL = GlobalData.appValStorage.decodeString("UserName", null)
+            val uU = GlobalData.appValStorage.decodeString("Password", null)
 
             if (file != null) {
                 setup?.setNewImage()
@@ -279,7 +279,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 App.clearDisallowedPackageApplication()
                 App.addArrayDisallowedPackageApplication(GlobalData.disableAppsList)
 
-                OpenVpnApi.startVpn(this, file, "Japan", "App", "App")
+                OpenVpnApi.startVpn(this, file, "Japan", uL, uU)
 
                 // Update log
                 Toast.makeText(this, "در حال اتصال ...", Toast.LENGTH_SHORT).show()

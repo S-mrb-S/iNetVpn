@@ -16,10 +16,10 @@ class InfoActivity : BaseActivity() {
         val view: View = binding!!.getRoot()
         setContentView(view)
 
-        val basicInfo = GlobalData.appValStorage.getString("basic_info", null)
-        val firstConnection = GlobalData.appValStorage.getString("first_connection", null)
-        val expiration = GlobalData.appValStorage.getString("expiration", null)
-        val userId = GlobalData.appValStorage.decodeString("UserName", null)
+        val basicInfo = GlobalData.appValStorage.getString("basic_info", "خالی")
+        val firstConnection = GlobalData.appValStorage.getString("first_connection", "خالی")
+        val expiration = GlobalData.appValStorage.getString("expiration", "خالی")
+        val userId = GlobalData.appValStorage.decodeString("UserName", "خالی")
         val days = GlobalData.appValStorage.getInt("days", 0)
 
         binding!!.userId.text = userId
@@ -27,13 +27,13 @@ class InfoActivity : BaseActivity() {
 
 //        text_for_c --< v
 //        layout_info_c --> gone
-        if (days.toDouble() != 1.1 || expiration != null) {
+//        if (days.toDouble() != 1.1 || expiration != null) {
             binding!!.textForC.visibility = View.GONE
             binding!!.layoutInfoC.visibility = View.VISIBLE
             binding!!.firstLogin.text = firstConnection
             binding!!.nearestExpDate.text = expiration
             binding!!.days.text = days.toString()
-        }
+//        }
         binding!!.llContactBack.setOnClickListener {
             this.onBackPressed()
         }

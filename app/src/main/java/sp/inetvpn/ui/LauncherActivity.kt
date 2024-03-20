@@ -133,8 +133,8 @@ class LauncherActivity : AppCompatActivity() {
     private fun getServers() {
         Log.d("CALL", "CALL SERVERS")
         binding!!.animationLayout.tvStatus.text = GlobalData.get_info_from_app
-        GetAllServers.getAllServers(this@LauncherActivity) { isContent: Boolean, message: String? ->
-            if (isContent) {
+        GetAllServers.getAllServers(this@LauncherActivity) { isContent: Boolean?, message: String? ->
+            if (isContent == true) {
                 validResult()
             } else {
                 if (message != null) {

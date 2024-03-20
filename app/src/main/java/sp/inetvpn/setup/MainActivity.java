@@ -184,7 +184,11 @@ public class MainActivity {
         if (GlobalData.defaultItemDialog == 0) {
             binding.ivServers.setImageResource(R.drawable.ic_qu_switch_24dp);
         } else {
-            Picasso.get().load(imageCountry).into(binding.ivServers);
+            if (!Objects.equals(imageCountry, GlobalData.NA)) {
+                Picasso.get().load(imageCountry).into(binding.ivServers);
+            } else {
+                binding.ivServers.setImageResource(R.drawable.qflag);
+            }
         }
     }
 

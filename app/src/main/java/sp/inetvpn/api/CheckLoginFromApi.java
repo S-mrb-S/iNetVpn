@@ -228,6 +228,7 @@ public class CheckLoginFromApi {
                     message = "اطلاعات دریافتی نادرست است";
                 } else {
                     JSONObject res = response.getJSONArray("Data").getJSONObject(0);
+
                     if (res.getBoolean("IsActive")) {
                         // مقدار CreationTime را دریافت می‌کنیم
                         String creationTime = res.getString("CreationTime");
@@ -236,13 +237,10 @@ public class CheckLoginFromApi {
                         Log.d("CT", creationTime);
                         Log.d("EU", externalUser);
 
-                        appValStorage.putString("basic_info", "none");
-                        appValStorage.putString("first_login", "none"); //
-                        appValStorage.putString("first_connection", "none"); //
-                        appValStorage.putString("nearest_exp_date", "none"); //
-                        appValStorage.putString("user_id", "none");
-                        appValStorage.putString("expiration", "none");
-                        appValStorage.putInt("days", 10);
+                        appValStorage.putString("basic_info", res.getString("GroupName"));
+                        appValStorage.putString("first_connection", res.getString("FirstLogin"));
+                        appValStorage.putString("expiration", res.getString("ExpirationTime"));
+                        appValStorage.putInt("days", Integer.parseInt(res.getString("RemainedTime")));
                     } else {
                         checkLogin = false;
                         message = "زمان استفاده شما تمام شده است";
