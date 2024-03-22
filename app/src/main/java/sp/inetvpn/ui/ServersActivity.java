@@ -27,7 +27,6 @@ import sp.inetvpn.interfaces.NavItemClickListener;
 public class ServersActivity extends Activity implements NavItemClickListener {
 
     private ActivityServersBinding binding;
-    String[][] ServerArray = new String[40][8];
     private final Intent returnIntent = new Intent();
 
     @Override

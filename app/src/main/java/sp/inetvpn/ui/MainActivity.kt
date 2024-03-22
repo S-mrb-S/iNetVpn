@@ -267,12 +267,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      */
     private fun startVpn() {
         usageConnectionManager.establishConnection()
+        val file = GlobalData.connectionStorage.getString("file", null)
+        val uL = GlobalData.appValStorage.decodeString("UserName", null)
+        val uU = GlobalData.appValStorage.decodeString("Password", null)
 
         try {
-            val file = GlobalData.connectionStorage.getString("file", null)
-            val uL = GlobalData.appValStorage.decodeString("UserName", null)
-            val uU = GlobalData.appValStorage.decodeString("Password", null)
-
             if (file != null) {
                 setup?.setNewImage()
                 state?.setNewVpnState(1)
@@ -280,17 +279,33 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 App.clearDisallowedPackageApplication()
                 App.addArrayDisallowedPackageApplication(GlobalData.disableAppsList)
 
-                OpenVpnApi.startVpn(this, file, "Japan", uL, uU)
-
-                // Update log
                 Toast.makeText(this, "در حال اتصال ...", Toast.LENGTH_SHORT).show()
-
+                OpenVpnApi.startVpn(this, file, "Japan", uL, uU)
             } else {
                 startServersActivity()
                 Toast.makeText(this, "ابتدا یک سرور را انتخاب کنید", Toast.LENGTH_SHORT).show()
             }
         } catch (e: RemoteException) {
-            e.printStackTrace()
+//            e.printStackTrace() //setenv CLIENT_CERT 0
+            Toast.makeText(this, "در حال اتصال با Certificate", Toast.LENGTH_SHORT).show()
+            val newString = "setenv CLIENT_CERT 0"
+
+            if (!file!!.contains(newString)) {
+                val sString = file + "\n" + newString
+
+                try {
+                    OpenVpnApi.startVpn(this, sString, "Japan", uL, uU)
+                } catch (e: RemoteException) {
+                    Toast.makeText(this, "خطایی رخ داد", Toast.LENGTH_SHORT).show()
+                    stopVpn()
+                }
+
+                GlobalData.connectionStorage.putString("file", sString)
+
+            } else {
+                stopVpn()
+            }
+
         }
     }
 
