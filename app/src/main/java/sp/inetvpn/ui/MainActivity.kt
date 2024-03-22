@@ -92,6 +92,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      * enable connection button
      */
     private var enableButtonC: Boolean = true
+
     // ViewModel (V2ray)
     private val mainViewModel: MainViewModel by viewModels()
 
@@ -171,11 +172,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      */
     private fun stopVpn(): Boolean {
         try {
-            OpenVPNThread.stop()
             state?.setNewVpnState(0)
+            OpenVPNThread.stop()
             return true
         } catch (e: Exception) {
-            e.printStackTrace()
+            showToast("مشکلی در قطع اتصال پیش امد")
         }
         return false
     }
