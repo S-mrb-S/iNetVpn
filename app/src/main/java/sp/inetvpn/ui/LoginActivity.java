@@ -1,5 +1,6 @@
 package sp.inetvpn.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,54 +29,59 @@ public class LoginActivity extends AppCompatActivity {
     TextView statusIsLogin;
     Boolean isTextForLogin = false;
     Button btn_welcome_later;
+    boolean isStart = false;
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Handler handler = new Handler();
-        handler.postDelayed(() -> Animations.startAnimation(LoginActivity.this, R.id.ll_main_layout_login, R.anim.slide_up_800, true), 500);
+        if (!isStart) {
+            Handler handler = new Handler();
+            handler.postDelayed(() -> Animations.startAnimation(LoginActivity.this, R.id.ll_main_layout_login, R.anim.slide_up_800, true), 500);
 
-        txtUsername.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            txtUsername.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // هنگام تغییر مقدار
-                String inputText = s.toString();
-                checkText(inputText);
-            }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    // هنگام تغییر مقدار
+                    String inputText = s.toString();
+                    checkText(inputText);
+                }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-        txtPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
+            txtPassword.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // هنگام تغییر مقدار
-                String inputText = s.toString();
-                checkText(inputText);
-            }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    // هنگام تغییر مقدار
+                    String inputText = s.toString();
+                    checkText(inputText);
+                }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                statusIsLogin.setTextColor(ContextCompat.getColor(LoginActivity.this, R.color.colorBubble));
-            }
-        });
+                @Override
+                public void afterTextChanged(Editable s) {
+                    statusIsLogin.setTextColor(ContextCompat.getColor(LoginActivity.this, R.color.colorBubble));
+                }
+            });
 
-        btn_welcome_later.setOnClickListener(view -> {
-            if (isTextForLogin) {
-                Handler handlerS = new Handler();
-                handlerS.postDelayed(this::saveAndFinish, 1000);
-            }
-        });
+            btn_welcome_later.setOnClickListener(view -> {
+                if (isTextForLogin) {
+                    Handler handlerS = new Handler();
+                    handlerS.postDelayed(this::saveAndFinish, 1000);
+                }
+            });
+
+            isStart = true;
+        }
     }
 
     @Override
@@ -108,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
         String inputPassText = Objects.requireNonNull(txtPassword.getText()).toString();
 
         CheckLoginFromApi.checkIsLogin(LoginActivity.this, inputUserText, inputPassText, (isLogin, message) -> {
-            if (isLogin){
+            if (isLogin) {
                 try {
                     Toast.makeText(this, "Login success, get servers", Toast.LENGTH_SHORT).show();
                     getServers();
@@ -118,10 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                     params.putString("exception", "MAA1" + e);
                     LogManager.logEvent(params);
                 }
-//                finally {
-//                    finish();
-//                }
-            }else{
+            } else {
                 statusIsLogin.setText(message);
                 statusIsLogin.setTextColor(ContextCompat.getColor(this, R.color.colorPingRed));
                 setActionInputText(true);
@@ -132,10 +135,14 @@ public class LoginActivity extends AppCompatActivity {
     private void getServers() {
         GetAllServers.getAllServers(LoginActivity.this, (isContent, message) -> {
             if (isContent) {
-                Intent Main = new Intent(LoginActivity.this, MainActivity.class);
-                Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(Main);
-                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+                try {
+                    Intent Main = new Intent(LoginActivity.this, MainActivity.class);
+                    Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(Main);
+                    overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left);
+                } finally {
+                    finish();
+                }
             } else {
                 statusIsLogin.setText(message);
                 statusIsLogin.setTextColor(ContextCompat.getColor(this, R.color.colorPingRed));
@@ -152,5 +159,11 @@ public class LoginActivity extends AppCompatActivity {
             btn_welcome_later.setBackgroundResource(R.drawable.round_input_default);
             isTextForLogin = false;
         }
+    }
+
+    @SuppressLint("MissingSuperCall")
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 }

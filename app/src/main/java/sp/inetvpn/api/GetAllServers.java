@@ -196,6 +196,7 @@ public class GetAllServers {
                         String rasImage = item.getString("RasImageUrl");
                         String serviceFile1 = item.getString("ServiceFile1");
                         if (!serviceFile1.isEmpty()) {
+                            UserData.OpenVpnServerListItemList.clear();
                             NetworkTask.executeTask(serviceFile1, new NetworkTask.NetworkTaskListener() {
                                 @Override
                                 public void onNetworkTaskCompleted(String result) {
@@ -207,6 +208,7 @@ public class GetAllServers {
                                     UserData.OpenVpnServerArray[UserData.OpenVpnCount][3] = rasImage;
 
                                     OpenVpnServerList OpenVpnServerList = getOpenVpnServerList(UserData.OpenVpnCount);
+
                                     UserData.OpenVpnServerListItemList.add(OpenVpnServerList);
                                 }
 

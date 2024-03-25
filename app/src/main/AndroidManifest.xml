@@ -71,7 +71,8 @@
         <activity
             android:name="sp.inetvpn.ui.LauncherActivity"
             android:exported="true"
-            android:theme="@style/AppThemeDayNight.NoActionBar">
+            android:theme="@style/AppThemeDayNight.NoActionBar"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -81,7 +82,7 @@
         <activity
             android:name="sp.inetvpn.ui.MainActivity"
             android:exported="false"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/AppThemeDayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
@@ -95,9 +96,10 @@
             android:name="sp.inetvpn.ui.LoginActivity"
             android:exported="false"
             android:theme="@style/AppTheme"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTop" />
         <activity
             android:name="sp.inetvpn.ui.ServersActivity"
+            android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
         <activity
             android:name="sp.inetvpn.ui.UsageActivity"
