@@ -202,7 +202,7 @@ public class GetAllServers {
                                     UserData.OpenVpnCount += 1;
                                     // پردازش نتیجه
                                     UserData.OpenVpnServerArray[UserData.OpenVpnCount][0] = String.valueOf(UserData.OpenVpnCount);
-                                    UserData.OpenVpnServerArray[UserData.OpenVpnCount][1] = serviceFile1;
+                                    UserData.OpenVpnServerArray[UserData.OpenVpnCount][1] = result;
                                     UserData.OpenVpnServerArray[UserData.OpenVpnCount][2] = rasLocation;
                                     UserData.OpenVpnServerArray[UserData.OpenVpnCount][3] = rasImage;
 

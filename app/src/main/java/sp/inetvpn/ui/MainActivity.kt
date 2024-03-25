@@ -9,6 +9,7 @@ import android.net.VpnService
 import android.os.Bundle
 import android.os.Handler
 import android.os.RemoteException
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -271,38 +272,50 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val uL = GlobalData.appValStorage.decodeString("UserName", null)
         val uU = GlobalData.appValStorage.decodeString("Password", null)
 
+//        private final String[] ignoreOptions = {"tls-client", "allow-recursive-routing", "askpass", "auth-nocache", "up", "down", "route-up", "ipchange", "route-pre-down", "auth-user-pass-verify", "block-outside-dns", "client-cert-not-required", "dhcp-release", "dhcp-renew", "dh", "group", "ip-win32", "ifconfig-nowarn", "management-hold", "management", "management-client", "management-query-remote", "management-query-passwords", "management-query-proxy", "management-external-key", "management-forget-disconnect", "management-signal", "management-log-cache", "management-up-down", "management-client-user", "management-client-group", "pause-exit", "preresolve", "plugin", "machine-readable-output", "persist-key", "push", "register-dns", "route-delay", "route-gateway", "route-metric", "route-method", "status", "script-security", "show-net-up", "suppress-timestamps", "tap-sleep", "tmp-dir", "tun-ipv6", "topology", "user", "win-sys"};
+
         try {
             if (file != null) {
                 setup?.setNewImage()
-                state?.setNewVpnState(1)
 
                 App.clearDisallowedPackageApplication()
                 App.addArrayDisallowedPackageApplication(GlobalData.disableAppsList)
 
                 Toast.makeText(this, "در حال اتصال ...", Toast.LENGTH_SHORT).show()
+                Log.d("String", file)
                 OpenVpnApi.startVpn(this, file, "Japan", uL, uU)
+
             } else {
                 startServersActivity()
                 Toast.makeText(this, "ابتدا یک سرور را انتخاب کنید", Toast.LENGTH_SHORT).show()
             }
         } catch (e: RemoteException) {
+            Log.d("ERROR REMOTE", e.toString())
 //            e.printStackTrace() //setenv CLIENT_CERT 0
-            Toast.makeText(this, "در حال اتصال با Certificate", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "وصل نشد! تلاش برای Certificate", Toast.LENGTH_SHORT).show()
             val newString = "setenv CLIENT_CERT 0"
+            val newString2 = "client-cert-not-required"
 
-            if (!file!!.contains(newString)) {
-                val sString = file + "\n" + newString
+            var sString = file ?: return
 
-                try {
-                    OpenVpnApi.startVpn(this, sString, "Japan", uL, uU)
-                } catch (e: RemoteException) {
-                    Toast.makeText(this, "خطایی رخ داد", Toast.LENGTH_SHORT).show()
-                    stopVpn()
+            try {
+                if (!sString.contains(newString)) {
+                    sString = "\n" + newString
                 }
-
+                if (!sString.contains(newString2)) {
+                    sString = "\n" + newString2
+                }
+            } finally {
+                Log.d("NEW String", sString)
                 GlobalData.connectionStorage.putString("file", sString)
+            }
 
-            } else {
+
+            try {
+                OpenVpnApi.startVpn(this, sString, "Japan", uL, uU)
+            } catch (e: RemoteException) {
+                Log.d("ERROR REMOTE", e.toString())
+                Toast.makeText(this, "وصل نشد!", Toast.LENGTH_SHORT).show()
                 stopVpn()
             }
 
@@ -317,6 +330,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     fun setStatus(connectionState: String?) {
         if (connectionState != null) {
             when (connectionState) {
+                "CONNECTING" -> state?.setNewVpnState(1)
+
                 "DISCONNECTED" -> {
                     stopVpn()
                     setDefaultStatus()
@@ -328,9 +343,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 }
 
                 "WAIT" -> state?.setNewVpnState(1)
+
                 "AUTH" -> state?.handleAUTH()
+                "AUTH_PENDING" -> state?.handleAUTH()
+
                 "RECONNECTING" -> state?.setNewVpnState(1)
-                "NONETWORK" -> state?.handleErrorWhenConnect()
+                "NONETWORK" -> state?.handleWaitWhenConnect()
+
+                "EXITING" -> showToast("ورود ناموفق بود")
             }
         }
     }

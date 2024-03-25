@@ -235,6 +235,16 @@ public class MainActivity {
         ));
     }
 
+    public void handleWaitWhenConnect() {
+        binding.tvMessageTopText.setText(GlobalData.connecion_wait_txt);
+
+//        binding.btnConnection.text = Data.connecting_btn
+        binding.btnConnection.setBackground(ContextCompat.getDrawable(
+                context,
+                R.drawable.button_retry
+        ));
+    }
+
     public void handleAUTH() {
         binding.tvMessageTopText.setText("درحال ورود به سرور");
         binding.tvMessageBottomText.setText("لطفا منتظر بمانید");

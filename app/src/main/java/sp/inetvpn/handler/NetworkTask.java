@@ -1,5 +1,7 @@
 package sp.inetvpn.handler;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +35,7 @@ public class NetworkTask {
                 reader.close();
                 String result = content.toString();
                 executor.shutdown(); // تمام کردن اجرای تسک
+                Log.d("Out put res", result);
                 listener.onNetworkTaskCompleted(result);
             } catch (IOException e) {
                 listener.onNetworkTaskFailed(e);
