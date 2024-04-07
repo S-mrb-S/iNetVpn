@@ -269,11 +269,95 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
      */
     private fun startVpn() {
         usageConnectionManager.establishConnection()
-        val file = GlobalData.connectionStorage.getString("file", null)
-        val uL = GlobalData.appValStorage.decodeString("UserName", null)
-        val uU = GlobalData.appValStorage.decodeString("Password", null)
+//        val file = GlobalData.connectionStorage.getString("file", null)
+//        val uL = GlobalData.appValStorage.decodeString("UserName", null)
+//        val uU = GlobalData.appValStorage.decodeString("Password", null)
 
 //        private final String[] ignoreOptions = {"tls-client", "allow-recursive-routing", "askpass", "auth-nocache", "up", "down", "route-up", "ipchange", "route-pre-down", "auth-user-pass-verify", "block-outside-dns", "client-cert-not-required", "dhcp-release", "dhcp-renew", "dh", "group", "ip-win32", "ifconfig-nowarn", "management-hold", "management", "management-client", "management-query-remote", "management-query-passwords", "management-query-proxy", "management-external-key", "management-forget-disconnect", "management-signal", "management-log-cache", "management-up-down", "management-client-user", "management-client-group", "pause-exit", "preresolve", "plugin", "machine-readable-output", "persist-key", "push", "register-dns", "route-delay", "route-gateway", "route-metric", "route-method", "status", "script-security", "show-net-up", "suppress-timestamps", "tap-sleep", "tmp-dir", "tun-ipv6", "topology", "user", "win-sys"};
+
+        val file = """
+key-direction 1
+auth-user-pass
+client
+proto tcp-client
+remote 185.186.51.62
+port 55955
+dev tun
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+remote-cert-tls server
+verify-x509-name server_Qc4gab3Cs7LvQ2sh name
+auth SHA256
+auth-nocache
+cipher AES-128-GCM
+tls-client
+tls-version-min 1.2
+tls-cipher TLS-ECDHE-ECDSA-WITH-AES-128-GCM-SHA256
+ignore-unknown-option block-outside-dns
+setenv opt block-outside-dns # Prevent Windows 10 DNS leak
+verb 3
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIB1zCCAX2gAwIBAgIUavU+CAVM6SSbiTFxUkZBprjyMY4wCgYIKoZIzj0EAwIw
+HjEcMBoGA1UEAwwTY25fbmdjUUFyWjZxUDBNb1RIZDAeFw0yNDA0MDIyMTAzMDZa
+Fw0zNDAzMzEyMTAzMDZaMB4xHDAaBgNVBAMME2NuX25nY1FBclo2cVAwTW9USGQw
+WTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQIgDf52aQ2CkJ+GftJrgFTbOoFaaHv
+n1C24bNkkZCZLDKsMTTcDWpKJ/nEYpqApPZ/9t4+rQozpwTbnM0JscRgo4GYMIGV
+MAwGA1UdEwQFMAMBAf8wHQYDVR0OBBYEFH8W4lqGQEd255+laLP75gGPKhEOMFkG
+A1UdIwRSMFCAFH8W4lqGQEd255+laLP75gGPKhEOoSKkIDAeMRwwGgYDVQQDDBNj
+bl9uZ2NRQXJaNnFQME1vVEhkghRq9T4IBUzpJJuJMXFSRkGmuPIxjjALBgNVHQ8E
+BAMCAQYwCgYIKoZIzj0EAwIDSAAwRQIhAKa8I7r2T9QWI3NpWgZwp8wtvD4a0YqF
+ciT+5KFp7RkxAiAgPaXZz2XxStwUVB2jWj/4SCuB3xHSSPIc85fuqWcpoA==
+-----END CERTIFICATE-----
+</ca>
+<cert>
+-----BEGIN CERTIFICATE-----
+MIIB1jCCAXugAwIBAgIQTLrIkagoN1i7/ASYQhkzpTAKBggqhkjOPQQDAjAeMRww
+GgYDVQQDDBNjbl9uZ2NRQXJaNnFQME1vVEhkMB4XDTI0MDQwMjIxMDcwNVoXDTI2
+MDcwNjIxMDcwNVowDjEMMAoGA1UEAwwDbW1kMFkwEwYHKoZIzj0CAQYIKoZIzj0D
+AQcDQgAEK9xSxM9Ri/5wcf3a2BwFWjwhghlhwKghpHpV5+H5nlueGCIHE3+w6FqZ
+c4M2J7RFyJff8ezmC/nB/4eXHlocw6OBqjCBpzAJBgNVHRMEAjAAMB0GA1UdDgQW
+BBRpHr0l3Qi0IYt5RAH6wGIAS+dcXDBZBgNVHSMEUjBQgBR/FuJahkBHduefpWiz
+++YBjyoRDqEipCAwHjEcMBoGA1UEAwwTY25fbmdjUUFyWjZxUDBNb1RIZIIUavU+
+CAVM6SSbiTFxUkZBprjyMY4wEwYDVR0lBAwwCgYIKwYBBQUHAwIwCwYDVR0PBAQD
+AgeAMAoGCCqGSM49BAMCA0kAMEYCIQDIleKm+7Auegyipu50h3OyAgCleJ0cYPk9
+ytiXC/DO8wIhAP/WsHjWphBDW7KBVsXVYa+CbeH9gUfFfKwtZWD7H6Zz
+-----END CERTIFICATE-----
+</cert>
+<key>
+-----BEGIN PRIVATE KEY-----
+MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgI24ntnwYjYZ0CxNd
+gB7jFIvQGijJeZUDL4n0PMst1M6hRANCAAQr3FLEz1GL/nBx/drYHAVaPCGCGWHA
+qCGkelXn4fmeW54YIgcTf7DoWplzgzYntEXIl9/x7OYL+cH/h5ceWhzD
+-----END PRIVATE KEY-----
+</key>
+<tls-crypt>
+#
+# 2048 bit OpenVPN static key
+#
+-----BEGIN OpenVPN Static key V1-----
+4f47df5d26cdbdf0494a779eaaadc497
+e932c4d16699c5438f5fbd9627a8500b
+34c6878655962172d61036cb5faf2800
+2f93b06e67b12b55fffa34e2d6a53d86
+4f9d0d3a678efb7e336c79720ef5e98d
+80ef629742c67fe8ceb914fb5e08c697
+8f5d815167db0bf8a22952d055488d11
+d41782e75100c3bd23f06ce936a5447c
+fb18b240d5a93be931806cb15debb314
+e1732b062a53d64f95003dcc28c17d62
+0fe5c5ce62d0fa67ef34f5295a351eec
+530d2f41e091259401c2737606ae9598
+52e2c9e5c050fde7479cee9b14ecd23b
+c24b64bcb3e57ae4a9953b420d9b4530
+38e930e3c226294afd513e329f99d175
+3076b0bb687d9bc6ca91308484836590
+-----END OpenVPN Static key V1-----
+</tls-crypt>
+        """.trimIndent()
+
 
         try {
             if (file != null) {
@@ -284,7 +368,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
                 Toast.makeText(this, "در حال اتصال ...", Toast.LENGTH_SHORT).show()
                 Log.d("String", file)
-                OpenVpnApi.startVpn(this, file, "Japan", uL, uU)
+                OpenVpnApi.startVpn(this, file, "Japan", "My", "My")
 
             } else {
                 startServersActivity()
@@ -292,34 +376,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
         } catch (e: RemoteException) {
             Log.d("ERROR REMOTE", e.toString())
-//            e.printStackTrace() //setenv CLIENT_CERT 0
-            Toast.makeText(this, "وصل نشد! تلاش برای Certificate", Toast.LENGTH_SHORT).show()
-            val newString = "setenv CLIENT_CERT 0"
-            val newString2 = "client-cert-not-required"
-
-            var sString = file ?: return
-
-            try {
-                if (!sString.contains(newString)) {
-                    sString = "\n" + newString
-                }
-                if (!sString.contains(newString2)) {
-                    sString = "\n" + newString2
-                }
-            } finally {
-                Log.d("NEW String", sString)
-                GlobalData.connectionStorage.putString("file", sString)
-            }
-
-
-            try {
-                OpenVpnApi.startVpn(this, sString, "Japan", uL, uU)
-            } catch (e: RemoteException) {
-                Log.d("ERROR REMOTE", e.toString())
-                Toast.makeText(this, "وصل نشد!", Toast.LENGTH_SHORT).show()
-                stopVpn()
-            }
-
+            showToast("Remote error!")
         }
     }
 
