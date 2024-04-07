@@ -12,7 +12,7 @@ def shrinkEnable = false
 android {
     compileSdk rootProject.ext.compileSdk
     ndkVersion rootProject.ext.ndkVersion
-    
+
     namespace 'sp.inetvpn'
     testNamespace 'sp.inetvpnTest'
 
@@ -87,7 +87,7 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
-     compileOptions {
+    compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -141,7 +141,7 @@ dependencies {
 
     implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper4:4.1.4"
     implementation 'com.squareup.picasso:picasso:2.8'
-    
+
     // OpenVpn
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
