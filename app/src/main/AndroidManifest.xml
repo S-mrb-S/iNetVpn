@@ -35,14 +35,20 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission
-        android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"
-        android:minSdkVersion="34" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <!-- Used to show all apps in the allowed Apps selection,
+         this app needs the list the app in the allow/deny apps over the VPN -->
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
     <application
-        android:name="sp.inetvpn.MainApplication"
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:banner="@mipmap/ic_banner"
         android:icon="@mipmap/ic_launcher"
@@ -52,15 +58,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
-            android:name="sp.inetvpn.ui.SplitActivity"
+            android:name=".ui.SplitActivity"
             android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
         <activity
-            android:name="sp.inetvpn.ui.LogActivity"
+            android:name=".ui.LogActivity"
             android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
         <activity
-            android:name="sp.inetvpn.ui.InfoActivity"
+            android:name=".ui.InfoActivity"
             android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
 
@@ -69,7 +75,7 @@
             android:value="2.1" /> <!-- App -->
 
         <activity
-            android:name="sp.inetvpn.ui.LauncherActivity"
+            android:name=".ui.LauncherActivity"
             android:exported="true"
             android:theme="@style/AppThemeDayNight.NoActionBar"
             android:launchMode="singleTask">
@@ -80,7 +86,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="sp.inetvpn.ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="false"
             android:launchMode="singleTop"
             android:theme="@style/AppThemeDayNight.NoActionBar">
@@ -93,19 +99,19 @@
                 android:resource="@xml/shortcuts" />
         </activity>
         <activity
-            android:name="sp.inetvpn.ui.LoginActivity"
+            android:name=".ui.LoginActivity"
             android:exported="false"
             android:theme="@style/AppTheme"
             android:launchMode="singleTop" />
         <activity
-            android:name="sp.inetvpn.ui.ServersActivity"
+            android:name=".ui.ServersActivity"
             android:exported="false"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
         <activity
-            android:name="sp.inetvpn.ui.UsageActivity"
+            android:name=".ui.UsageActivity"
             android:theme="@style/AppThemeDayNight.NoActionBar" />
-        <activity android:name="sp.inetvpn.ui.FeedbackActivity" />
-        <activity android:name="sp.inetvpn.ui.AboutMeActivity" />
+        <activity android:name=".ui.FeedbackActivity" />
+        <activity android:name=".ui.AboutMeActivity" />
         <!-- OpenVpn -->
         <service
             android:name="de.blinkt.openvpn.core.OpenVPNService"
