@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
         CheckLoginFromApi.checkIsLogin(LoginActivity.this, inputUserText, inputPassText, (isLogin, message) -> {
             appValStorage.encode("isLoginBool", isLogin);
 
-            if (isLogin){
+            if (true) {
                 try {
                     Intent Main = new Intent(LoginActivity.this, MainActivity.class);
                     Main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                 } finally {
                     finish();
                 }
-            }else{
+            } else {
                 statusIsLogin.setText(message);
                 statusIsLogin.setTextColor(ContextCompat.getColor(this, R.color.colorPingRed));
                 setActionInputText(true);

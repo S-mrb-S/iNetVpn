@@ -46,7 +46,11 @@ class LauncherActivity : BaseActivity() {
                 params.putString("exception", "WAA9$e")
                 LogManager.logEvent(params)
             } finally {
-                checkInternetLayer()
+//                checkInternetLayer()
+
+                val Main = Intent(this@LauncherActivity, MainActivity::class.java)
+                startActivity(Main)
+                overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
             }
         } catch (e: Exception) {
             throw RuntimeException(e)

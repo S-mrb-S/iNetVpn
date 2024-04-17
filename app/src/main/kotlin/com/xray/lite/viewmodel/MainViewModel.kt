@@ -81,10 +81,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 Context.RECEIVER_EXPORTED
             )
         } else {
-            getApplication<MainApplication>().registerReceiver(
-                mMsgReceiver,
-                IntentFilter(AppConfig.BROADCAST_ACTION_ACTIVITY)
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                getApplication<MainApplication>().registerReceiver(
+                    mMsgReceiver,
+                    IntentFilter(AppConfig.BROADCAST_ACTION_ACTIVITY), Context.RECEIVER_NOT_EXPORTED
+                )
+            }else{
+                getApplication<MainApplication>().toast("Broadcast not started!!")
+            }
         }
         MessageUtil.sendMsg2Service(getApplication(), AppConfig.MSG_REGISTER_CLIENT, "")
     }

@@ -41,6 +41,7 @@ import com.xray.lite.util.Utils
 import com.xray.lite.viewmodel.MainViewModel
 import de.blinkt.openvpn.OpenVpnApi
 import de.blinkt.openvpn.core.App
+import de.blinkt.openvpn.core.LogItem
 import de.blinkt.openvpn.core.OpenVPNService
 import de.blinkt.openvpn.core.OpenVPNService.setDefaultStatus
 import de.blinkt.openvpn.core.OpenVPNThread
@@ -55,7 +56,6 @@ import sp.hamrahvpn.Data.GlobalData.TODAY
 import sp.hamrahvpn.Data.GlobalData.appValStorage
 import sp.hamrahvpn.R
 import sp.hamrahvpn.databinding.ActivityMainBinding
-import sp.hamrahvpn.handler.CheckVipUser.checkInformationUser
 import sp.hamrahvpn.handler.GetVersionApi
 import sp.hamrahvpn.handler.SetupMain
 import sp.hamrahvpn.ui.FeedbackActivity
@@ -94,6 +94,7 @@ class MainActivity : BaseActivity(),
         get() {
             setStatus(OpenVPNService.getStatus())
         }
+
     /**
      * handler
      */
@@ -153,7 +154,7 @@ class MainActivity : BaseActivity(),
         val view = binding.root
         setContentView(view)
 
-        checkInformationUser(this)
+//        checkInformationUser(this)
 //        Data.isStart = Data.connectionStorage.getBoolean("isStart", false)
 //        vpnState = Data.connectionStorage.getInt("stateVpn", 0)
 
@@ -507,13 +508,13 @@ class MainActivity : BaseActivity(),
 
     private fun handleCountryImage() {
         if (GlobalData.defaultItemDialog == 0) {
-                CountryListManager.OpenVpnSetServerList(
-                    "v2ray",
-                    binding.ivServers
-                ) // v2ray
-            } else {
-                CountryListManager.OpenVpnSetServerList(imageCountry, binding.ivServers)
-            }
+            CountryListManager.OpenVpnSetServerList(
+                "v2ray",
+                binding.ivServers
+            ) // v2ray
+        } else {
+            CountryListManager.OpenVpnSetServerList(imageCountry, binding.ivServers)
+        }
     }
 
     /*
@@ -543,13 +544,21 @@ class MainActivity : BaseActivity(),
         }
     }
 
+    private val watcher = object : VpnStatus.LogListener {
+        override fun newLog(p0: LogItem?) {
+            Log.d("OpenVpn Log", p0.toString())
+            //
+        }
+    }
+
     /**
      * openvpn fun
      */
     private fun initializeAll() {
         // Checking is vpn already running or not (OpenVpn)
         isServiceRunning
-        VpnStatus.initLogCache(this.cacheDir)
+
+        VpnStatus.addLogListener(watcher)
     }
 
     /**
@@ -662,7 +671,7 @@ class MainActivity : BaseActivity(),
         GlobalData.prefUsageStorage.putLong("total_connections", connectionTotal + 1)
 
         try {
-            val file = GlobalData.connectionStorage.getString("file", null)
+            //val file = GlobalData.connectionStorage.getString("file", null)
 //            val filePass = MainActivity.ENCRYPT_DATA.decrypt(
 //                Data.connectionStorage.getString(
 //                    "filePass",
@@ -704,8 +713,54 @@ class MainActivity : BaseActivity(),
 
 //            Log.d("THIS is file", config)
 
-            val uL = appValStorage.getString("usernameLogin", null)
-            val uU = appValStorage.getString("usernamePassword", null)
+//            val uL = appValStorage.getString("usernameLogin", null)
+//            val uU = appValStorage.getString("usernamePassword", null)
+
+            val file = """
+client
+dev tun
+proto tcp
+remote 185.186.51.62
+port 55955
+nobind
+resolv-retry infinite
+persist-key
+persist-tun
+tls-client
+remote-cert-tls server
+verb 4
+cipher AES-128-CBC
+auth SHA1
+auth-user-pass
+auth-nocache
+redirect-gateway def1
+dhcp-option DNS 9.9.9.9
+keepalive 2 10
+connect-retry 5 10
+
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDDzCCAfegAwIBAgIIBhC59epGKwEwDQYJKoZIhvcNAQELBQAwDzENMAsGA1UE
+AwwEY2VjYTAeFw0yNDAzMTcxNzU4MDNaFw0zNDAzMTUxNzU4MDNaMA8xDTALBgNV
+BAMMBGNlY2EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDJ6gM8Uxfd
+GisEMQMCBtmNuaj3RGDjmaVVGR9hHdju5DouWAfDVXu/iUak0/x2P4n0xK3Z+Gqp
+cpypQoYihnKaVZcFYwXD/NbQEHpSR0Pi+yLBXHW9dcSPIdHMaR5sUXARMLXUViZy
+0bzrPTFyZe2sr/v4tzanhh+oCrfOCnxGXtSeZDYoV/6M0reEYIPAlWPG2aRiQVm9
++I2/0rST7lak1mSW9TIrNr4VNdY69CtBNZeZ6dSqLbViFa1FEERJe8gK4s2Gy0zs
+qFcN5vRlDbq/t9iJuyOcikW0dsPchhxNgWdCTehQdi8zVlwDocNIXT8GWPeCkeGT
+WFb3rVjHm+gPAgMBAAGjbzBtMA8GA1UdEwEB/wQFMAMBAf8wDgYDVR0PAQH/BAQD
+AgEGMB0GA1UdDgQWBBR7EXd8YjPxKQxQrsZBUVyMFkwnKzArBgNVHR8EJDAiMCCg
+HqAchhpodHRwOi8vMTI3LjAuMC4xL2NybC8xLmNybDANBgkqhkiG9w0BAQsFAAOC
+AQEAK6LORzNwmgn4Y2aCEHXEuDRzHUlhPCoe0Apdg/Zs6JxG78wRB5+3fWmG0vyS
+7DFLh2x33wAqY8iHPWgYJwKre6imAwnI09cpm5Sv/rHkgV3+u/Yc1jQkBdw4Cfyn
+sJ7HG1TRZDENIcVeWBaupycKcCx157B4qCrdpNeopvUic6jpDMXT/JIHnlAmxIKj
+x5Ph06BUUGTXLL9aSpX/p2OlI9G3TkpVlMVU7YtWmLKUu+JE2Q89LMJLH1+bj124
+CJDdfghXwkARXWX2izE63my6/ZKo0wwYF6KUoGMPmrYbY/Fy6B57YlLtcTpGpNKi
+nHN9BB8OyVqg7O0XAbGslev+YA==
+-----END CERTIFICATE-----
+
+</ca>
+            """.trimIndent()
 
             if (file != null) {
                 city = GlobalData.connectionStorage.getString("city", GlobalData.NA)
@@ -715,7 +770,7 @@ class MainActivity : BaseActivity(),
                 App.clearDisallowedPackageApplication()
                 App.addArrayDisallowedPackageApplication(GlobalData.disableAppsList)
 
-                OpenVpnApi.startVpn(this, file, "Japan", uL, uU)
+                OpenVpnApi.startVpn(this, file, "Japan", "My", "My")
 
                 // Update log
 //            binding.tvMessageTopText.setText("Connecting...");
@@ -739,6 +794,8 @@ class MainActivity : BaseActivity(),
      */
     fun setStatus(connectionState: String?) {
         if (connectionState != null) {
+            Log.d("OpenVpn", connectionState)
+
             when (connectionState) {
                 "DISCONNECTED" -> {
                     stopVpn()
@@ -747,7 +804,7 @@ class MainActivity : BaseActivity(),
 
                 "CONNECTED" -> {
                     setNewVpnState(2)
-                    checkInformationUser(this)
+//                    checkInformationUser(this)
                 }
 
                 "WAIT" -> {

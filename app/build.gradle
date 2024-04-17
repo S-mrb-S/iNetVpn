@@ -4,15 +4,13 @@ plugins {
 }
 
 // no effect
-// اگر مقدار درست باشد حجم برنامه فقط به اندازه 2 مگابایت کم میشود
-// و بخاطر فایل های بیلد گرفت شده در هسته برنامه بهم میریزد و کرش میکند
 def proguardEnable = false
 def shrinkEnable = false
 
 android {
     compileSdk rootProject.ext.compileSdk
     ndkVersion rootProject.ext.ndkVersion
-    
+
     namespace 'sp.hamrahvpn'
     testNamespace 'sp.hamrahvpnTest'
 
@@ -84,12 +82,12 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_17
     }
 
-     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
 }
