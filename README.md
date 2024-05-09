@@ -1,3 +1,5 @@
+moved here: https://github.com/Team-Ariyae/iNet-Finally
+
 New version of iNetVpn
 
 + OpenVpn client
